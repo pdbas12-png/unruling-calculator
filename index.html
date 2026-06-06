@@ -127,6 +127,15 @@
   .step-btn:active{transform:scale(.94);}
   .stat-item .num-stepper{margin-top:2px;width:100%;}
 
+
+  /* skill manager */
+  .skill-manager-grid{display:grid;grid-template-columns:1.2fr .7fr .9fr .7fr .65fr .75fr .75fr .75fr auto;gap:6px;align-items:end;}
+  .skill-list{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.68rem;margin-top:10px;}
+  .skill-list th{color:var(--text-dim);font-weight:normal;padding:5px 7px;border-bottom:1px solid var(--border);text-align:left;letter-spacing:1px;}
+  .skill-list td{padding:5px 7px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;}
+  .skill-list input,.skill-list select{width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:5px 7px;font-family:var(--mono);font-size:0.7rem;outline:none;}
+  @media(max-width:900px){.skill-manager-grid{grid-template-columns:1fr 1fr;}.skill-list{font-size:0.62rem;}}
+
   /* mobile overflow fixes */
   html,body{max-width:100%;}
   .panel,.card,.field,.stat-item,.result-item{min-width:0;}
@@ -161,6 +170,7 @@
     <button class="tab active" data-tab="calc" onclick="switchTab('calc')">STAT CALC</button>
     <button class="tab" data-tab="monster" onclick="switchTab('monster')">MONSTER</button>
     <button class="tab" data-tab="combat" onclick="switchTab('combat')">COMBAT SIM</button>
+    <button class="tab" data-tab="skill" onclick="switchTab('skill')">SKILL</button>
     <button class="tab" data-tab="inventory" onclick="switchTab('inventory')">INVENTORY</button>
     <button class="tab" data-tab="tools" onclick="switchTab('tools')">TOOLS</button>
     <button class="tab" data-tab="behavior" onclick="switchTab('behavior')">MONSTER TIER</button>
@@ -619,6 +629,69 @@
     </div>
   </div>
 
+
+  <!-- ═══ SKILL MANAGER ═══ -->
+  <div class="panel" id="panel-skill">
+    <div class="card purple">
+      <div class="card-title purple">SKILL LIBRARY</div>
+      <div class="small-note">เพิ่มสกิลหลายอันแล้วเลือกใช้จากหน้า Combat Sim ได้ทันที | Active ใช้ MP, Passive เก็บไว้เป็นข้อมูล/หมายเหตุ</div>
+      <div class="skill-manager-grid" style="margin-top:10px;">
+        <div>
+          <div class="section-label" style="margin-bottom:4px">SKILL NAME</div>
+          <input id="skill-name" value="Double Slash" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:4px">TYPE</div>
+          <select id="skill-type" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+            <option value="active">Active</option>
+            <option value="passive">Passive</option>
+          </select>
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:4px">EFFECT</div>
+          <select id="skill-effect" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+            <option value="damage">Damage</option>
+            <option value="evasion">Evasion</option>
+            <option value="ignore_def">Ignore DEF</option>
+            <option value="weak">โจมตีจุดอ่อน</option>
+          </select>
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:4px">VALUE %</div>
+          <input id="skill-value" type="number" value="0" min="0" step="1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:4px">MP</div>
+          <input id="skill-mp" type="number" value="10" min="0" step="1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:4px">HIT 1 %</div>
+          <input id="skill-hit1" type="number" value="90" min="0" step="1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:4px">HIT 2 %</div>
+          <input id="skill-hit2" type="number" value="70" min="0" step="1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:4px">HIT 3 %</div>
+          <input id="skill-hit3" type="number" value="0" min="0" step="1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+        </div>
+        <button class="btn sm gold-btn" style="height:32px;margin-top:0;" onclick="skillAddFromForm()">+ ADD</button>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+        <button class="btn sm" style="width:auto;padding:7px 12px;" onclick="skillLoadDefaults()">LOAD DEFAULTS</button>
+        <button class="btn sm red-btn" style="width:auto;padding:7px 12px;" onclick="skillClearAll()">CLEAR ALL</button>
+      </div>
+      <div style="overflow-x:auto;margin-top:10px;">
+        <table class="skill-list">
+          <thead><tr><th>Name</th><th>Type</th><th>Effect</th><th>Value</th><th>MP</th><th>Hits</th><th></th></tr></thead>
+          <tbody id="skill-list-body"></tbody>
+        </table>
+      </div>
+      <p class="small-note">Damage/Ignore DEF/Weak ใช้เป็นสกิลโจมตีใน Combat Sim ได้ โดยแต่ละ hit แยกเช็คพลาด/หลบ และหัก durability ต่อ hit | Evasion เป็น buff หลบใน turn นั้น</p>
+    </div>
+  </div>
+
   <!-- ═══ COMBAT SIM ═══ -->
   <div class="panel" id="panel-combat">
     <div class="grid2">
@@ -757,6 +830,22 @@
           </div>
         </div>
         <div class="divider"></div>
+        <div class="section-label">ACTIVE SKILL (MP)</div>
+        <div class="field"><label>SKILL</label><select id="combat-active-skill-select" onchange="combatSkillChanged()"><option value="">OFF</option></select></div>
+        <div class="result-grid" style="grid-template-columns:1fr 1fr 1fr;">
+          <div class="result-item"><span class="r-label">TYPE</span><span class="r-val cyan" id="combat-skill-type">—</span></div>
+          <div class="result-item"><span class="r-label">MP COST</span><span class="r-val" id="combat-skill-mp">—</span></div>
+          <div class="result-item"><span class="r-label">EFFECT</span><span class="r-val green" id="combat-skill-effect">—</span></div>
+        </div>
+        <div class="skill-row">
+          <span class="skill-label">ใช้สกิล:</span>
+          <div class="skill-btns">
+            <button class="skill-btn off active" id="mp-skill-off" onclick="setMpSkill(false)">OFF</button>
+            <button class="skill-btn" id="mp-skill-on" onclick="setMpSkill(true)">NEXT TURN</button>
+          </div>
+        </div>
+        <p class="small-note">Active Skill ใช้ MP ใน turn ถัดไป: Double Slash = 2 hit ใน 1 action, แต่ละ hit มีโอกาสพลาด/โดนหลบแยกกัน และหัก durability ตามจำนวน hit</p>
+        <div class="divider"></div>
         <div class="section-label">INNER MANA SKILL</div>
         <div class="field"><label>SKILL</label><input id="im-skill-name" value="Burst Flow" style="font-family:var(--mono);"></div>
         <div class="grid3" style="gap:6px;">
@@ -775,12 +864,12 @@
         <div class="divider"></div>
         <div class="section-label">HP POTION</div>
         <div class="grid3" style="gap:6px;">
-          <div class="field"><label>POTION LV</label><input type="number" id="combat-potion-lv" value="1" min="1" max="400"></div>
-          <div class="field"><label>HEAL HP</label><input type="number" id="combat-potion-heal" value="50" min="0"></div>
+          <div class="field"><label>POTION</label><select id="combat-potion-lv" onchange="updateCombatPotionHeal()"><option value="1">Lv.1</option><option value="2">Lv.2</option><option value="3" selected>Lv.3</option><option value="4">Lv.4</option><option value="5">Lv.5</option><option value="custom">Custom</option></select></div>
+          <div class="field"><label>HEAL HP</label><input type="number" id="combat-potion-heal" value="150" min="0"></div>
           <div class="field"><label>QTY</label><input type="number" id="combat-potion-qty" value="1" min="0"></div>
         </div>
         <button class="btn sm gold-btn" onclick="useCombatPotion()">🧪 USE POTION</button>
-        <p class="small-note">ใช้โพชันใน Combat Sim: เลือกระดับโพชันเอง + ใส่จำนวน HP ที่ฟื้นเอง | ใช้แล้ว QTY -1 และบันทึกลง Battle Log</p>
+        <p class="small-note">Potion dropdown ตั้งค่า Heal อัตโนมัติ: Lv.1=50, Lv.2=100, Lv.3=150, Lv.4=200, Lv.5=250 | Custom ปรับเองได้</p>
         <div class="section-label">เลือกเป้าหมายการโจมตี</div>
         <div class="hitbox-btns">
           <button class="hb-btn strong" id="hb-strong" onclick="setHitbox('strong')">⬡ ตีเกราะ<br>×0.5 ชัวร์</button>
@@ -1086,9 +1175,128 @@ function updateBehaviorTable(){
 }
 
 // ══ COMBAT SIM ══
-let combat=null, selectedHitbox='normal', selectedSkill='off', selectedMpSkill=false, selectedImSkill=false;
+let combat=null, selectedHitbox='normal', selectedSkill='off', selectedMpSkill=false, selectedImSkill=false, selectedCombatSkillId='';
 let compactCombatLog=[];
 let activeTurnSummary=null;
+
+
+
+// ══ SKILL LIBRARY ══
+let skillLibrary = [];
+let skillIdSeq = 1;
+function skillDefaults(){
+  return [
+    {id:'sk_double_slash', name:'Double Slash', type:'active', effect:'damage', value:0, mp:10, hits:[90,70]},
+    {id:'sk_power_strike', name:'Power Strike', type:'active', effect:'damage', value:0, mp:8, hits:[150]},
+    {id:'sk_piercing_strike', name:'Piercing Strike', type:'active', effect:'ignore_def', value:20, mp:9, hits:[120]}
+  ];
+}
+function normalizeSkill(sk){
+  const hits=(sk.hits||[]).map(x=>+x||0).filter(x=>x>0).slice(0,3);
+  return {
+    id: sk.id || ('sk_'+(skillIdSeq++)),
+    name: sk.name || 'Unnamed Skill',
+    type: sk.type || 'active',
+    effect: sk.effect || 'damage',
+    value: Math.max(0,+sk.value||0),
+    mp: Math.max(0,+sk.mp||0),
+    hits: hits.length?hits:[100]
+  };
+}
+function skillLoadDefaults(){
+  skillLibrary = skillDefaults().map(normalizeSkill);
+  skillIdSeq = Date.now()%100000;
+  skillRender();
+  skillRefreshCombatSelect();
+  if(typeof autoSave==='function') autoSave();
+}
+function skillClearAll(){
+  skillLibrary=[];
+  selectedCombatSkillId='';
+  setMpSkill(false);
+  skillRender(); skillRefreshCombatSelect();
+  if(typeof autoSave==='function') autoSave();
+}
+function skillAddFromForm(){
+  const hits=[+document.getElementById('skill-hit1')?.value||0,+document.getElementById('skill-hit2')?.value||0,+document.getElementById('skill-hit3')?.value||0].filter(x=>x>0);
+  const sk=normalizeSkill({
+    name:document.getElementById('skill-name')?.value||'Unnamed Skill',
+    type:document.getElementById('skill-type')?.value||'active',
+    effect:document.getElementById('skill-effect')?.value||'damage',
+    value:+document.getElementById('skill-value')?.value||0,
+    mp:+document.getElementById('skill-mp')?.value||0,
+    hits
+  });
+  skillLibrary.push(sk); skillRender(); skillRefreshCombatSelect();
+  if(typeof autoSave==='function') autoSave();
+}
+function skillDelete(id){
+  skillLibrary=skillLibrary.filter(s=>s.id!==id);
+  if(selectedCombatSkillId===id){ selectedCombatSkillId=''; setMpSkill(false); }
+  skillRender(); skillRefreshCombatSelect();
+  if(typeof autoSave==='function') autoSave();
+}
+function skillClone(id){
+  const sk=skillLibrary.find(s=>s.id===id); if(!sk) return;
+  const cp=normalizeSkill({...sk, id:'sk_'+(skillIdSeq++), name:sk.name+' Copy'});
+  skillLibrary.push(cp); skillRender(); skillRefreshCombatSelect();
+}
+function skillEffectLabel(e){ return {damage:'Damage',evasion:'Evasion',ignore_def:'Ignore DEF',weak:'โจมตีจุดอ่อน'}[e]||e; }
+function skillRender(){
+  const body=document.getElementById('skill-list-body'); if(!body) return;
+  body.innerHTML='';
+  if(!skillLibrary.length){ const tr=document.createElement('tr'); tr.innerHTML='<td colspan="7" style="color:var(--text-dim)">// no skills</td>'; body.appendChild(tr); return; }
+  skillLibrary.forEach(sk=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${sk.name}</td><td>${sk.type}</td><td>${skillEffectLabel(sk.effect)}</td><td>${sk.value}%</td><td>${sk.mp}</td><td>${(sk.hits||[]).join('% + ')}%</td><td style="white-space:nowrap"><button class="btn sm" style="width:auto;padding:4px 8px;" onclick="skillClone('${sk.id}')">COPY</button> <button class="btn sm red-btn" style="width:auto;padding:4px 8px;" onclick="skillDelete('${sk.id}')">DEL</button></td>`;
+    body.appendChild(tr);
+  });
+}
+function skillRefreshCombatSelect(){
+  const sel=document.getElementById('combat-active-skill-select'); if(!sel) return;
+  const prev=selectedCombatSkillId || sel.value || '';
+  sel.innerHTML='<option value="">OFF</option>';
+  skillLibrary.filter(sk=>sk.type==='active').forEach(sk=>{
+    const opt=document.createElement('option'); opt.value=sk.id; opt.textContent=`${sk.name} (${skillEffectLabel(sk.effect)} / MP ${sk.mp})`; sel.appendChild(opt);
+  });
+  if([...sel.options].some(o=>o.value===prev)){ sel.value=prev; selectedCombatSkillId=prev; }
+  else { sel.value=''; selectedCombatSkillId=''; }
+  combatSkillChanged();
+}
+function getSelectedCombatSkill(){ return skillLibrary.find(sk=>sk.id===selectedCombatSkillId) || null; }
+function combatSkillChanged(){
+  const sel=document.getElementById('combat-active-skill-select');
+  selectedCombatSkillId = sel ? sel.value : '';
+  const sk=getSelectedCombatSkill();
+  const typeEl=document.getElementById('combat-skill-type'), mpEl=document.getElementById('combat-skill-mp'), effEl=document.getElementById('combat-skill-effect');
+  if(!sk){ if(typeEl) typeEl.textContent='—'; if(mpEl) mpEl.textContent='—'; if(effEl) effEl.textContent='—'; setMpSkill(false); return; }
+  if(typeEl) typeEl.textContent=sk.type;
+  if(mpEl) mpEl.textContent=sk.mp;
+  if(effEl) effEl.textContent=`${skillEffectLabel(sk.effect)} ${sk.value?sk.value+'%':''} / hits ${(sk.hits||[]).join('+')}%`;
+}
+function activeMPSkill(){ return combat && combat.player && combat.player.mpSkillBuff ? combat.player.mpSkillBuff : null; }
+function mpSkillDodgeBonus(){ const sk=activeMPSkill(); return sk && sk.effect==='evasion' ? (+sk.value||0) : 0; }
+function activateMPSkill(p, lines){
+  p.mpSkillBuff=null;
+  if(!selectedMpSkill) return null;
+  const sk=getSelectedCombatSkill();
+  if(!sk){ lines.push('dead','✦ Active Skill ใช้ไม่สำเร็จ: ยังไม่ได้เลือกสกิล'); setMpSkill(false); return null; }
+  if(sk.type!=='active'){ lines.push('dead',`✦ ${sk.name} ไม่ใช่ Active Skill`); setMpSkill(false); return null; }
+  const cost=Math.max(0,Math.ceil(sk.mp||0));
+  if(cost>0 && p.mp<cost){ lines.push('dead',`✦ ${sk.name} ใช้ไม่สำเร็จ: MP ไม่พอ (${p.mp}/${cost})`); setMpSkill(false); return null; }
+  p.mp=Math.max(0,p.mp-cost);
+  p.mpSkillBuff=JSON.parse(JSON.stringify(sk));
+  lines.push('skill',`✦ Active Skill: ${sk.name} → MP -${cost} = ${p.mp}/${p.maxMP} | ${skillEffectLabel(sk.effect)} | hits ${(sk.hits||[]).join('+')}%`);
+  pushSpecialOutcome(`Active ${sk.name}: MP -${cost}`);
+  setMpSkill(false);
+  return p.mpSkillBuff;
+}
+function updateCombatPotionHeal(){
+  const lv=document.getElementById('combat-potion-lv')?.value || 'custom';
+  const heal=document.getElementById('combat-potion-heal'); if(!heal) return;
+  if(lv==='custom') return;
+  heal.value=String((+lv||1)*50);
+}
 
 function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
 function pct(n){ return Math.round(n*10)/10+'%'; }
@@ -1110,6 +1318,7 @@ function setSkill(t){
 }
 function setMpSkill(on){
   selectedMpSkill=!!on;
+  if(selectedMpSkill && !getSelectedCombatSkill()) selectedMpSkill=false;
   const off=document.getElementById('mp-skill-off'), onb=document.getElementById('mp-skill-on');
   if(off) off.classList.toggle('active',!selectedMpSkill);
   if(onb) onb.classList.toggle('active',selectedMpSkill);
@@ -1263,8 +1472,8 @@ function getNormalArmorChance(effDex,mAgi){
   // DEX เท่า AGI => 20%, DEX สูงขึ้น => โดนเกราะน้อยลง, มอนมี Armored Body ค่อยดันให้สูง
   return clamp(35 - 30*ratio - masteryWeakBonus()*0.5, 5, 35);
 }
-function resolvePlayerHitbox(effDex){
-  const mode=selectedHitbox;
+function resolvePlayerHitbox(effDex, modeOverride){
+  const mode=modeOverride || selectedHitbox;
   const mAgi=combat.monster.agi;
   if(mode==='strong') return {hb:0.5, redScale:1.0, label:'ตีเกราะ×0.5',note:'เลือกตีจุดแข็ง/เกราะ: ดาเมจต่ำแต่มั่นคง'};
   if(mode==='weak'){
@@ -1407,9 +1616,9 @@ function applySkill(p, lines){
   };
 }
 
-function calcPlayerDamage(p, effStr, effDex, mult=1){
+function calcPlayerDamage(p, effStr, effDex, mult=1, options={}){
   const d6p=d6();
-  const resolved=resolvePlayerHitbox(effDex);
+  const resolved=resolvePlayerHitbox(effDex, options.forceHitbox||null);
   let hb=resolved.hb, hbLbl=resolved.label;
   const redScale = (resolved.redScale==null?1.0:resolved.redScale);
   let raw=(getTotalDMG(effStr,p.lv,p.rar)*d6p)*mult*manaPressureDmgMult(p.lv, combat.monster.lv);
@@ -1418,6 +1627,7 @@ function calcPlayerDamage(p, effStr, effDex, mult=1){
     return {real:0, raw, d6p, hb, hbLbl, dexUp:false, monsterDodged:true, monsterDodgeChance:mdodge, hitboxNote:resolved.note};
   }
   let pressuredRed=Math.min(0.95, combat.monster.red + manaPressureDefBonus(p.lv, combat.monster.lv));
+  if(options.ignoreDefPct) pressuredRed *= Math.max(0, 1 - options.ignoreDefPct/100);
   let real=Math.max(1,raw*(1-(pressuredRed*redScale))*hb*monsterTakenDamageMult());
   if(combat.monster.shield){ real*=0.5; combat.monster.shield=false; }
   return {real, raw, d6p, hb, hbLbl, dexUp:false, monsterDodged:false, monsterDodgeChance:mdodge, hitboxNote:resolved.note};
@@ -1633,7 +1843,7 @@ function simpleMonsterResultFromDodgeEntry(entry){
   return `M${idx}: ${e}`;
 }
 
-function applyPlayerHit(p, lines, effStr, effDex, mult, label){
+function applyPlayerHit(p, lines, effStr, effDex, mult, label, options={}){
   const attackCost=getAttackMPCost();
   if(!spendMP(attackCost, lines, `${label} / weapon circuit`)){
     lines.push('player',`${label}: MP ไม่พอ วงจรอาวุธทำงานไม่เต็มที่ → DMG -40%`);
@@ -1658,7 +1868,7 @@ function applyPlayerHit(p, lines, effStr, effDex, mult, label){
     }
   }
   equipmentDamage('weapon', Math.max(0.05,0.125*(mult||1))*manaPressureDurabilityMult(p.lv, combat.monster.lv)); // common weapon ~0.125 durability per hit, scaled by force + mana pressure
-  const hit=calcPlayerDamage(p,effStr,effDex,mult);
+  const hit=calcPlayerDamage(p,effStr,effDex,mult,options);
   const prev=combat.monster.hp;
   if(hit.monsterDodged){
     lines.push('dodge',`◇ Monster Evasive: หลบการโจมตีของไอเรนสำเร็จ (${pct(hit.monsterDodgeChance)}) — 0 DMG`);
@@ -1682,6 +1892,26 @@ function applyPlayerHit(p, lines, effStr, effDex, mult, label){
   return hit.real;
 }
 
+function applyMPSkillAttackSequence(p, lines, effStr, effDex, sk, labelBase){
+  if(!sk) return {damage:0,hits:0,used:false};
+  const hits=(sk.hits&&sk.hits.length?sk.hits:[100]).slice(0,3);
+  const opts={};
+  if(sk.effect==='ignore_def') opts.ignoreDefPct=+sk.value||0;
+  if(sk.effect==='weak') opts.forceHitbox='weak';
+  let total=0, count=0;
+  if(sk.effect==='evasion'){
+    lines.push('skill',`✦ ${sk.name}: Evasion +${sk.value}% ใน turn นี้ ไม่มี hit โจมตีเพิ่ม`);
+    return {damage:0,hits:0,used:true};
+  }
+  for(let i=0;i<hits.length && !combat.over;i++){
+    const mult=(+hits[i]||100)/100;
+    const lbl=`✦ ${sk.name} Hit ${i+1}/${hits.length} (${hits[i]}%)`;
+    const dmg=applyPlayerHit(p, lines, effStr, effDex, mult, lbl, opts);
+    total += dmg||0; count++;
+  }
+  return {damage:total,hits:count,used:true};
+}
+
 function doTurn(strategy){
   if(!combat||combat.over) return;
   combat.round++;
@@ -1702,6 +1932,7 @@ function doTurn(strategy){
   const skill=applySkill(p, lines);
   if(skill.msg) lines.push('skill',skill.msg);
   activateImSkill(p, lines);
+  const mpTurnSkill=activateMPSkill(p, lines);
   const effStr=skill.effStr, effAgi=skill.effAgi, effVit=skill.effVit, effDex=skill.effDex;
   const pActs=getActionCount(effAgi,m.agi);
   const mActs=getActionCount(m.agi,effAgi);
@@ -1717,7 +1948,14 @@ function doTurn(strategy){
   if(strategy==='attack'){
     const attackCount=pActs;
     const playerAttack=()=>{
+      let usedMpSkill=false;
       for(let i=1;i<=attackCount && !combat.over;i++){
+        if(mpTurnSkill && !usedMpSkill && ['damage','ignore_def','weak','evasion'].includes(mpTurnSkill.effect)){
+          const res=applyMPSkillAttackSequence(p, lines, effStr, effDex, mpTurnSkill, `Active ${i}/${attackCount}`);
+          summary.playerHits += Math.max(1,res.hits||0); summary.damageToMonster += res.damage||0;
+          usedMpSkill=true;
+          continue;
+        }
         const dmg=applyPlayerHit(p, lines, effStr, effDex, 1.0, `⚔ Attack ${i}/${attackCount}`);
         summary.playerHits++; summary.damageToMonster += dmg||0;
       }
@@ -1729,7 +1967,7 @@ function doTurn(strategy){
         const incomingRaw=monsterDamageForAction(m,action,d6());
         const red=getFinalPlayerReduction(effVit,p.lv);
         const incoming=Math.max(1,incomingRaw*(1-red));
-        const chance=clamp(getCombatDodge(effAgi,m.agi)+masteryDodgeBonus()+imSkillDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
+        const chance=clamp(getCombatDodge(effAgi,m.agi)+masteryDodgeBonus()+imSkillDodgeBonus()+mpSkillDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
         const dodged=rollPct(chance);
         if(dodged){ spendMP(getDodgeMPCost(), lines, `Combat Dodge ${i+1}/${mActs}`); lines.push('dodge',`👟 Combat Dodge ${i+1}/${mActs}: ${pct(chance)} สำเร็จ — 0 DMG`); summary.dodge.push(`M${i+1}:${monsterActionName(action)}=DODGE`); pushMonsterResult(`M${i+1}: ${monsterActionName(action)}→หลบได้`); }
         else if(shouldCombatInstinctAutoDodge(p, incoming)){ const reason=combatInstinctReason(p, incoming); p.im=Math.max(0,p.im-1); p.nextAttackMissPenalty=30; lines.push('dodge',`🛡 Combat Instinct: หลบพลาดแต่แก่นบังคับหลบ (${reason}) → IM -1 = ${p.im}/${p.maxIM} | 0 DMG | การโจมตีถัดไปพลาดเพิ่ม 30%`); summary.dodge.push(`M${i+1}:${monsterActionName(action)}=INSTINCT_DODGE`); pushMonsterResult(`M${i+1}: ${monsterActionName(action)}→หลบได้ด้วย Combat Instinct, IM -1, โจมตีถัดไปพลาด +30%`); }
@@ -1745,7 +1983,7 @@ function doTurn(strategy){
   if(strategy==='dodge'){
     // หลบเต็มตัว: ถ้าหลบการโจมตีจริงได้ จะ counter การันตี 1 ครั้งต่อ action ของไอเรน
     let countersLeft=pActs;
-    const fullChance=clamp(getFullDodge(effAgi,m.agi)+masteryDodgeBonus()+imSkillDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
+    const fullChance=clamp(getFullDodge(effAgi,m.agi)+masteryDodgeBonus()+imSkillDodgeBonus()+mpSkillDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
     for(let i=0;i<monsterActions.length && !combat.over;i++){
       const action=monsterActions[i];
       if(action==='feint'){
@@ -1797,6 +2035,7 @@ function doTurn(strategy){
   }
 
   if(p.imSkillBuff){ lines.push('system',`Inner Mana Skill ${p.imSkillBuff.name} สิ้นสุดผลใน turn นี้`); p.imSkillBuff=null; }
+  if(p.mpSkillBuff){ lines.push('system',`Active Skill ${p.mpSkillBuff.name} สิ้นสุดผลใน turn นี้`); p.mpSkillBuff=null; }
   applyMPRegen(strategy, lines);
   lines.push('system',`HP ไอเรน:${Math.round(p.hp)}/${Math.round(p.maxHP)} | MP:${Math.round(p.mp)}/${Math.round(p.maxMP)} | HP มอน:${Math.round(m.hp)}/${Math.round(m.maxHP)} | IM:${p.im}/${p.maxIM}`);
   if(p.hp/p.maxHP<0.3 && p.hp>0) lines.push('dead',`⚠ HP วิกฤต! ${Math.round(p.hp/p.maxHP*100)}%`);
@@ -1868,11 +2107,8 @@ function updateMPDisplay(){
   if(bar) bar.style.width=Math.max(0,p.mp/p.maxMP*100)+'%';
 }
 function getMPSkillConfig(){
-  return {
-    name:document.getElementById('mp-skill-name')?.value||'MP Skill',
-    cost:+document.getElementById('mp-skill-cost')?.value||0,
-    mult:+document.getElementById('mp-skill-mult')?.value||1
-  };
+  const sk=getSelectedCombatSkill();
+  return sk ? {name:sk.name,cost:sk.mp,mult:((sk.hits&&sk.hits[0])?sk.hits[0]:100)/100} : {name:'MP Skill',cost:0,mult:1};
 }
 
 function updateHPDisplay(){
@@ -1900,11 +2136,13 @@ function updateStatusRow(){
   const p=combat.player; const row=document.getElementById('status-row'); row.innerHTML='';
   if(selectedSkill!=='off'&&p.im>0){ const t=document.createElement('div'); t.className='status-tag active-skill'; t.textContent=`เร่งชีพจร ${selectedSkill.toUpperCase()}`; row.appendChild(t); }
   if(p.activeSkill&&p.activeSkill!=='off'){ const t=document.createElement('div'); t.className='status-tag active-skill'; t.textContent=`active:${p.activeSkill.toUpperCase()}`; row.appendChild(t); }
+  if(selectedMpSkill&&getSelectedCombatSkill()){ const t=document.createElement('div'); t.className='status-tag active-skill'; t.textContent=`next:${getSelectedCombatSkill().name}`; row.appendChild(t); }
 }
 
 function useCombatPotion(){
   if(!combat){ addLog('system','ต้องเริ่มการต่อสู้ก่อนจึงจะใช้โพชันได้'); return; }
-  const lv=Math.max(1,+document.getElementById('combat-potion-lv')?.value||1);
+  const lvVal=document.getElementById('combat-potion-lv')?.value||'1';
+  const lv=lvVal==='custom'?'Custom':Math.max(1,+lvVal||1);
   const healBase=Math.max(0,+document.getElementById('combat-potion-heal')?.value||0);
   const qtyEl=document.getElementById('combat-potion-qty');
   let qty=Math.max(0,+qtyEl?.value||0);
@@ -2574,6 +2812,8 @@ function buildState(){
     selectedHitbox:selectedHitbox||'normal',
     selectedSkill:selectedSkill||'off',
     selectedMpSkill:!!selectedMpSkill,
+    selectedCombatSkillId:selectedCombatSkillId||'',
+    skillLibrary:JSON.parse(JSON.stringify(skillLibrary||[])),
     selectedImSkill:!!selectedImSkill,
     compactCombatLog:JSON.parse(JSON.stringify(compactCombatLog||[]))
   };
@@ -2590,6 +2830,9 @@ function buildApplyState(state){
   if(state.selectedHitbox) setHitbox(state.selectedHitbox);
   if(state.selectedSkill) setSkill(state.selectedSkill);
   selectedMpSkill=!!state.selectedMpSkill;
+  skillLibrary=Array.isArray(state.skillLibrary)?state.skillLibrary.map(normalizeSkill):(skillLibrary&&skillLibrary.length?skillLibrary:skillDefaults().map(normalizeSkill));
+  selectedCombatSkillId=state.selectedCombatSkillId||'';
+  skillRender(); skillRefreshCombatSelect(); setMpSkill(!!state.selectedMpSkill);
   if(typeof setImSkill==='function') setImSkill(!!state.selectedImSkill);
   compactCombatLog=Array.isArray(state.compactCombatLog)?state.compactCombatLog:[];
   // Refresh UI
@@ -2668,7 +2911,7 @@ function enhanceNumberStepper(id, step=1){
 }
 function initQuickSteppers(){
   [
-    'c-lv','m-lv','b-plv','b-mlv','reward-mlv','eq-weapon-lv','eq-armor-lv','ek-mon-lv','inv-add-lv','combat-potion-lv',
+    'c-lv','m-lv','b-plv','b-mlv','reward-mlv','eq-weapon-lv','eq-armor-lv','ek-mon-lv','inv-add-lv',
     'c-str','c-agi','c-dex','c-vit','c-int','c-wis',
     'm-str','m-agi','m-dex','m-vit','m-int',
     'b-str','b-agi','b-vit','b-int','b-dex','b-wis',
@@ -2678,6 +2921,7 @@ function initQuickSteppers(){
 
 // init
 initQuickSteppers();
+skillLibrary=skillDefaults().map(normalizeSkill); skillRender(); skillRefreshCombatSelect(); updateCombatPotionHeal();
 autoFillStats(); calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender(); equipmentRecalc('weapon'); equipmentRecalc('armor'); consRender(); fatigueRender(); expectedCalc(); clearIMPips(15);
 document.querySelectorAll('#im-pips .im-pip').forEach(p=>p.classList.add('filled'));
 </script>
