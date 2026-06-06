@@ -372,19 +372,38 @@
             <div class="section-label">CRYSTAL / WEAPON / REPAIR RULES</div>
             <div class="small-note" style="line-height:1.7">
               <b>Crystal drop starts at monster Lv.10+</b><br>
-              Normal: เศษเสี้ยว 3%, ต่ำ 0.5%<br>
-              Elite: เศษเสี้ยว 9%, ต่ำ 2%<br>
-              Champion: เศษเสี้ยว 100%, ต่ำ 10%, กลาง 1.5%<br>
-              Mini-boss: เศษเสี้ยว x2–4, ต่ำ 50%, กลาง 5%, สูง 1%<br>
-              Boss: เศษเสี้ยว x6–10, ต่ำ x2–4, กลาง 40%, สูง 5%, เศษเสี้ยวแก่น 0.01%<br>
-              ผลึกไร้มานา: ฆ่า 50 ตัวในช่วงระดับเดียวกัน = การันตีเศษเสี้ยว x1
+              Normal: เศษเสี้ยว 1%, ต่ำ 0.2%<br>
+              Elite: เศษเสี้ยว 5%, ต่ำ 1%, กลาง 0.1%<br>
+              Champion: เศษเสี้ยว 100%×1, ต่ำ 10%, กลาง 1.5%, สูง 0.1%<br>
+              Mini-boss: เศษเสี้ยว 100%×2–4, ต่ำ 50%, กลาง 5%, สูง 1%<br>
+              Boss: เศษเสี้ยว 100%×6–10, ต่ำ 100%×2–4, กลาง 40%, สูง 5%, เศษเสี้ยวแก่น 0.01%<br>
+              ผลึกไร้มานา: ต้องมีใน Inventory ก่อน จึงนับ kill; ฆ่าครบ 150 ตัวในช่วงระดับเดียวกัน → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้เศษเสี้ยว x1
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               Weapon ATK = (Lv×1.2)+5 × rarity<br>
               Weapon price = 75 + (Lv²×20); repair base: Common×1, Uncommon×2, Rare×3, Epic×4, Unique×5, Legendary×8<br>
               Crystal price: เศษเสี้ยว = Weapon base×0.25, ต่ำ×5, กลาง×25, สูง×100<br>
+              ผลึกไร้มานา price = ผลึกเศษเสี้ยว×20% = Weapon base×0.05 (ระดับ 1–5 = อุปกรณ์ Lv.10/15/20/25/30)<br>
               Mana Pressure: มอนสูงกว่า 1 Lv = ตีเบาลง 5%, DEF มอน +5%, durability lost +10%, EXP +10%
             </div>
+          </div>
+
+          <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
+            <div class="section-label">BUY EMPTY MANA CRYSTAL</div>
+            <div class="field"><label>LEVEL</label>
+              <select id="empty-crystal-lv" onchange="emptyCrystalUpdatePrice()">
+                <option value="1">ระดับ 1 → อุปกรณ์ Lv.10</option>
+                <option value="2">ระดับ 2 → อุปกรณ์ Lv.15</option>
+                <option value="3">ระดับ 3 → อุปกรณ์ Lv.20</option>
+                <option value="4">ระดับ 4 → อุปกรณ์ Lv.25</option>
+                <option value="5">ระดับ 5 → อุปกรณ์ Lv.30</option>
+              </select>
+            </div>
+            <div class="field"><label>QTY</label><input type="number" id="empty-crystal-qty" value="1" min="1" oninput="emptyCrystalUpdatePrice()"></div>
+            <div class="result-item" style="margin-top:6px;"><span class="r-label">UNIT / TOTAL</span><span class="r-val gold" id="empty-crystal-price-show">—</span></div>
+            <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;margin-top:8px;" onclick="buyEmptyCrystal()">BUY → INVENTORY</button>
+            <div class="small-note">ราคา = ผลึกเศษเสี้ยวมานา ×20% = Weapon base ×0.05. ต้องมีผลึกไร้มานาใน Inventory ก่อนจึงนับ kill; ครบ 150 ตัว → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานา x1</div>
+            <div id="empty-crystal-trace" style="font-family:var(--mono);font-size:0.66rem;color:var(--text-dim);margin-top:8px;background:var(--panel);border:1px solid var(--border);padding:6px;line-height:1.6;">Empty Crystal Trace: —</div>
           </div>
 
           <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
@@ -569,6 +588,7 @@
               <option value="crystal_low">ผลึกมานาเข้มข้นต่ำ</option>
               <option value="crystal_mid">ผลึกมานาเข้มข้นกลาง</option>
               <option value="crystal_high">ผลึกมานาเข้มข้นสูง</option>
+              <option value="empty_crystal">ผลึกไร้มานา</option>
               <option value="core_fragment">เศษเสี้ยวแก่นมานา</option>
               <option value="custom">Custom</option>
             </select>
@@ -2403,6 +2423,7 @@ const INV_TYPE_BASE = {
   crystal_low: { label:'ผลึกมานาเข้มข้นต่ำ', base:0 },
   crystal_mid: { label:'ผลึกมานาเข้มข้นกลาง', base:0 },
   crystal_high: { label:'ผลึกมานาเข้มข้นสูง', base:0 },
+  empty_crystal: { label:'ผลึกไร้มานา', base:0 },
   core_fragment: { label:'เศษเสี้ยวแก่นมานา', base:0 },
   custom: { label:'Custom', base:5 },
 };
@@ -2427,12 +2448,21 @@ function invTypeChanged(){
   else if(type==='crystal_low') name.value='ผลึกมานาเข้มข้นต่ำ';
   else if(type==='crystal_mid') name.value='ผลึกมานาเข้มข้นกลาง';
   else if(type==='crystal_high') name.value='ผลึกมานาเข้มข้นสูง';
+  else if(type==='empty_crystal') name.value='ผลึกไร้มานา';
   else if(type==='core_fragment') name.value='เศษเสี้ยวแก่นมานา';
   else name.value='Custom Item';
 }
 function getCrystalEquipLv(monLv){
   const lv=Math.max(10,+monLv||10);
   return Math.max(10, Math.floor(lv/5)*5);
+}
+function emptyCrystalEquipLv(level){
+  level=Math.max(1,Math.min(5,Math.round(+level||1)));
+  return 10 + ((level-1)*5);
+}
+function emptyCrystalUnitPrice(level){
+  const equipLv=emptyCrystalEquipLv(level);
+  return cleanRoundCopper(getEquipmentBasePrice('weapon', equipLv)*0.05);
 }
 function crystalPriceFactor(type){
   if(type==='crystal_shard') return 0.25;
@@ -2449,6 +2479,7 @@ function getCrystalUnitPrice(type, monLv){
   return cleanRoundCopper(getEquipmentBasePrice('weapon', equipLv)*factor);
 }
 function invUnitPrice(row){
+  if(row.type==='empty_crystal') return emptyCrystalUnitPrice(row.lv);
   const crystalPrice=getCrystalUnitPrice(row.type,row.lv);
   if(crystalPrice!==null) return crystalPrice;
   const rar=INV_RARITY[row.rarity]||INV_RARITY.common;
@@ -2550,6 +2581,7 @@ function invRender(){
   }
   const totalEl=document.getElementById('inv-total');
   if(totalEl) totalEl.textContent=invFormatCopper(invTotal());
+  if(typeof renderEmptyCrystalTrace==='function') renderEmptyCrystalTrace();
 }
 
 
@@ -2563,13 +2595,13 @@ const LOOT_TIER_PRICE = {
   boss:     { commonType:'elite_monster_part', commonName:'ชิ้นส่วนบอส',                commonBase:100,rareType:'elite_rare_material', rareName:'วัตถุดิบหายากบอส',       rareBase:300 },
 };
 const CRYSTAL_DROP = {
-  normal:   { shard:[0.03,1,1],  low:[0.005,1,1] },
-  elite:    { shard:[0.09,1,1],  low:[0.02,1,1] },
-  champion: { shard:[1,1,1],     low:[0.10,1,1],   mid:[0.015,1,1] },
+  normal:   { shard:[0.01,1,1],  low:[0.002,1,1] },
+  elite:    { shard:[0.05,1,1],  low:[0.01,1,1],    mid:[0.001,1,1] },
+  champion: { shard:[1,1,1],     low:[0.10,1,1],   mid:[0.015,1,1], high:[0.001,1,1] },
   miniboss: { shard:[1,2,4],     low:[0.50,1,1],   mid:[0.05,1,1],  high:[0.01,1,1] },
   boss:     { shard:[1,6,10],    low:[1,2,4],      mid:[0.40,1,1],  high:[0.05,1,1],  core:[0.0001,1,1] }
 };
-const CRYSTAL_PITY_KILLS = 50;
+const CRYSTAL_PITY_KILLS = 150;
 let crystalPityState = {};
 const CRYSTAL_TYPE_MAP = {
   shard:{type:'crystal_shard', name:'ผลึกเศษเสี้ยวมานา'},
@@ -2579,6 +2611,45 @@ const CRYSTAL_TYPE_MAP = {
   core:{type:'core_fragment', name:'เศษเสี้ยวแก่นมานา'}
 };
 function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+function emptyCrystalLevelFromEquipLv(equipLv){
+  const lv=Math.floor((Math.max(10,+equipLv||10)-10)/5)+1;
+  if(lv<1 || lv>5) return null;
+  return lv;
+}
+function emptyCrystalCount(level){
+  level=Math.max(1,Math.min(5,Math.round(+level||1)));
+  return inventoryRows.reduce((sum,r)=>sum + (r.type==='empty_crystal' && Math.round(+r.lv||0)===level ? Math.max(0,+r.qty||0) : 0),0);
+}
+function consumeEmptyCrystal(level, qty){
+  level=Math.max(1,Math.min(5,Math.round(+level||1)));
+  qty=Math.max(0,Math.round(+qty||0));
+  let left=qty;
+  for(let i=inventoryRows.length-1;i>=0 && left>0;i--){
+    const r=inventoryRows[i];
+    if(r.type==='empty_crystal' && Math.round(+r.lv||0)===level){
+      const take=Math.min(left,Math.max(0,+r.qty||0));
+      r.qty=(+r.qty||0)-take;
+      left-=take;
+      if(r.qty<=0) inventoryRows.splice(i,1);
+    }
+  }
+  if(qty-left>0) invRender();
+  return qty-left;
+}
+function renderEmptyCrystalTrace(){
+  const el=document.getElementById('empty-crystal-trace');
+  if(!el) return;
+  const lines=[];
+  for(let lv=1;lv<=5;lv++){
+    const equipLv=emptyCrystalEquipLv(lv);
+    const key=`L${equipLv}`;
+    const count=Math.max(0,Math.round(crystalPityState[key]||0));
+    const stock=emptyCrystalCount(lv);
+    const status=stock>0 ? `${count}/${CRYSTAL_PITY_KILLS}` : `${count}/${CRYSTAL_PITY_KILLS} paused`;
+    lines.push(`Lv.${lv} Eq.${equipLv}: ${status} | stock ${stock}`);
+  }
+  el.textContent='Empty Crystal Trace: '+lines.join('  •  ');
+}
 function rollCrystalDrops(tier, monLv, kills){
   const results=[];
   monLv=+monLv||0; kills=Math.max(0,Math.round(+kills||0));
@@ -2595,31 +2666,77 @@ function rollCrystalDrops(tier, monLv, kills){
       results.push({key,type:map.type,name:map.name,lv:monLv,qty,source:'drop'});
     }
   });
-  // ผลึกไร้มานา guarantee: every 50 kills in the same equipment level range gives 1 shard.
+  // ผลึกไร้มานา guarantee: only counts when a matching Empty Mana Crystal exists in inventory.
   const equipLv=getCrystalEquipLv(monLv);
-  const pityKey=`L${equipLv}`;
-  crystalPityState[pityKey]=(crystalPityState[pityKey]||0)+kills;
-  const guaranteed=Math.floor(crystalPityState[pityKey]/CRYSTAL_PITY_KILLS);
-  crystalPityState[pityKey]=crystalPityState[pityKey]%CRYSTAL_PITY_KILLS;
-  if(guaranteed>0){
-    const map=CRYSTAL_TYPE_MAP.shard;
-    const existing=results.find(r=>r.key==='shard' && r.type===map.type);
-    if(existing){ existing.qty += guaranteed; existing.guaranteed=(existing.guaranteed||0)+guaranteed; }
-    else results.push({key:'shard',type:map.type,name:map.name,lv:monLv,qty:guaranteed,guaranteed,source:'pity'});
+  const emptyLv=emptyCrystalLevelFromEquipLv(equipLv);
+  if(emptyLv){
+    const pityKey=`L${equipLv}`;
+    let count=Math.max(0,Math.round(crystalPityState[pityKey]||0));
+    let remaining=kills;
+    let available=emptyCrystalCount(emptyLv);
+    let guaranteed=0;
+    while(remaining>0 && available>0){
+      const need=CRYSTAL_PITY_KILLS-count;
+      if(remaining>=need){
+        remaining-=need;
+        count=0;
+        guaranteed++;
+        available--;
+      }else{
+        count+=remaining;
+        remaining=0;
+      }
+    }
+    crystalPityState[pityKey]=count;
+    if(guaranteed>0){
+      const consumed=consumeEmptyCrystal(emptyLv, guaranteed);
+      const map=CRYSTAL_TYPE_MAP.shard;
+      const existing=results.find(r=>r.key==='shard' && r.type===map.type);
+      if(existing){ existing.qty += consumed; existing.guaranteed=(existing.guaranteed||0)+consumed; existing.emptyConsumed=(existing.emptyConsumed||0)+consumed; }
+      else results.push({key:'shard',type:map.type,name:map.name,lv:monLv,qty:consumed,guaranteed:consumed,emptyConsumed:consumed,source:'pity'});
+      if(guaranteed>consumed){
+        crystalPityState[pityKey]=0;
+      }
+    }
   }
+  renderEmptyCrystalTrace();
   return results;
 }
 function addCrystalDropsToInventory(tier, monLv, kills){
   const drops=rollCrystalDrops(tier, monLv, kills);
   let total=0;
   drops.forEach(d=>{
-    total += invPush({name:d.name,type:d.type,rarity:'common',lv:d.lv,qty:d.qty,base:0});
+    if((+d.qty||0)>0) total += invPush({name:d.name,type:d.type,rarity:'common',lv:d.lv,qty:d.qty,base:0});
   });
+  renderEmptyCrystalTrace();
+  if(typeof autoSave==='function') autoSave();
   return {drops,total};
 }
 function crystalDropSummary(drops){
   if(!drops || !drops.length) return 'Crystal MISS';
-  return drops.map(d=>`${d.name} Lv.${d.lv} ×${d.qty}${d.guaranteed?` (การันตี ${d.guaranteed})`:''}`).join(', ');
+  return drops.map(d=>`${d.name} Lv.${d.lv} ×${d.qty}${d.guaranteed?` (การันตี ${d.guaranteed}${d.emptyConsumed?`, ใช้ไร้มานา ${d.emptyConsumed}`:''})`:''}`).join(', ');
+}
+function emptyCrystalUpdatePrice(){
+  const lv=Math.max(1,Math.min(5,+document.getElementById('empty-crystal-lv')?.value||1));
+  const qty=Math.max(1,+document.getElementById('empty-crystal-qty')?.value||1);
+  const unit=emptyCrystalUnitPrice(lv);
+  const equipLv=emptyCrystalEquipLv(lv);
+  const el=document.getElementById('empty-crystal-price-show');
+  if(el) el.textContent=`Lv.${lv} / Eq Lv.${equipLv}: ${invFormatCopper(unit)} ×${qty} = ${invFormatCopper(unit*qty)}`;
+}
+function buyEmptyCrystal(){
+  const lv=Math.max(1,Math.min(5,+document.getElementById('empty-crystal-lv')?.value||1));
+  const qty=Math.max(1,+document.getElementById('empty-crystal-qty')?.value||1);
+  const unit=emptyCrystalUnitPrice(lv);
+  const cost=unit*qty;
+  if(cost>moneyCopper){ moneyLog(`✘ เงินไม่พอซื้อผลึกไร้มานา: ${invFormatCopper(cost)}`,'var(--red)'); return; }
+  moneyCopper-=cost;
+  updateMoneyDisplay();
+  invPush({name:`ผลึกไร้มานา ระดับ ${lv}`,type:'empty_crystal',rarity:'common',lv,qty,base:0});
+  moneyLog(`ซื้อผลึกไร้มานา ระดับ ${lv} ×${qty} = ${invFormatCopper(cost)}`,'var(--red)');
+  if(sessionState.active){ sessionState.consumableCost=(sessionState.consumableCost||0)+cost; sessionState.log.push(`BUY EMPTY CRYSTAL Lv.${lv} x${qty}: ${invFormatCopper(cost)}`); sessionRender(); }
+  emptyCrystalUpdatePrice();
+  if(typeof autoSave==='function') autoSave();
 }
 
 let sessionState={active:false,startLv:0,startExpTotal:0,kills:0,exp:0,lootValue:0,repairCost:0,consumableCost:0,restMinutes:0,log:[]};
@@ -2959,6 +3076,7 @@ function buildState(){
     expState:JSON.parse(JSON.stringify(expState||{})),
     moneyCopper:moneyCopper||0,
     inventoryRows:JSON.parse(JSON.stringify(inventoryRows||[])),
+    crystalPityState:JSON.parse(JSON.stringify(crystalPityState||{})),
     consumables:JSON.parse(JSON.stringify(consumables||[])),
     sessionState:JSON.parse(JSON.stringify(sessionState||{})),
     coreFatigue:coreFatigue||0,
@@ -2977,6 +3095,7 @@ function buildApplyState(state){
   if(state.expState){ expState=state.expState; }
   if(typeof state.moneyCopper==='number') moneyCopper=state.moneyCopper;
   inventoryRows=Array.isArray(state.inventoryRows)?state.inventoryRows:[];
+  crystalPityState=(state.crystalPityState && typeof state.crystalPityState==='object')?state.crystalPityState:{};
   consumables=Array.isArray(state.consumables)?state.consumables:[];
   if(state.sessionState) sessionState=state.sessionState;
   coreFatigue=typeof state.coreFatigue==='number'?state.coreFatigue:0;
