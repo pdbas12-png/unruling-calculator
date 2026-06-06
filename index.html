@@ -1286,6 +1286,7 @@ function skillClone(id){
   const sk=skillLibrary.find(s=>s.id===id); if(!sk) return;
   const cp=normalizeSkill({...sk, id:'sk_'+(skillIdSeq++), name:sk.name+' Copy'});
   skillLibrary.push(cp); skillRender(); skillRefreshCombatSelect();
+  buildQueueAutoSave('skills');
 }
 function skillEffectLabel(e){ return {damage:'Damage',evasion:'Evasion',ignore_def:'Ignore DEF',weak:'โจมตีจุดอ่อน'}[e]||e; }
 function skillRender(){
@@ -1313,6 +1314,7 @@ function getSelectedCombatSkill(){ return skillLibrary.find(sk=>sk.id===selected
 function combatSkillChanged(){
   const sel=document.getElementById('combat-active-skill-select');
   selectedCombatSkillId = sel ? sel.value : '';
+  buildQueueAutoSave('skill-select');
   const sk=getSelectedCombatSkill();
   const typeEl=document.getElementById('combat-skill-type'), mpEl=document.getElementById('combat-skill-mp'), effEl=document.getElementById('combat-skill-effect');
   if(!sk){ if(typeEl) typeEl.textContent='—'; if(mpEl) mpEl.textContent='—'; if(effEl) effEl.textContent='—'; setMpSkill(false); return; }
@@ -2873,6 +2875,63 @@ function buildStatus(msg,color){
   const el=document.getElementById('build-save-status');
   if(el){ el.textContent=msg; el.style.color=color||'var(--text-dim)'; }
 }
+const BUILD_STORAGE_KEY='unrulingWorldBuild';
+let autoSaveTimer=null;
+let suppressAutoSave=false;
+function buildStorageSet(state){
+  try{
+    localStorage.setItem(BUILD_STORAGE_KEY, JSON.stringify(state));
+    return true;
+  }catch(e){
+    buildStatus('✘ Save ไม่สำเร็จ: browser/localStorage ไม่อนุญาต หรือพื้นที่เต็ม','var(--red)');
+    return false;
+  }
+}
+function buildStorageGet(){
+  try{ return localStorage.getItem(BUILD_STORAGE_KEY); }
+  catch(e){ buildStatus('✘ Load ไม่สำเร็จ: browser/localStorage ไม่อนุญาต','var(--red)'); return null; }
+}
+function buildAutoSaveNow(reason='auto'){
+  if(suppressAutoSave) return;
+  const ok=buildStorageSet(buildState());
+  if(ok && reason!=='silent'){ buildStatus(`✓ Auto Save (${reason})`,'var(--green)'); }
+}
+function buildQueueAutoSave(reason='change'){
+  if(suppressAutoSave) return;
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer=setTimeout(()=>buildAutoSaveNow(reason),350);
+}
+function autoSave(){ buildQueueAutoSave('auto'); }
+function buildTryAutoLoad(){
+  const raw=buildStorageGet();
+  if(!raw) return false;
+  try{
+    suppressAutoSave=true;
+    buildApplyState(JSON.parse(raw));
+    suppressAutoSave=false;
+    buildStatus('✓ Auto Load จาก Quick Save สำเร็จ','var(--green)');
+    return true;
+  }catch(e){
+    suppressAutoSave=false;
+    buildStatus('✘ Auto Load พัง: '+e.message,'var(--red)');
+    return false;
+  }
+}
+function buildEnableAutoSave(){
+  document.addEventListener('input', e=>{
+    const el=e.target;
+    if(!el || !el.id || el.id==='build-import-file') return;
+    buildQueueAutoSave('input');
+  });
+  document.addEventListener('change', e=>{
+    const el=e.target;
+    if(!el || !el.id || el.id==='build-import-file') return;
+    buildQueueAutoSave('change');
+  });
+  window.addEventListener('beforeunload', ()=>{
+    try{ localStorage.setItem(BUILD_STORAGE_KEY, JSON.stringify(buildState())); }catch(e){}
+  });
+}
 function buildCollectInputs(){
   const inputs={};
   document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el=>{
@@ -2936,14 +2995,17 @@ function buildApplyState(state){
   buildStatus(`✓ โหลด build สำเร็จ (${state.savedAt||'unknown time'})`,'var(--green)');
 }
 function buildQuickSave(){
-  localStorage.setItem('unrulingWorldBuild', JSON.stringify(buildState()));
-  buildStatus('✓ Quick Save สำเร็จ ลง localStorage','var(--green)');
+  if(buildStorageSet(buildState())) buildStatus('✓ Quick Save สำเร็จ ลง localStorage','var(--green)');
 }
 function buildQuickLoad(){
-  const raw=localStorage.getItem('unrulingWorldBuild');
+  const raw=buildStorageGet();
   if(!raw){ buildStatus('✘ ยังไม่มี Quick Save','var(--red)'); return; }
-  try{ buildApplyState(JSON.parse(raw)); }
-  catch(e){ buildStatus('✘ Quick Load พัง: '+e.message,'var(--red)'); }
+  try{
+    suppressAutoSave=true;
+    buildApplyState(JSON.parse(raw));
+    suppressAutoSave=false;
+  }
+  catch(e){ suppressAutoSave=false; buildStatus('✘ Quick Load พัง: '+e.message,'var(--red)'); }
 }
 function buildExportFile(){
   const data=JSON.stringify(buildState(),null,2);
@@ -3018,6 +3080,8 @@ initQuickSteppers();
 skillLibrary=skillDefaults().map(normalizeSkill); skillRender(); skillRefreshCombatSelect(); updateCombatPotionHeal();
 autoFillStats(); calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender(); equipmentRecalc('weapon'); equipmentRecalc('armor'); consRender(); fatigueRender(); expectedCalc(); clearIMPips(15);
 document.querySelectorAll('#im-pips .im-pip').forEach(p=>p.classList.add('filled'));
+buildTryAutoLoad();
+buildEnableAutoSave();
 </script>
 </body>
 </html>
