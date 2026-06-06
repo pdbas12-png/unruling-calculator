@@ -1843,6 +1843,34 @@ function simpleMonsterResultFromDodgeEntry(entry){
   return `M${idx}: ${e}`;
 }
 
+
+function addCombatExpOnKill(tier, lv, lines){
+  // Combat Sim kill EXP: use the same EXP formula as Reward Tracker.
+  // Normal = Lv×10×tier; if monster is above player level, +10% EXP per level.
+  // If player is more than 5 levels above monster, EXP = 0.
+  const playerLv = (combat && combat.player && combat.player.lv) ? combat.player.lv : (expState.lv || 1);
+  const expOne = (typeof rewardCalcExpOne === 'function')
+    ? rewardCalcExpOne(lv, tier, playerLv)
+    : Math.round((lv * 10 * ((typeof EXP_TIER_MULT !== 'undefined' && EXP_TIER_MULT[tier]) ? EXP_TIER_MULT[tier] : 1)) * (lv > playerLv ? (1 + 0.10 * (lv - playerLv)) : 1));
+  if(expOne > 0){
+    addEXPDirect(expOne);
+    const pressure = lv > playerLv ? ` | EXP bonus +${(lv-playerLv)*10}%` : '';
+    lines.push('system', `✨ Combat EXP: +${expOne} EXP (Lv.${lv} ${tier})${pressure}`);
+  } else {
+    lines.push('system', `✨ Combat EXP: 0 EXP (level penalty: ผู้เล่นสูงกว่ามอนเกิน 5 Lv)`);
+  }
+  if(activeTurnSummary){
+    activeTurnSummary.specialOutcomes = activeTurnSummary.specialOutcomes || [];
+    activeTurnSummary.specialOutcomes.push(`EXP +${expOne}`);
+  }
+  if(sessionState && sessionState.active){
+    sessionState.exp += expOne;
+    sessionState.log.push(`COMBAT EXP: Lv.${lv} ${tier} = ${expOne}`);
+    if(typeof sessionRender === 'function') sessionRender();
+  }
+  return expOne;
+}
+
 function applyPlayerHit(p, lines, effStr, effDex, mult, label, options={}){
   const attackCost=getAttackMPCost();
   if(!spendMP(attackCost, lines, `${label} / weapon circuit`)){
@@ -1886,6 +1914,7 @@ function applyPlayerHit(p, lines, effStr, effDex, mult, label, options={}){
     pushMonsterResult('ถูกสังหารก่อนโต้กลับ');
     const lootReport=getKillTrashReport(combat.tier, combat.monster.lv);
     lines.push('system',`🧾 ${lootReport.text}`);
+    addCombatExpOnKill(combat.tier, combat.monster.lv, lines);
     addCombatLootToInventory(combat.tier, combat.monster.lv, lines);
     combat.over=true;
   }
