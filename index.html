@@ -187,7 +187,7 @@
             <button class="btn sm red-btn" style="width:auto;padding:6px 14px;" onclick="resetEXP()">↺</button>
           </div>
           <div style="font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);margin-top:6px;">
-            สูตร: EXP ต่อเลเวล = 50 × lv²  |  รวมสะสม: <span id="exp-total-show" style="color:var(--cyan)">0</span>
+            สูตร: Lv.1–9 = 50×lv² | Lv.10+ = 80×lv²  |  รวมสะสม: <span id="exp-total-show" style="color:var(--cyan)">0</span>
           </div>
         </div>
 
@@ -341,7 +341,7 @@
               <button class="btn sm gold-btn" style="width:auto;padding:7px 10px;" onclick="rewardAddLoot()">+ LOOT</button>
               <button class="btn sm gold-btn" style="width:auto;padding:7px 10px;" onclick="rewardAddAll()">+ BOTH</button>
             </div>
-            <div class="small-note">EXP = Lv×10×Tier. Normal/Elite loot: Common 100%, Rare 10%. Add EXP จะหัก durability ดาบตาม HIT/KILL × 0.125 base (8 hit ≈ 1 durability/kill).</div>
+            <div class="small-note">EXP = Lv×10×Tier (+10% ต่อเลเวลเมื่อมอนสูงกว่า). Normal/Elite loot: Common 100%, Rare 10%. Add EXP จะหัก durability ดาบตาม HIT/KILL × 0.125 base (8 hit ≈ 1 durability/kill) และแรงดันมานา +10% durability/lv.</div>
             <div id="reward-log" style="font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);margin-top:8px;height:70px;overflow-y:auto;background:var(--panel);border:1px solid var(--border);padding:6px;"></div>
           </div>
 
@@ -362,17 +362,18 @@
             <div class="section-label">CRYSTAL / WEAPON / REPAIR RULES</div>
             <div class="small-note" style="line-height:1.7">
               <b>Crystal drop starts at monster Lv.10+</b><br>
-              Normal: เศษเสี้ยว 1%, ต่ำ 0.2%<br>
-              Elite: เศษเสี้ยว 5%, ต่ำ 1%, กลาง 0.1%<br>
-              Champion: เศษเสี้ยว 100%, ต่ำ 10%, กลาง 1.5%, สูง 0.1%<br>
-              Mini-boss: เศษเสี้ยว x2–4, ต่ำ 50%, กลาง 5%, สูง 0.5%<br>
-              Boss: เศษเสี้ยว x6–10, ต่ำ x2–4, กลาง 30%, สูง 3%, เศษเสี้ยวแก่น 0.01%<br>
-              ผลึกไร้มานา: ฆ่า 150 ตัวในช่วงระดับเดียวกัน = การันตีเศษเสี้ยว x1
+              Normal: เศษเสี้ยว 3%, ต่ำ 0.5%<br>
+              Elite: เศษเสี้ยว 9%, ต่ำ 2%<br>
+              Champion: เศษเสี้ยว 100%, ต่ำ 10%, กลาง 1.5%<br>
+              Mini-boss: เศษเสี้ยว x2–4, ต่ำ 50%, กลาง 5%, สูง 1%<br>
+              Boss: เศษเสี้ยว x6–10, ต่ำ x2–4, กลาง 40%, สูง 5%, เศษเสี้ยวแก่น 0.01%<br>
+              ผลึกไร้มานา: ฆ่า 50 ตัวในช่วงระดับเดียวกัน = การันตีเศษเสี้ยว x1
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               Weapon ATK = (Lv×1.2)+5 × rarity<br>
-              Repair base rarity: Common×1, Uncommon×2, Rare×3, Epic×4, Unique×5, Legendary×8<br>
-              Crystal price: เศษเสี้ยว = Weapon base×0.25, ต่ำ×5, กลาง×25, สูง×100
+              Weapon price = 75 + (Lv²×20); repair base: Common×1, Uncommon×2, Rare×3, Epic×4, Unique×5, Legendary×8<br>
+              Crystal price: เศษเสี้ยว = Weapon base×0.25, ต่ำ×5, กลาง×25, สูง×100<br>
+              Mana Pressure: มอนสูงกว่า 1 Lv = ตีเบาลง 5%, DEF มอน +5%, durability lost +10%, EXP +10%
             </div>
           </div>
 
@@ -444,7 +445,7 @@
             </div>
           </div>
         </div>
-        <p class="small-note">Combat auto-wear: reward tracker weapon hit≈0.125 base (8 hit≈1 durability/kill); combat sim hit wear remains action-based. Armor hit 1.5%/heavy 2.5%/guard 2.5–3.5%. ค่า wear ถูกหารด้วย DurPool ตาม rarity (Common 100, Uncommon 200, Rare 300, Epic 400, Unique 500, Legendary 800). Repair ใช้สูตร Repair Base × Durability Lost% × 0.8</p>
+        <p class="small-note">Combat auto-wear: reward tracker weapon hit≈0.125 base (8 hit≈1 durability/kill); mana pressure adds +10% durability loss per monster level above player; combat sim hit wear remains action-based. Armor hit 1.5%/heavy 2.5%/guard 2.5–3.5%. ค่า wear ถูกหารด้วย DurPool ตาม rarity (Common 100, Uncommon 200, Rare 300, Epic 400, Unique 500, Legendary 800). Repair ใช้สูตร Repair Base × Durability Lost% × 0.8</p>
       </div>
 
       <!-- Consumable / Rest / Expected Kills -->
@@ -634,9 +635,9 @@
         </div>
         <div class="field"><label>RARITY</label>
           <select id="b-rarity">
-            <option value="1.0">Common</option><option value="1.1">Uncommon</option>
-            <option value="1.25">Rare</option><option value="1.4">Epic</option>
-            <option value="1.6">Unique</option><option value="2.0">Legendary</option>
+            <option value="1.0">Common</option><option value="1.15">Uncommon</option>
+            <option value="1.3">Rare</option><option value="1.5">Epic</option>
+            <option value="1.7">Unique</option><option value="2.0">Legendary</option>
           </select>
         </div>
         <div class="divider"></div>
@@ -817,10 +818,10 @@
         <table class="beh-table">
           <tr><th>Tier</th><th>STAT ×</th><th>HP ×</th><th>DMG ×</th><th>DEF ×</th><th>ยาก ×</th><th>EXP reward</th></tr>
           <tr><td class="t-n">Normal</td><td>×1.00</td><td>×1.0</td><td>×1.0</td><td>×1.0</td><td>baseline</td><td>×1</td></tr>
-          <tr><td class="t-e">Elite</td><td>×1.05</td><td>×1.8</td><td>×1.25</td><td>×1.15</td><td>~×2</td><td>×3</td></tr>
-          <tr><td class="t-c">Champion</td><td>×1.10</td><td>×2.8</td><td>×1.45</td><td>×1.25</td><td>~×4</td><td>×10</td></tr>
-          <tr><td class="t-m">Mini Boss</td><td>×1.15</td><td>×4.5</td><td>×1.7</td><td>×1.4</td><td>~×7</td><td>×20</td></tr>
-          <tr><td class="t-b">Boss</td><td>×1.20</td><td>×8.0</td><td>×2.0</td><td>×1.6</td><td>~×15–20</td><td>×50</td></tr>
+          <tr><td class="t-e">Elite</td><td>×1.15</td><td>×1.8</td><td>×1.25</td><td>×1.15</td><td>~×2</td><td>×3</td></tr>
+          <tr><td class="t-c">Champion</td><td>×1.25</td><td>×2.8</td><td>×1.45</td><td>×1.25</td><td>~×4</td><td>×10</td></tr>
+          <tr><td class="t-m">Mini Boss</td><td>×1.35</td><td>×4.5</td><td>×1.7</td><td>×1.4</td><td>~×7</td><td>×20</td></tr>
+          <tr><td class="t-b">Boss</td><td>×1.50</td><td>×8.0</td><td>×2.0</td><td>×1.6</td><td>~×15–20</td><td>×50</td></tr>
         </table>
         <p class="small-note" style="margin-top:8px">* Tier สูงเพิ่ม stat ดิบใหม่: Elite +15%, Champion +25%, Mini Boss +35%, Boss +50% เพื่อให้ต่างจาก Normal ชัดขึ้น แต่ยังไม่คูณจน AGI/DEX พังระบบ hit/dodge</p>
       </div>
@@ -887,6 +888,15 @@ function fmtRange(x){ return '×'+x.toFixed(2); }
 function d6(){ return dmgRange(); } // legacy name: now damage range 0.90–1.10
 function fmt(n){ return Math.round(n*10)/10; }
 function fmtPct(n){ return Math.round(n*1000)/10+'%'; }
+function getManaPressureDiff(playerLv, monsterLv){ return Math.max(0, (+monsterLv||0)-(+playerLv||0)); }
+function manaPressureDmgMult(playerLv, monsterLv){ return Math.max(0.10, 1 - 0.05*getManaPressureDiff(playerLv, monsterLv)); }
+function manaPressureDefBonus(playerLv, monsterLv){ return 0.05*getManaPressureDiff(playerLv, monsterLv); }
+function manaPressureDurabilityMult(playerLv, monsterLv){ return 1 + 0.10*getManaPressureDiff(playerLv, monsterLv); }
+function manaPressureText(playerLv, monsterLv){
+  const diff=getManaPressureDiff(playerLv, monsterLv);
+  if(diff<=0) return 'Mana Pressure: none';
+  return `Mana Pressure: +${diff} Lv → DMG -${diff*5}%, Monster DEF +${diff*5}%, Durability lost +${diff*10}%, EXP +${diff*10}%`;
+}
 function tierStatMult(tierKey){ return (TIER[tierKey]&&TIER[tierKey].stat)||1; }
 function tierEffectiveStat(stat,tierKey){ return stat * tierStatMult(tierKey); }
 function tierDamageFromStat(str,lv,tierKey){
@@ -957,7 +967,7 @@ function getInnerManaMax(wis,lv){ return Math.max(1, Math.round(wis*getCoreStage
 
 // ══ EXP SYSTEM ══
 let expState={ lv:1, current:0 };
-function expNeeded(lv){ return 50*lv*lv; }
+function expNeeded(lv){ lv=+lv||1; return (lv>=10?80:50)*lv*lv; }
 function syncExpLv(){
   const lv=+document.getElementById('c-lv').value||1;
   expState.lv=lv; expState.current=0;
@@ -1047,8 +1057,14 @@ function calcAll(){
   document.getElementById('mr-def').textContent=fmtPct(mRed);
   const badge=document.getElementById('m-tier-badge');
   badge.innerHTML=`<span class="tier-badge ${t.cls}">${t.label}</span>`;
-  const pVsM=getRealDMG(pDMG,mRed,1.0);
+  const pressureDiff=getManaPressureDiff(plv, mlv);
+  const pressuredPDMG=pDMG*manaPressureDmgMult(plv, mlv);
+  const pressuredMRed=Math.min(0.95, mRed+manaPressureDefBonus(plv, mlv));
+  const pVsM=getRealDMG(pressuredPDMG,pressuredMRed,1.0);
   const mVsP=getRealDMG(mDMG,pRed,1.0);
+  if(pressureDiff>0){
+    document.getElementById('est-hits-player').title=manaPressureText(plv, mlv);
+  }
   document.getElementById('est-hits-player').textContent='~'+Math.ceil(mHP/pVsM)+' hit';
   document.getElementById('est-hits-monster').textContent='~'+Math.ceil(pHP/mVsP)+' hit';
 }
@@ -1333,6 +1349,7 @@ function initCombat(){
   addLog('system',`ไอเรน HP:${Math.round(pHP)} DMG:${fmt(pDMG)} ขั้น:${coreStage} IM:${maxIM}/${maxIM}`);
   addLog('system',`มอนสเตอร์ HP:${Math.round(mHP)} DMG:${fmt(mDMG)} AGI_eff:${fmt(mAgiEff)}`);
   if(abilities.length) addLog('system',`Monster Abilities: ${mAbilityLabels(abilities).join(', ')}`);
+  if(getManaPressureDiff(plv, mlv)>0) addLog('system', manaPressureText(plv, mlv));
   if(combat.monster.shield) addLog('dodge',`🛡 ${t.label} มี Shield! การโจมตีแรก DMG -50%`);
   setCombatButtonsDisabled(false);
 }
@@ -1395,12 +1412,13 @@ function calcPlayerDamage(p, effStr, effDex, mult=1){
   const resolved=resolvePlayerHitbox(effDex);
   let hb=resolved.hb, hbLbl=resolved.label;
   const redScale = (resolved.redScale==null?1.0:resolved.redScale);
-  let raw=(getTotalDMG(effStr,p.lv,p.rar)*d6p)*mult;
+  let raw=(getTotalDMG(effStr,p.lv,p.rar)*d6p)*mult*manaPressureDmgMult(p.lv, combat.monster.lv);
   const mdodge=monsterDodgeChance();
   if(mdodge>0 && rollPct(mdodge)){
     return {real:0, raw, d6p, hb, hbLbl, dexUp:false, monsterDodged:true, monsterDodgeChance:mdodge, hitboxNote:resolved.note};
   }
-  let real=Math.max(1,raw*(1-(combat.monster.red*redScale))*hb*monsterTakenDamageMult());
+  let pressuredRed=Math.min(0.95, combat.monster.red + manaPressureDefBonus(p.lv, combat.monster.lv));
+  let real=Math.max(1,raw*(1-(pressuredRed*redScale))*hb*monsterTakenDamageMult());
   if(combat.monster.shield){ real*=0.5; combat.monster.shield=false; }
   return {real, raw, d6p, hb, hbLbl, dexUp:false, monsterDodged:false, monsterDodgeChance:mdodge, hitboxNote:resolved.note};
 }
@@ -1631,7 +1649,7 @@ function applyPlayerHit(p, lines, effStr, effDex, mult, label){
     p.nextAttackMissPenalty=0;
     if(rollPct(pen)){
       spendMP(getAttackMPCost(), lines, `${label} / weapon circuit (เสียจังหวะ)`);
-      equipmentDamage('weapon', Math.max(0.03,0.12*(mult||1)));
+      equipmentDamage('weapon', Math.max(0.03,0.12*(mult||1))*manaPressureDurabilityMult(p.lv, combat.monster.lv));
       lines.push('dodge',`${label}: เสียจังหวะจาก Combat Instinct → โจมตีพลาด (${pct(pen)})`);
       pushPlayerOutcome(label, {hbLbl:'พลาด'}, 0);
       return 0;
@@ -1639,7 +1657,7 @@ function applyPlayerHit(p, lines, effStr, effDex, mult, label){
       lines.push('system',`${label}: คุมจังหวะกลับมาได้ ผ่านโอกาสพลาดเพิ่ม ${pct(pen)}`);
     }
   }
-  equipmentDamage('weapon', Math.max(0.05,0.25*(mult||1))); // common weapon ~0.25% per hit, scaled by force
+  equipmentDamage('weapon', Math.max(0.05,0.125*(mult||1))*manaPressureDurabilityMult(p.lv, combat.monster.lv)); // common weapon ~0.125 durability per hit, scaled by force + mana pressure
   const hit=calcPlayerDamage(p,effStr,effDex,mult);
   const prev=combat.monster.hp;
   if(hit.monsterDodged){
@@ -2211,13 +2229,13 @@ const LOOT_TIER_PRICE = {
   boss:     { commonType:'elite_monster_part', commonName:'ชิ้นส่วนบอส',                commonBase:100,rareType:'elite_rare_material', rareName:'วัตถุดิบหายากบอส',       rareBase:300 },
 };
 const CRYSTAL_DROP = {
-  normal:   { shard:[0.01,1,1],  low:[0.002,1,1] },
-  elite:    { shard:[0.05,1,1],  low:[0.01,1,1],   mid:[0.001,1,1] },
-  champion: { shard:[1,1,1],     low:[0.10,1,1],   mid:[0.015,1,1], high:[0.001,1,1] },
-  miniboss: { shard:[1,2,4],     low:[0.50,1,1],   mid:[0.05,1,1],  high:[0.005,1,1] },
-  boss:     { shard:[1,6,10],    low:[1,2,4],      mid:[0.30,1,1],  high:[0.03,1,1],  core:[0.0001,1,1] }
+  normal:   { shard:[0.03,1,1],  low:[0.005,1,1] },
+  elite:    { shard:[0.09,1,1],  low:[0.02,1,1] },
+  champion: { shard:[1,1,1],     low:[0.10,1,1],   mid:[0.015,1,1] },
+  miniboss: { shard:[1,2,4],     low:[0.50,1,1],   mid:[0.05,1,1],  high:[0.01,1,1] },
+  boss:     { shard:[1,6,10],    low:[1,2,4],      mid:[0.40,1,1],  high:[0.05,1,1],  core:[0.0001,1,1] }
 };
-const CRYSTAL_PITY_KILLS = 150;
+const CRYSTAL_PITY_KILLS = 50;
 let crystalPityState = {};
 const CRYSTAL_TYPE_MAP = {
   shard:{type:'crystal_shard', name:'ผลึกเศษเสี้ยวมานา'},
@@ -2243,7 +2261,7 @@ function rollCrystalDrops(tier, monLv, kills){
       results.push({key,type:map.type,name:map.name,lv:monLv,qty,source:'drop'});
     }
   });
-  // ผลึกไร้มานา guarantee: every 150 kills in the same equipment level range gives 1 shard.
+  // ผลึกไร้มานา guarantee: every 50 kills in the same equipment level range gives 1 shard.
   const equipLv=getCrystalEquipLv(monLv);
   const pityKey=`L${equipLv}`;
   crystalPityState[pityKey]=(crystalPityState[pityKey]||0)+kills;
@@ -2310,10 +2328,13 @@ function rewardApplyWeaponWear(kills){
   if(!apply) return 0;
   const hitsPerKill = Math.max(0, +document.getElementById('reward-hits-per-kill')?.value || 0);
   const baseWearPerHit = 0.125; // Reward tracker baseline: 8 hit ≈ 1 durability per normal kill
-  const totalBaseWear = kills * hitsPerKill * baseWearPerHit;
+  const monLv=+document.getElementById('reward-mlv')?.value||1;
+  const playerLv=+document.getElementById('c-lv')?.value||expState.lv||1;
+  const wearMult=manaPressureDurabilityMult(playerLv, monLv);
+  const totalBaseWear = kills * hitsPerKill * baseWearPerHit * wearMult;
   if(totalBaseWear>0){
     equipmentDamage('weapon', totalBaseWear);
-    const msg = `WEAPON WEAR: ${kills} kill × ${hitsPerKill} hit × ${baseWearPerHit}% = ${Math.round(totalBaseWear*10)/10}% base`;
+    const msg = `WEAPON WEAR: ${kills} kill × ${hitsPerKill} hit × ${baseWearPerHit} dur × pressure ${wearMult.toFixed(2)} = ${Math.round(totalBaseWear*10)/10} durability`;
     rewardLog(msg,'var(--purple)');
     if(sessionState.active){ sessionState.log.push(msg); sessionRender(); }
   }
@@ -2405,18 +2426,18 @@ function sessionCopy(){ navigator.clipboard?.writeText(sessionText()); const el=
 function clampNumber(v,min,max){ return Math.max(min,Math.min(max,+v||0)); }
 const EQ_RARITY = {
   common:{price:1, atk:1, dur:100, label:'Common'},
-  uncommon:{price:1.15, atk:1.15, dur:200, label:'Uncommon'},
-  rare:{price:1.3, atk:1.3, dur:300, label:'Rare'},
-  epic:{price:1.5, atk:1.5, dur:400, label:'Epic'},
-  unique:{price:1.7, atk:1.7, dur:500, label:'Unique'},
-  legendary:{price:2, atk:2, dur:800, label:'Legendary'}
+  uncommon:{price:2, atk:1.15, dur:200, label:'Uncommon'},
+  rare:{price:3, atk:1.3, dur:300, label:'Rare'},
+  epic:{price:4, atk:1.5, dur:400, label:'Epic'},
+  unique:{price:5, atk:1.7, dur:500, label:'Unique'},
+  legendary:{price:8, atk:2, dur:800, label:'Legendary'}
 };
 function cleanRoundCopper(v){ return Math.max(1, Math.round(v/10)*10); }
 function getEquipmentRarity(kind){ const key=document.getElementById(`eq-${kind}-rarity`)?.value||'common'; return EQ_RARITY[key]||EQ_RARITY.common; }
 function getEquipmentBasePrice(kind,lv){
   lv=Math.max(1,+lv||1);
-  // Weapon anchor formula currently preserves early canon anchors: Lv1≈100, Lv5≈600, Lv10≈2000. Armor = 80% weapon price.
-  const weaponBase=(155/9)*lv*lv + (65/3)*lv + (550/9);
+  // Weapon Price = 75 + (Weapon Lv² × 20). Armor = 80% weapon price.
+  const weaponBase=75 + (lv*lv*20);
   const base=kind==='armor'?weaponBase*0.8:weaponBase;
   return cleanRoundCopper(base);
 }
@@ -2437,7 +2458,7 @@ function equipmentRecalc(kind){
   if(meta){
     const base=getEquipmentBasePrice(kind,lv);
     const atkTxt=kind==='weapon'?` / ATK ${getEquipmentAtk(lv,rarityKey)}`:'';
-    meta.textContent=`Base ${base}C × rarity ${r.price}${atkTxt} / DurPool ${r.dur} (${r.label})`;
+    meta.textContent=`Base ${base}C × repair ${r.price}${atkTxt} / DurPool ${r.dur} (${r.label})`;
   }
   equipmentRender();
 }
@@ -2495,7 +2516,7 @@ function expectedCalc(){
   const kills=expOne>0?Math.ceil(need/expOne):Infinity;
   const hours=isFinite(kills)?kills/rate:Infinity;
   const txt = expOne>0
-    ? `Player Lv.${playerLv}\nNeed: ${need} EXP\nMonster: Lv.${monLv} ${tier}\nEXP/kill: ${expOne}\nKills needed: ${kills}\nEst time: ${Math.floor(hours)}h ${Math.round((hours%1)*60)}m @ ${rate}/hr`
+    ? `Player Lv.${playerLv}\nNeed: ${need} EXP\nMonster: Lv.${monLv} ${tier}\nEXP/kill: ${expOne}\n${manaPressureText(playerLv, monLv)}\nKills needed: ${kills}\nEst time: ${Math.floor(hours)}h ${Math.round((hours%1)*60)}m @ ${rate}/hr`
     : `Player Lv.${playerLv}\nMonster Lv.${monLv} ${tier}\nEXP/kill: 0\nเหตุผล: level penalty`;
   const box=document.getElementById('expected-box'); if(box) box.textContent=txt;
 }
