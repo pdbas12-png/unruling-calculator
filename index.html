@@ -876,7 +876,7 @@
           <button class="hb-btn sel active" id="hb-normal" onclick="setHitbox('normal')">◈ ธรรมดา<br>สุ่ม hitbox</button>
           <button class="hb-btn weak" id="hb-weak" onclick="setHitbox('weak')">◎ เล็งจุดอ่อน<br>×2 / DEF×0.5</button>
         </div>
-        <p class="small-note">ไม่มีปุ่มเล็งจุดตายโดยตรงแล้ว: จุดตายจะสุ่มเกิดเฉพาะตอนเลือกเล็งจุดอ่อนเท่านั้น (DEX=AGI → จุดตาย 5%) | ธรรมดา = สุ่มเกราะ/ปกติ/จุดอ่อน | จุดอ่อน DEF×0.5 | จุดตาย DEF×0.2 | Armored Body ทำให้โอกาสโดนเกราะ +50%</p>
+        <p class="small-note">ไม่มีปุ่มเล็งจุดตายโดยตรงแล้ว: จุดตายจะสุ่มเกิดเฉพาะตอนเลือกเล็งจุดอ่อนเท่านั้น (DEX=AGI → จุดตาย 5%) | จุดอ่อน DEF×0.5 และนับ Weak Point Hit | Base Normal 2 hit, tier สูงขึ้นคูณตามความเก่ง | โจมตีจุดอ่อนซ้ำ DMG +0.1 ต่อครั้ง สูงสุด ×2.5 | ครบจำนวนติด [อ่อนแอ] | Stagger เช็กหลังตีโดนเท่านั้น</p>
         <button class="btn red-btn" onclick="resetCombat()" style="margin-top:6px">↺ รีเซต</button>
       </div>
     </div>
@@ -985,6 +985,52 @@ function manaPressureText(playerLv, monsterLv){
   const diff=getManaPressureDiff(playerLv, monsterLv);
   if(diff<=0) return 'Mana Pressure: none';
   return `Mana Pressure: +${diff} Lv → DMG -${diff*5}%, Monster DEF +${diff*5}%, Durability lost +${diff*10}%, EXP +${diff*10}%`;
+}
+
+// ══ WEAK POINT / STAGGER SYSTEM ══
+function weakTierMultiplier(tierKey){ return {normal:1, elite:2, champion:4, miniboss:7, boss:15}[tierKey] || 1; }
+function weakPointRequired(tierKey){ return 2 * weakTierMultiplier(tierKey); }
+function weakPointRepeatBonus(prevWeakHits){ return Math.min(0.5, Math.max(0, prevWeakHits||0) * 0.1); }
+function isWeakPointResolved(resolved){ return !!(resolved && resolved.isWeakPoint); }
+function monsterWeakenedDamageMult(){ return (combat && combat.monster && combat.monster.weakened) ? 0.90 : 1.0; }
+function monsterWeakenedEvasionPenalty(){ return (combat && combat.monster && combat.monster.weakened) ? 15 : 0; }
+function monsterStaggerEvasionPenalty(){ return (combat && combat.monster && combat.monster.staggered) ? 30 : 0; }
+function staggerChance(attackerStr, defenderStr, defenderVit, skillImpactMult=1){
+  const impact = Math.max(0, (+attackerStr||0) * (skillImpactMult||1));
+  const anchor = Math.max(+defenderStr||0, +defenderVit||0);
+  const full = (+defenderStr||0) + (+defenderVit||0);
+  if(impact <= anchor) return {chance:0, heavy:false, impact, anchor, full};
+  if(impact > full) return {chance:100, heavy:true, impact, anchor, full};
+  const denom = Math.max(1, full - anchor);
+  const chance = clamp(20 + 80 * ((impact - anchor) / denom), 20, 99);
+  return {chance, heavy:false, impact, anchor, full};
+}
+function applyWeakPointOnHit(hit, lines){
+  if(!combat || !combat.monster || !hit || !hit.isWeakPoint || hit.real<=0) return;
+  const m=combat.monster;
+  m.weakHits=(m.weakHits||0)+1;
+  const req=m.weakReq || weakPointRequired(combat.tier);
+  lines.push('system', `◎ Weak Point Hit: ${m.weakHits}/${req}`);
+  if(!m.weakened && m.weakHits>=req){
+    m.weakened=true;
+    lines.push('dead', `✦ มอนสเตอร์ติดสถานะ [อ่อนแอ] → Damage -10%, Evasion -15%`);
+    pushSpecialOutcome(`Monster Weakened by Weak Point ${m.weakHits}/${req}`);
+  }
+}
+function applyStaggerOnHit(attackerStr, defenderStr, defenderVit, skillImpactMult, lines, label){
+  if(!combat || !combat.monster) return false;
+  const s=staggerChance(attackerStr, defenderStr, defenderVit, skillImpactMult);
+  if(s.chance<=0) return false;
+  const vuln = combat.monster.weakened ? 10 : 0;
+  const chance = Math.min(100, s.chance + vuln);
+  if(rollPct(chance)){
+    combat.monster.staggered=true;
+    const tag=s.heavy?'Heavy Stagger':'Stagger';
+    lines.push('dodge', `✦ ${tag}: ${label||'โจมตี'} ทำให้มอนสเตอร์เสียจังหวะ (${pct(chance)}) → Evasion ครั้งถัดไป -30%`);
+    pushSpecialOutcome(`${tag} ${pct(chance)}`);
+    return true;
+  }
+  return false;
 }
 function tierStatMult(tierKey){ return (TIER[tierKey]&&TIER[tierKey].stat)||1; }
 function tierEffectiveStat(stat,tierKey){ return stat * tierStatMult(tierKey); }
@@ -1406,7 +1452,7 @@ function mAbilityLabels(list){ return (list||[]).map(a=>{
   const label=MONSTER_ABILITY[key]?.label || key;
   return `${label} ${val}%`;
 }); }
-function monsterDodgeChance(){ return mAbilityValue('evasive'); }
+function monsterDodgeChance(){ return clamp(mAbilityValue('evasive') - monsterWeakenedEvasionPenalty() - monsterStaggerEvasionPenalty(), 0, 100); }
 function monsterAccuracyPenalty(){ return mAbilityValue('accurate'); }
 function monsterArmorWearMult(){ return 1 + mAbilityValue('armor_breaker')/100; }
 function monsterDamageMult(){ return 1 + mAbilityValue('brutal')/100; }
@@ -1475,15 +1521,15 @@ function getNormalArmorChance(effDex,mAgi){
 function resolvePlayerHitbox(effDex, modeOverride){
   const mode=modeOverride || selectedHitbox;
   const mAgi=combat.monster.agi;
-  if(mode==='strong') return {hb:0.5, redScale:1.0, label:'ตีเกราะ×0.5',note:'เลือกตีจุดแข็ง/เกราะ: ดาเมจต่ำแต่มั่นคง'};
+  if(mode==='strong') return {hb:0.5, redScale:1.0, label:'ตีเกราะ×0.5',note:'เลือกตีจุดแข็ง/เกราะ: ดาเมจต่ำแต่มั่นคง', isWeakPoint:false};
   if(mode==='weak'){
     const totalChance=getWeakAimChance(effDex,mAgi);
     const deathChance=Math.min(getWeakModeDeathChance(effDex,mAgi), totalChance);
     const weakChance=Math.max(0, totalChance-deathChance);
     const r=Math.random()*100;
-    if(r<deathChance) return {hb:2.5, redScale:0.2, label:`เล็งจุดอ่อน→จุดตาย×2.5 / DEF×0.2 (จุดตาย ${pct(deathChance)} | สำเร็จรวม ${pct(totalChance)})`,note:'เล็งจุดอ่อนแม่นจนเข้าแนวจุดตาย: ทะลุ damage reduction เหลือ 20%'};
-    if(r<totalChance) return {hb:2.0, redScale:0.5, label:`จุดอ่อน×2.0 / DEF×0.5 (จุดอ่อน ${pct(weakChance)} | สำเร็จรวม ${pct(totalChance)})`,note:'เล็งจุดอ่อนสำเร็จ: ทะลุ damage reduction 50%'};
-    return {hb:0.5, redScale:1.0, label:`เล็งจุดอ่อนพลาด→โดนเกราะ×0.5 (${pct(100-totalChance)})`,note:'เล็งจุดอ่อนพลาด: ดาบไปติดเกราะ/จุดแข็ง'};
+    if(r<deathChance) return {hb:2.5, redScale:0.2, label:`เล็งจุดอ่อน→จุดตาย×2.5 / DEF×0.2 (จุดตาย ${pct(deathChance)} | สำเร็จรวม ${pct(totalChance)})`,note:'เล็งจุดอ่อนแม่นจนเข้าแนวจุดตาย: ทะลุ damage reduction เหลือ 20%', isWeakPoint:true};
+    if(r<totalChance) return {hb:2.0, redScale:0.5, label:`จุดอ่อน×2.0 / DEF×0.5 (จุดอ่อน ${pct(weakChance)} | สำเร็จรวม ${pct(totalChance)})`,note:'เล็งจุดอ่อนสำเร็จ: ทะลุ damage reduction 50%', isWeakPoint:true};
+    return {hb:0.5, redScale:1.0, label:`เล็งจุดอ่อนพลาด→โดนเกราะ×0.5 (${pct(100-totalChance)})`,note:'เล็งจุดอ่อนพลาด: ดาบไปติดเกราะ/จุดแข็ง', isWeakPoint:false};
   }
   // Normal attack: ไม่เล็งจุดเฉพาะ จึงสุ่มตำแหน่งปะทะ
   let armorChance=getNormalArmorChance(effDex,mAgi)*monsterArmorCoverageMult();
@@ -1492,15 +1538,15 @@ function resolvePlayerHitbox(effDex, modeOverride){
   if(armorChance+weakChance>90) weakChance=Math.max(0,90-armorChance);
   const normalChance=100-armorChance-weakChance;
   const r=Math.random()*100;
-  if(r<armorChance) return {hb:0.5, redScale:1.0, label:`ธรรมดา→โดนเกราะ×0.5 (${pct(armorChance)})`,note:'โจมตีธรรมดาโดนเกราะ/จุดแข็ง'};
-  if(r<armorChance+normalChance) return {hb:1.0, redScale:1.0, label:`ธรรมดา×1.0 (${pct(normalChance)})`,note:'โจมตีธรรมดาเข้าเป้าปกติ'};
-  return {hb:2.0, redScale:0.5, label:`ธรรมดา→เฉี่ยวจุดอ่อน×2.0 / DEF×0.5 (${pct(weakChance)})`,note:'โจมตีธรรมดาเผลอเข้าแนวจุดอ่อน: ทะลุ damage reduction 50%'};
+  if(r<armorChance) return {hb:0.5, redScale:1.0, label:`ธรรมดา→โดนเกราะ×0.5 (${pct(armorChance)})`,note:'โจมตีธรรมดาโดนเกราะ/จุดแข็ง', isWeakPoint:false};
+  if(r<armorChance+normalChance) return {hb:1.0, redScale:1.0, label:`ธรรมดา×1.0 (${pct(normalChance)})`,note:'โจมตีธรรมดาเข้าเป้าปกติ', isWeakPoint:false};
+  return {hb:2.0, redScale:0.5, label:`ธรรมดา→เฉี่ยวจุดอ่อน×2.0 / DEF×0.5 (${pct(weakChance)})`,note:'โจมตีธรรมดาเผลอเข้าแนวจุดอ่อน: ทะลุ damage reduction 50%', isWeakPoint:true};
 }
 
 function monsterDamageForAction(m, action, rangeRoll){
   if(action==='feint') return 0;
   let mult=action==='heavy'?1.5:1.0;
-  return (m.dmg*rangeRoll)*mult*monsterDamageMult();
+  return (m.dmg*rangeRoll)*mult*monsterDamageMult()*monsterWeakenedDamageMult();
 }
 
 function initCombat(){
@@ -1540,7 +1586,8 @@ function initCombat(){
     monster:{lv:mlv,str:mStrEff,agi:mAgiEff,vit:mVitEff,dex:mdex,int:mint,
              dmg:mDMG,maxHP:mHP,hp:mHP,red:mRed,
              shield:mtier==='champion'||mtier==='boss',
-             abilities:abilities},
+             abilities:abilities,
+             weakHits:0, weakReq:weakPointRequired(mtier), weakened:false, staggered:false},
     over:false
   };
 
@@ -1557,6 +1604,7 @@ function initCombat(){
   addLog('system',`Dodge: Combat ${pct(initCombatDodge)} | Full ${pct(initFullDodge)}${initAccurate>0?` [Accurate -${pct(initAccurate)}]`:''}`);
   addLog('system',`ไอเรน HP:${Math.round(pHP)} DMG:${fmt(pDMG)} ขั้น:${coreStage} IM:${maxIM}/${maxIM}`);
   addLog('system',`มอนสเตอร์ HP:${Math.round(mHP)} DMG:${fmt(mDMG)} AGI_eff:${fmt(mAgiEff)}`);
+  addLog('system',`Weak Point Required: ${weakPointRequired(mtier)} hit(s) → [อ่อนแอ] | Repeat weak damage +0.1/hit cap ×2.5`);
   if(abilities.length) addLog('system',`Monster Abilities: ${mAbilityLabels(abilities).join(', ')}`);
   if(getManaPressureDiff(plv, mlv)>0) addLog('system', manaPressureText(plv, mlv));
   if(combat.monster.shield) addLog('dodge',`🛡 ${t.label} มี Shield! การโจมตีแรก DMG -50%`);
@@ -1621,16 +1669,25 @@ function calcPlayerDamage(p, effStr, effDex, mult=1, options={}){
   const resolved=resolvePlayerHitbox(effDex, options.forceHitbox||null);
   let hb=resolved.hb, hbLbl=resolved.label;
   const redScale = (resolved.redScale==null?1.0:resolved.redScale);
+  const weakBonus = isWeakPointResolved(resolved) ? weakPointRepeatBonus(combat.monster.weakHits||0) : 0;
+  if(weakBonus>0){
+    const oldHb=hb;
+    hb=Math.min(2.5, hb + weakBonus);
+    hbLbl += ` | ซ้ำจุดอ่อน +${weakBonus.toFixed(1)} → ×${hb.toFixed(1)}`;
+  }
   let raw=(getTotalDMG(effStr,p.lv,p.rar)*d6p)*mult*manaPressureDmgMult(p.lv, combat.monster.lv);
+  const wasStaggered=!!(combat.monster && combat.monster.staggered);
   const mdodge=monsterDodgeChance();
   if(mdodge>0 && rollPct(mdodge)){
-    return {real:0, raw, d6p, hb, hbLbl, dexUp:false, monsterDodged:true, monsterDodgeChance:mdodge, hitboxNote:resolved.note};
+    if(wasStaggered) combat.monster.staggered=false;
+    return {real:0, raw, d6p, hb, hbLbl, dexUp:false, monsterDodged:true, monsterDodgeChance:mdodge, hitboxNote:resolved.note, isWeakPoint:false, wasStaggered};
   }
+  if(wasStaggered) combat.monster.staggered=false;
   let pressuredRed=Math.min(0.95, combat.monster.red + manaPressureDefBonus(p.lv, combat.monster.lv));
   if(options.ignoreDefPct) pressuredRed *= Math.max(0, 1 - options.ignoreDefPct/100);
   let real=Math.max(1,raw*(1-(pressuredRed*redScale))*hb*monsterTakenDamageMult());
   if(combat.monster.shield){ real*=0.5; combat.monster.shield=false; }
-  return {real, raw, d6p, hb, hbLbl, dexUp:false, monsterDodged:false, monsterDodgeChance:mdodge, hitboxNote:resolved.note};
+  return {real, raw, d6p, hb, hbLbl, dexUp:false, monsterDodged:false, monsterDodgeChance:mdodge, hitboxNote:resolved.note, isWeakPoint:isWeakPointResolved(resolved), weakBonus, wasStaggered};
 }
 function dealMonsterDamage(p, m, action, effVit, lines, modeLabel){
   if(action==='feint'){
@@ -1909,6 +1966,9 @@ function applyPlayerHit(p, lines, effStr, effDex, mult, label, options={}){
   lines.push('player',`${label} [${hit.hbLbl}]: ${fmt(hit.raw)}×${(1-combat.monster.red).toFixed(2)}×${hit.hb}${hideNote} = ${fmt(hit.real)} DMG`);
   pushPlayerOutcome(label, hit, hit.real);
   if(hit.hitboxNote) lines.push('system',`Hitbox: ${hit.hitboxNote}`);
+  if(hit.wasStaggered) lines.push('system',`Stagger ถูกใช้ไปกับการโจมตีครั้งนี้ → มอนสเตอร์ตั้งหลักใหม่`);
+  applyWeakPointOnHit(hit, lines);
+  applyStaggerOnHit(effStr, combat.monster.str, combat.monster.vit, Math.max(1, mult||1), lines, label);
   if(prev>0&&combat.monster.hp<=0){
     lines.push('win',`✦ มอนสเตอร์ถูกสังหาร! Inner Mana ไม่ฟื้นจากการฆ่า → ${p.im}/${p.maxIM}`);
     pushMonsterResult('ถูกสังหารก่อนโต้กลับ');
@@ -2166,6 +2226,11 @@ function updateStatusRow(){
   if(selectedSkill!=='off'&&p.im>0){ const t=document.createElement('div'); t.className='status-tag active-skill'; t.textContent=`เร่งชีพจร ${selectedSkill.toUpperCase()}`; row.appendChild(t); }
   if(p.activeSkill&&p.activeSkill!=='off'){ const t=document.createElement('div'); t.className='status-tag active-skill'; t.textContent=`active:${p.activeSkill.toUpperCase()}`; row.appendChild(t); }
   if(selectedMpSkill&&getSelectedCombatSkill()){ const t=document.createElement('div'); t.className='status-tag active-skill'; t.textContent=`next:${getSelectedCombatSkill().name}`; row.appendChild(t); }
+  if(combat.monster){
+    const w=document.createElement('div'); w.className='status-tag'; w.style.borderColor='var(--purple)'; w.style.color='var(--purple)'; w.textContent=`Weak ${combat.monster.weakHits||0}/${combat.monster.weakReq||weakPointRequired(combat.tier)}`; row.appendChild(w);
+    if(combat.monster.weakened){ const t=document.createElement('div'); t.className='status-tag debuff'; t.textContent='มอนอ่อนแอ'; row.appendChild(t); }
+    if(combat.monster.staggered){ const t=document.createElement('div'); t.className='status-tag debuff'; t.textContent='มอนชะงัก'; row.appendChild(t); }
+  }
 }
 
 function useCombatPotion(){
