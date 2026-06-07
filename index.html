@@ -780,6 +780,7 @@
               <option value="pierce">Pierce — เจาะ DEF ไอเรน</option>
               <option value="brutal">Brutal — Damage มอนเพิ่ม</option>
               <option value="thick_hide">Thick Hide — ลดดาเมจที่มอนได้รับ</option>
+              <option value="hp_percent">HP Boost — HP มอนเพิ่ม</option>
             </select>
             <input type="number" id="m-ability-1-val" class="m-ability-val" value="10" min="0" step="1" style="background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.72rem;outline:none;" placeholder="%">
           </div>
@@ -793,6 +794,7 @@
               <option value="pierce">Pierce — เจาะ DEF ไอเรน</option>
               <option value="brutal">Brutal — Damage มอนเพิ่ม</option>
               <option value="thick_hide">Thick Hide — ลดดาเมจที่มอนได้รับ</option>
+              <option value="hp_percent">HP Boost — HP มอนเพิ่ม</option>
             </select>
             <input type="number" id="m-ability-2-val" class="m-ability-val" value="10" min="0" step="1" style="background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.72rem;outline:none;" placeholder="%">
           </div>
@@ -806,11 +808,12 @@
               <option value="pierce">Pierce — เจาะ DEF ไอเรน</option>
               <option value="brutal">Brutal — Damage มอนเพิ่ม</option>
               <option value="thick_hide">Thick Hide — ลดดาเมจที่มอนได้รับ</option>
+              <option value="hp_percent">HP Boost — HP มอนเพิ่ม</option>
             </select>
             <input type="number" id="m-ability-3-val" class="m-ability-val" value="10" min="0" step="1" style="background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.72rem;outline:none;" placeholder="%">
           </div>
         </div>
-        <p class="small-note">* เลือกได้สูงสุด 3 ability แล้วใส่ % เอง เช่น Evasive 15 = มอนหลบ +15%, Pierce 20 = เจาะ DEF 20 percentage points, Brutal 25 = Damage ×1.25</p>
+        <p class="small-note">* เลือกได้สูงสุด 3 ability แล้วใส่ % เอง เช่น Evasive 15 = มอนหลบ +15%, Pierce 20 = เจาะ DEF 20 percentage points, Brutal 25 = Damage ×1.25, HP Boost 30 = Max HP ×1.30</p>
         <button class="btn gold-btn" onclick="initCombat()">⟨ เริ่มการต่อสู้ ⟩</button>
       </div>
 
@@ -1202,7 +1205,7 @@ function calcAll(){
   const mStrEff=tierEffectiveStat(mstr,mtier); const mAgiEff=tierEffectiveStat(magi,mtier); const mVitEff=tierEffectiveStat(mvit,mtier);
   const mDMG=tierDamageFromStat(mstr,mlv,mtier);
   const mRed=tierReductionFromStat(mvit,mlv,mtier);
-  const mHP=getMonsterHP(mstr,mvit,mlv,mtier);
+  const mHP=Math.round(getMonsterHP(mstr,mvit,mlv,mtier) * monsterHpAbilityMultFromList(abilities));
   document.getElementById('mr-str').textContent=fmt(mStrEff);
   document.getElementById('mr-agi').textContent=fmt(mAgiEff);
   document.getElementById('mr-vit').textContent=fmt(mVitEff);
@@ -1438,9 +1441,10 @@ const MONSTER_ABILITY = {
   pierce: { label:'Pierce', desc:'เจาะ DEF/ลด reduction' },
   brutal: { label:'Brutal', desc:'Damage มอนสเตอร์เพิ่ม' },
   thick_hide: { label:'Thick Hide', desc:'รับดาเมจจากไอเรนลดลง' },
+  hp_percent: { label:'HP Boost', desc:'Max HP มอนสเตอร์เพิ่ม' },
 };
 function normalizeMAbilityKey(key){
-  const map={evasive_10:'evasive', armor_coverage_50:'armor_coverage', accurate_10:'accurate', pierce_10:'pierce', brutal_15:'brutal', thick_hide_10:'thick_hide'};
+  const map={evasive_10:'evasive', armor_coverage_50:'armor_coverage', accurate_10:'accurate', pierce_10:'pierce', brutal_15:'brutal', thick_hide_10:'thick_hide', hp_boost:'hp_percent', hp_plus:'hp_percent'};
   return map[key] || key;
 }
 function getSelectedMonsterAbilities(){
@@ -1479,6 +1483,11 @@ function monsterAccuracyPenalty(){ return mAbilityValue('accurate'); }
 function monsterArmorWearMult(){ return 1 + mAbilityValue('armor_breaker')/100; }
 function monsterDamageMult(){ return 1 + mAbilityValue('brutal')/100; }
 function monsterTakenDamageMult(){ return Math.max(0.05, 1 - mAbilityValue('thick_hide')/100); }
+function monsterHpAbilityMultFromList(list){
+  const v=(list||[]).filter(a=>normalizeMAbilityKey(a.key)==='hp_percent').reduce((sum,a)=>sum+(+a.value||0),0);
+  return Math.max(0.05, 1 + v/100);
+}
+function monsterHpAbilityMult(){ return monsterHpAbilityMultFromList(getMAbilityList()); }
 function adjustedReductionForMonsterAttack(red){ return Math.max(0, red - mAbilityValue('pierce')/100); }
 function monsterArmorCoverageMult(){ return 1 + mAbilityValue('armor_coverage')/100; }
 function getMonsterMastery(){
@@ -1596,7 +1605,7 @@ function initCombat(){
   const pDMG=getTotalDMG(pstr,plv,prar);
   const mDMG=tierDamageFromStat(mstr,mlv,mtier);
   const mRed=tierReductionFromStat(mvit,mlv,mtier);
-  const mHP=getMonsterHP(mstr,mvit,mlv,mtier);
+  const mHP=Math.round(getMonsterHP(mstr,mvit,mlv,mtier) * monsterHpAbilityMultFromList(abilities));
   const coreStage=getCoreStage(plv);
   const maxIM=getInnerManaMax(pwis,plv);
 
@@ -1628,6 +1637,8 @@ function initCombat(){
   addLog('system',`มอนสเตอร์ HP:${Math.round(mHP)} DMG:${fmt(mDMG)} AGI_eff:${fmt(mAgiEff)}`);
   addLog('system',`Weak Point Required: ${weakPointRequired(mtier)} hit(s) → [อ่อนแอ] | Repeat weak damage +0.1/hit cap ×2.5`);
   if(abilities.length) addLog('system',`Monster Abilities: ${mAbilityLabels(abilities).join(', ')}`);
+  const hpBoostInit = abilities.filter(a=>normalizeMAbilityKey(a.key)==='hp_percent').reduce((sum,a)=>sum+(+a.value||0),0);
+  if(hpBoostInit>0) addLog('system',`HP Boost: Max HP ×${(1+hpBoostInit/100).toFixed(2)}`);
   if(getManaPressureDiff(plv, mlv)>0) addLog('system', manaPressureText(plv, mlv));
   if(combat.monster.shield) addLog('dodge',`🛡 ${t.label} มี Shield! การโจมตีแรก DMG -50%`);
   setCombatButtonsDisabled(false);
