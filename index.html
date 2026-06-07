@@ -162,7 +162,7 @@
 <div class="wrap">
   <div class="header">
     <h1>⟨ UNRULING WORLD ⟩</h1>
-    <p>COMBAT SYSTEM v3.5 — Action Bar + No Direct Deathspot</p>
+    <p>COMBAT SYSTEM v3.5 — Log Pulse/Status Fix</p>
     <div class="header-line"></div>
   </div>
 
@@ -542,6 +542,12 @@
         </div>
         <div class="small-note">แสดงแบบย่อ: 1 Silver = 1,000 Copper | 1 Gold = 1,000 Silver | 1 Platinum = 1,000 Gold</div>
         <div id="money-log" style="font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);margin-top:8px;height:44px;overflow-y:auto;background:var(--bg);border:1px solid var(--border);padding:6px;"></div>
+      </div>
+
+      <div class="card gold" style="grid-column:1/-1">
+        <div class="card-title gold">EMPTY MANA CRYSTAL TRACE</div>
+        <div id="empty-crystal-trace-inv" style="font-family:var(--mono);font-size:0.70rem;color:var(--text-dim);background:var(--bg);border:1px solid var(--border);padding:8px;line-height:1.7;">Empty Crystal Trace: —</div>
+        <div class="small-note">นับจาก Combat Sim และ Reward/Montage เฉพาะเมื่อมีผลึกไร้มานาระดับตรงกับช่วงมอนใน Inventory | ครบ 150 kill → ใช้ผลึกไร้มานา 1 ก้อน แล้วเพิ่มผลึกเศษเสี้ยวมานา 1 ก้อน</div>
       </div>
 
       <div class="card purple" style="grid-column:1/-1">
@@ -1036,7 +1042,7 @@ function checkMonsterWeakened(lines){
   if(!m.weakened && (m.weakHits||0)>=req && hpPct<0.25){
     m.weakened=true;
     lines.push('dead', `✦ มอนสเตอร์ติดสถานะ [อ่อนแอ] → Weak ${m.weakHits}/${req}, HP ${pct(hpPct*100)} <25%, Damage -10%, Evasion -15%`);
-    pushSpecialOutcome(`Monster Weakened by Weak Point ${m.weakHits}/${req} + HP<25%`);
+    pushSpecialOutcome(`สถานะ: Weak Point ${m.weakHits}/${req} + HP<25% → มอนสเตอร์ติด [อ่อนแอ]`);
   }
 }
 function applyWeakPointOnHit(hit, lines){
@@ -1058,7 +1064,7 @@ function applyStaggerOnHit(attackerStr, defenderStr, defenderVit, skillImpactMul
     combat.monster.staggered=true;
     const tag=s.heavy?'Heavy Stagger':'Stagger';
     lines.push('dodge', `✦ ${tag}: ${label||'โจมตี'} ทำให้มอนสเตอร์เสียจังหวะ (${pct(chance)}) → Evasion ครั้งถัดไป -30%`);
-    pushSpecialOutcome(`${tag} ${pct(chance)}`);
+    pushSpecialOutcome(`สถานะ: ${tag} ${pct(chance)}`);
     return true;
   }
   return false;
@@ -1695,7 +1701,6 @@ function applySkill(p, lines){
     addCoreFatigue(1);
     p.pulseTurnCount=0;
     upkeepMsg=`ครบ 6 turn → IM -1 = ${p.im}/${p.maxIM}`;
-    pushSpecialOutcome(`เร่งชีพจร ${selectedSkill.toUpperCase()}: ครบ 6 turn IM -1`);
   }
 
   bonus=Math.floor(p.int/3); skillStat=selectedSkill.toUpperCase();
@@ -1868,9 +1873,16 @@ function addCombatLootToInventory(tier, lv, lines){
     rareValue = invPush(rareRow);
   }
 
-  const total = commonValue + rareValue;
+  const crystalResult = (typeof addCrystalDropsToInventory === 'function')
+    ? addCrystalDropsToInventory(tier, lv, 1)
+    : {drops:[], total:0};
+  const crystalText = (+lv>=10 && typeof crystalDropSummary === 'function')
+    ? ` | ${crystalDropSummary(crystalResult.drops)}`
+    : ' | Crystal locked (<Lv.10)';
+
+  const total = commonValue + rareValue + (crystalResult.total||0);
   const rareText = rareDropped ? ` | Rare DROP → ${cfg.rareName} Lv.${lv} ×1 (~${rareValue} Copper)` : ' | Rare MISS';
-  lines.push('system', `📦 Added to Inventory: ${cfg.commonName} Lv.${lv} ×1 (~${commonValue} Copper)${rareText}`);
+  lines.push('system', `📦 Added to Inventory: ${cfg.commonName} Lv.${lv} ×1 (~${commonValue} Copper)${rareText}${crystalText}`);
   if(activeTurnSummary){
     activeTurnSummary.lootOutcomes = activeTurnSummary.lootOutcomes || [];
     activeTurnSummary.lootOutcomes.push(`${cfg.commonName} Lv.${lv} ×1 (${commonValue}C)`);
@@ -1878,6 +1890,9 @@ function addCombatLootToInventory(tier, lv, lines){
       activeTurnSummary.lootOutcomes.push(`${cfg.rareName} Lv.${lv} ×1 (${rareValue}C)`);
     } else {
       activeTurnSummary.lootOutcomes.push(`Rare: ไม่ดรอป`);
+    }
+    if(+lv>=10 && typeof crystalDropSummary === 'function'){
+      activeTurnSummary.lootOutcomes.push(crystalDropSummary(crystalResult.drops));
     }
   }
 
@@ -2307,11 +2322,19 @@ function getCompactCombatLogText(){
   const header=[
     `UNRULING WORLD SIMPLE BATTLE LOG`,
     `Generated: ${now}`,
-    `Format: Pulse/Skill | Irein attack result | Monster result / special timing`,
+    `Format: Pulse/Status | Irein attack result | Monster result / special timing`,
     ``
   ];
   const body=compactCombatLog.map(e=>{
-    const special = (e.specialOutcomes && e.specialOutcomes.length) ? `เร่งชีพจร: ${e.specialOutcomes.join(' | ')} | ` : '';
+    const specials = (e.specialOutcomes && e.specialOutcomes.length) ? e.specialOutcomes : [];
+    const pulseEvents = specials.filter(x=>String(x).startsWith('เร่งชีพจร'));
+    const statusEvents = specials.filter(x=>String(x).startsWith('สถานะ:'));
+    const otherEvents = specials.filter(x=>!String(x).startsWith('เร่งชีพจร') && !String(x).startsWith('สถานะ:'));
+    const specialParts=[];
+    if(pulseEvents.length) specialParts.push(`เร่งชีพจร: ${pulseEvents.join(' | ')}`);
+    if(statusEvents.length) specialParts.push(`${statusEvents.join(' | ')}`);
+    if(otherEvents.length) specialParts.push(`ระบบ: ${otherEvents.join(' | ')}`);
+    const special = specialParts.length ? `${specialParts.join(' | ')} | ` : '';
     const ire = (e.playerOutcomes && e.playerOutcomes.length) ? e.playerOutcomes.join(' | ') : 'ไม่โจมตี';
     const monList = (e.monsterResults && e.monsterResults.length) ? e.monsterResults : (e.dodge||[]).map(simpleMonsterResultFromDodgeEntry);
     const mon = monList.length ? monList.join(' | ') : ((e.lootOutcomes && e.lootOutcomes.length) ? 'ถูกสังหารก่อนโต้กลับ' : 'มอนไม่ได้โจมตี');
@@ -2662,8 +2685,6 @@ function consumeEmptyCrystal(level, qty){
   return qty-left;
 }
 function renderEmptyCrystalTrace(){
-  const el=document.getElementById('empty-crystal-trace');
-  if(!el) return;
   const lines=[];
   for(let lv=1;lv<=5;lv++){
     const equipLv=emptyCrystalEquipLv(lv);
@@ -2673,7 +2694,11 @@ function renderEmptyCrystalTrace(){
     const status=stock>0 ? `${count}/${CRYSTAL_PITY_KILLS}` : `${count}/${CRYSTAL_PITY_KILLS} paused`;
     lines.push(`Lv.${lv} Eq.${equipLv}: ${status} | stock ${stock}`);
   }
-  el.textContent='Empty Crystal Trace: '+lines.join('  •  ');
+  const text='Empty Crystal Trace: '+lines.join('  •  ');
+  ['empty-crystal-trace','empty-crystal-trace-inv'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=text;
+  });
 }
 function rollCrystalDrops(tier, monLv, kills){
   const results=[];
