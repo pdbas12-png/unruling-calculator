@@ -903,7 +903,7 @@
         <div class="hitbox-btns">
           <button class="hb-btn strong" id="hb-strong" onclick="setHitbox('strong')">⬡ ตีเกราะ<br>×0.5 ชัวร์</button>
           <button class="hb-btn sel active" id="hb-normal" onclick="setHitbox('normal')">◈ ธรรมดา<br>สุ่ม hitbox</button>
-          <button class="hb-btn weak" id="hb-weak" onclick="setHitbox('weak')">◎ เล็งจุดอ่อน<br>×1.5 / DEF×0.5</button>
+          <button class="hb-btn weak" id="hb-weak" onclick="setHitbox('weak')">◎ เล็งจุดอ่อน<br>×1.5 / DEF×0.5 / หลบ↑</button>
         </div>
         <p class="small-note">ไม่มีปุ่มเล็งจุดตายโดยตรงแล้ว: จุดตายจะสุ่มเกิดเฉพาะตอนเลือกเล็งจุดอ่อนเท่านั้น | จุดอ่อนเริ่ม ×1.5 / DEF×0.5 และนับ Weak Point Hit | Base Normal 3 hit, tier สูงขึ้นคูณตามความเก่ง | โจมตีจุดอ่อนซ้ำ DMG +0.1 ต่อครั้ง สูงสุด ×2.0 | ครบจำนวน + HP มอน <25% ถึงติด [อ่อนแอ] | Stagger เช็กหลังตีโดนเท่านั้น | AGI ≥ 1.5× มีโอกาส 50% ได้ 2 action</p>
         <button class="btn red-btn" onclick="resetCombat()" style="margin-top:6px">↺ รีเซต</button>
@@ -1216,7 +1216,7 @@ function calcAll(){
   const mvit=+document.getElementById('m-vit').value||1;
   const mtier=document.getElementById('m-rarity').value;
   const t=TIER[mtier];
-  const mStrEff=tierEffectiveStat(mstr,mtier); const mAgiEff=tierEffectiveStat(magi,mtier); const mVitEff=tierEffectiveStat(mvit,mtier);
+  const mStrEff=tierEffectiveStat(mstr,mtier); const mAgiEff=tierEffectiveStat(magi,mtier); const mVitEff=tierEffectiveStat(mvit,mtier); const mDexEff=tierEffectiveStat(mdex,mtier);
   const mDMG=tierDamageFromStat(mstr,mlv,mtier);
   const mRed=tierReductionFromStat(mvit,mlv,mtier);
   const mHP=Math.round(getMonsterHP(mstr,mvit,mlv,mtier) * monsterHpAbilityMultFromList(abilities));
@@ -1426,15 +1426,45 @@ function getActionCount(agi, enemyAgi){
 function getActionCountPreview(agi, enemyAgi){
   return ((+agi||0) >= (+enemyAgi||0)*1.5) ? '1–2 (50%)' : '1';
 }
-function getCombatDodge(pAgi,mAgi){
-  // Dodge rebalance: AGI เท่ากัน = 60%, AGI มากกว่า 1.5 เท่า = 100%
-  // ใช้ ratio เพื่อไม่ให้ AGI gap แบบเลขดิบสเกลเพี้ยนช่วงเลเวลสูง
-  const ratio = pAgi / (pAgi + mAgi);
-  return clamp(-140 + 400 * ratio, 15, 100);
+// ══ RATIO DODGE SYSTEM ══
+// หลัก: AGI เป็นแกนหลัก, DEX เป็นตัวเสริมการตีแม่น, และมอนทั่วไปมี Control ต่ำกว่าผู้เล่น
+function calcRatioDodge(defAgi, atkAgi, atkDex, controlFactor=1.0, evasionFactor=1.0){
+  const atkScore = Math.max(1, ((+atkAgi||0)*0.75 + (+atkDex||0)*0.25) * (controlFactor||1));
+  const dodgeScore = Math.max(1, (+defAgi||0) * (evasionFactor||1));
+  const chance = 25 * Math.pow(dodgeScore / atkScore, 1.8);
+  return clamp(chance, 5, 90);
 }
-function getFullDodge(pAgi,mAgi){
-  // หลบสวน/Full Evasion ยังดีกว่า Attack แต่ไม่บวกเว่อร์ เพราะ Combat Dodge ใหม่สูงขึ้นแล้ว
-  return clamp(getCombatDodge(pAgi,mAgi)+15, 40, 100);
+function monsterControlFactor(){
+  // มอนทั่วไปเร็วได้ แต่ใช้ความเร็วโจมตีไม่แม่นเท่าผู้เล่น/มนุษย์ฝึกอาวุธ
+  // Accurate เพิ่ม control แทนการหัก dodge ตรงๆ เพื่อให้สเกลตาม ratio
+  return clamp(0.75 + mAbilityValue('accurate')/100, 0.50, 1.20);
+}
+function monsterControlFactorFromList(list){
+  const v=(list||[]).filter(a=>normalizeMAbilityKey(a.key)==='accurate').reduce((sum,a)=>sum+(+a.value||0),0);
+  return clamp(0.75 + v/100, 0.50, 1.20);
+}
+function monsterEvasionFactor(){
+  return clamp(1 + mAbilityValue('evasive')/100, 0.50, 1.80);
+}
+function getCombatDodge(pAgi,mAgi,mDex){
+  return calcRatioDodge(pAgi, mAgi, (mDex==null?mAgi:mDex), monsterControlFactor(), 1.0);
+}
+function getFullDodge(pAgi,mAgi,mDex){
+  return clamp(getCombatDodge(pAgi,mAgi,mDex)+15, 5, 90);
+}
+function getWeakPointDodgeModifier(isWeakAim){
+  // เล็งจุดอ่อนต้องมีจังหวะเปิด ไม่งั้นมอนมีโอกาสหลบสูงมาก
+  // None: ×1.75 | Stagger already applies ×0.50 separately, so weak aim during stagger uses ×1.00
+  if(!isWeakAim) return 1.0;
+  if(combat && combat.monster && combat.monster.staggered) return 1.0;
+  return 1.75;
+}
+function getMonsterDodgeAgainstPlayer(pAgi,pDex,mAgi,isWeakAim=false){
+  let chance = calcRatioDodge(mAgi, pAgi, pDex, 1.0, monsterEvasionFactor());
+  if(combat && combat.monster && combat.monster.weakened) chance *= 0.75;
+  if(combat && combat.monster && combat.monster.staggered) chance *= 0.50;
+  chance *= getWeakPointDodgeModifier(isWeakAim);
+  return clamp(chance, 0, 90);
 }
 function getCounterDmgMult(natural){ return natural?Math.min(1.0,0.80+masteryCounterBonus()):Math.min(0.75,0.50+masteryCounterBonus()); }
 function getHitboxMult(){ return {strong:0.5,normal:1.0,weak:1.5}[selectedHitbox]||1; }
@@ -1497,8 +1527,8 @@ function mAbilityLabels(list){ return (list||[]).map(a=>{
   const label=MONSTER_ABILITY[key]?.label || key;
   return `${label} ${val}%`;
 }); }
-function monsterDodgeChance(){ return clamp(mAbilityValue('evasive') - monsterWeakenedEvasionPenalty() - monsterStaggerEvasionPenalty(), 0, 100); }
-function monsterAccuracyPenalty(){ return mAbilityValue('accurate'); }
+function monsterDodgeChance(pAgi,pDex,mAgi,isWeakAim=false){ return getMonsterDodgeAgainstPlayer(pAgi,pDex,mAgi,isWeakAim); }
+function monsterAccuracyPenalty(){ return 0; } // Accurate ถูกคิดใน monsterControlFactor() แล้ว
 function monsterArmorWearMult(){ return 1 + mAbilityValue('armor_breaker')/100; }
 function monsterDamageMult(){ return 1 + mAbilityValue('brutal')/100; }
 function monsterTakenDamageMult(){ return Math.max(0.05, 1 - mAbilityValue('thick_hide')/100); }
@@ -1619,7 +1649,7 @@ function initCombat(){
   const abilities=getSelectedMonsterAbilities();
   const mastery=clamp(+document.getElementById('b-mastery')?.value||0,0,100);
 
-  const mStrEff=tierEffectiveStat(mstr,mtier); const mAgiEff=tierEffectiveStat(magi,mtier); const mVitEff=tierEffectiveStat(mvit,mtier);
+  const mStrEff=tierEffectiveStat(mstr,mtier); const mAgiEff=tierEffectiveStat(magi,mtier); const mVitEff=tierEffectiveStat(mvit,mtier); const mDexEff=tierEffectiveStat(mdex,mtier);
   const pHP=getHP(pvit,plv); const pRed=getReduction(pvit,plv);
   const pDMG=getTotalDMG(pstr,plv,prar);
   const mDMG=tierDamageFromStat(mstr,mlv,mtier);
@@ -1633,7 +1663,7 @@ function initCombat(){
     player:{lv:plv,str:pstr,agi:pagi,vit:pvit,int:pint,dex:pdex,wis:pwis,coreStage:coreStage,
             dmg:pDMG,maxHP:pHP,hp:pHP,maxMP:getMP(pint,plv),mp:getMP(pint,plv),red:pRed,im:maxIM,maxIM:maxIM,
             rar:prar, activeSkill:'off', pulseTurnCount:0, nextAttackMissPenalty:0},
-    monster:{lv:mlv,str:mStrEff,agi:mAgiEff,vit:mVitEff,dex:mdex,int:mint,
+    monster:{lv:mlv,str:mStrEff,agi:mAgiEff,vit:mVitEff,dex:mDexEff,int:mint,
              dmg:mDMG,maxHP:mHP,hp:mHP,red:mRed,
              shield:mtier==='champion'||mtier==='boss',
              abilities:abilities,
@@ -1648,13 +1678,13 @@ function initCombat(){
   const ini=pagi>=mAgiEff?'ไอเรน':'มอนสเตอร์';
   addLog('system',`⟨ Turn-Based Combat — ${t.label} ⟩`);
   addLog('system',`Initiative: ${ini} | Action Count Preview: ไอเรน ${pActsPreview} / มอน ${mActsPreview}`);
-  const initAccurate = abilities.filter(a=>normalizeMAbilityKey(a.key)==='accurate').reduce((sum,a)=>sum+(+a.value||0),0);
-  const initCombatDodge=clamp(getCombatDodge(pagi,mAgiEff)-initAccurate,0,100);
-  const initFullDodge=clamp(getFullDodge(pagi,mAgiEff)-initAccurate,0,100);
-  addLog('system',`Dodge: Combat ${pct(initCombatDodge)} | Full ${pct(initFullDodge)}${initAccurate>0?` [Accurate -${pct(initAccurate)}]`:''}`);
+  const initControl = monsterControlFactorFromList(abilities);
+  const initCombatDodge=calcRatioDodge(pagi, mAgiEff, mDexEff, initControl, 1.0);
+  const initFullDodge=clamp(initCombatDodge+15, 5, 90);
+  addLog('system',`Dodge: Combat ${pct(initCombatDodge)} | Full ${pct(initFullDodge)} | Monster Control ×${initControl.toFixed(2)}`);
   addLog('system',`ไอเรน HP:${Math.round(pHP)} DMG:${fmt(pDMG)} ขั้น:${coreStage} IM:${maxIM}/${maxIM}`);
   addLog('system',`มอนสเตอร์ HP:${Math.round(mHP)} DMG:${fmt(mDMG)} AGI_eff:${fmt(mAgiEff)}`);
-  addLog('system',`Weak Point Required: ${weakPointRequired(mtier)} hit(s) + HP <25% → [อ่อนแอ] | Repeat weak damage +0.1/hit cap ×2.0`);
+  addLog('system',`Weak Point Required: ${weakPointRequired(mtier)} clean hit(s) + HP <25% → [อ่อนแอ] | Repeat weak damage +0.1/hit cap ×2.0 | Aim weak: Dodge×1.75 (Stagger opening: ×1.0)`);
   if(abilities.length) addLog('system',`Monster Abilities: ${mAbilityLabels(abilities).join(', ')}`);
   const hpBoostInit = abilities.filter(a=>normalizeMAbilityKey(a.key)==='hp_percent').reduce((sum,a)=>sum+(+a.value||0),0);
   if(hpBoostInit>0) addLog('system',`HP Boost: Max HP ×${(1+hpBoostInit/100).toFixed(2)}`);
@@ -1728,7 +1758,8 @@ function calcPlayerDamage(p, effStr, effDex, mult=1, options={}){
   }
   let raw=(getTotalDMG(effStr,p.lv,p.rar)*d6p)*mult*manaPressureDmgMult(p.lv, combat.monster.lv);
   const wasStaggered=!!(combat.monster && combat.monster.staggered);
-  const mdodge=monsterDodgeChance();
+  const isWeakAim = (options.forceHitbox==='weak' || selectedHitbox==='weak');
+  const mdodge=monsterDodgeChance(options.attackerAgi||p.agi, effDex, combat.monster.agi, isWeakAim);
   if(mdodge>0 && rollPct(mdodge)){
     if(wasStaggered) combat.monster.staggered=false;
     return {real:0, raw, d6p, hb, hbLbl, dexUp:false, monsterDodged:true, monsterDodgeChance:mdodge, hitboxNote:resolved.note, isWeakPoint:false, wasStaggered};
@@ -2014,6 +2045,7 @@ function applyPlayerHit(p, lines, effStr, effDex, mult, label, options={}){
     }
   }
   equipmentDamage('weapon', Math.max(0.05,0.125*(mult||1))*manaPressureDurabilityMult(p.lv, combat.monster.lv)); // common weapon ~0.125 durability per hit, scaled by force + mana pressure
+  options = Object.assign({attackerAgi:p.tempEffAgi||p.agi}, options||{});
   const hit=calcPlayerDamage(p,effStr,effDex,mult,options);
   const prev=combat.monster.hp;
   if(hit.monsterDodged){
@@ -2085,6 +2117,7 @@ function doTurn(strategy){
   activateImSkill(p, lines);
   const mpTurnSkill=activateMPSkill(p, lines);
   const effStr=skill.effStr, effAgi=skill.effAgi, effVit=skill.effVit, effDex=skill.effDex;
+  p.tempEffAgi=effAgi;
   const pActs=getActionCount(effAgi,m.agi);
   const mActs=getActionCount(m.agi,effAgi);
   const playerFirst=effAgi>=m.agi;
@@ -2118,7 +2151,7 @@ function doTurn(strategy){
         const incomingRaw=monsterDamageForAction(m,action,d6());
         const red=getFinalPlayerReduction(effVit,p.lv);
         const incoming=Math.max(1,incomingRaw*(1-red));
-        const chance=clamp(getCombatDodge(effAgi,m.agi)+masteryDodgeBonus()+imSkillDodgeBonus()+mpSkillDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
+        const chance=clamp(getCombatDodge(effAgi,m.agi,m.dex)+masteryDodgeBonus()+imSkillDodgeBonus()+mpSkillDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
         const dodged=rollPct(chance);
         if(dodged){ spendMP(getDodgeMPCost(), lines, `Combat Dodge ${i+1}/${mActs}`); lines.push('dodge',`👟 Combat Dodge ${i+1}/${mActs}: ${pct(chance)} สำเร็จ — 0 DMG`); summary.dodge.push(`M${i+1}:${monsterActionName(action)}=DODGE`); pushMonsterResult(`M${i+1}: ${monsterActionName(action)}→หลบได้`); }
         else if(shouldCombatInstinctAutoDodge(p, incoming)){ const reason=combatInstinctReason(p, incoming); p.im=Math.max(0,p.im-1); p.nextAttackMissPenalty=30; lines.push('dodge',`🛡 Combat Instinct: หลบพลาดแต่แก่นบังคับหลบ (${reason}) → IM -1 = ${p.im}/${p.maxIM} | 0 DMG | การโจมตีถัดไปพลาดเพิ่ม 30%`); summary.dodge.push(`M${i+1}:${monsterActionName(action)}=INSTINCT_DODGE`); pushMonsterResult(`M${i+1}: ${monsterActionName(action)}→หลบได้ด้วย Combat Instinct, IM -1, โจมตีถัดไปพลาด +30%`); }
@@ -2134,7 +2167,7 @@ function doTurn(strategy){
   if(strategy==='dodge'){
     // หลบเต็มตัว: ถ้าหลบการโจมตีจริงได้ จะ counter การันตี 1 ครั้งต่อ action ของไอเรน
     let countersLeft=pActs;
-    const fullChance=clamp(getFullDodge(effAgi,m.agi)+masteryDodgeBonus()+imSkillDodgeBonus()+mpSkillDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
+    const fullChance=clamp(getFullDodge(effAgi,m.agi,m.dex)+masteryDodgeBonus()+imSkillDodgeBonus()+mpSkillDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
     for(let i=0;i<monsterActions.length && !combat.over;i++){
       const action=monsterActions[i];
       if(action==='feint'){
@@ -3139,11 +3172,46 @@ function buildState(){
     compactCombatLog:JSON.parse(JSON.stringify(compactCombatLog||[]))
   };
 }
+function buildSafeCall(fnName, ...args){
+  try{
+    const fn=window[fnName];
+    if(typeof fn==='function') return fn(...args);
+  }catch(e){ console.warn('Render refresh failed:', fnName, e); }
+}
+function buildForceRender(){
+  // Force all derived UI to redraw after JSON import/quick load.
+  // Some values are plain JS state (moneyCopper, inventoryRows, pity counter), not input fields,
+  // so changing inputs alone does not repaint them until another click unless we explicitly render.
+  buildSafeCall('calcAll');
+  buildSafeCall('updateExpDisplay');
+  buildSafeCall('updateMoneyDisplay');
+  buildSafeCall('invRender');
+  buildSafeCall('equipmentRecalc','weapon');
+  buildSafeCall('equipmentRecalc','armor');
+  buildSafeCall('equipmentRender');
+  buildSafeCall('consRender');
+  buildSafeCall('fatigueRender');
+  buildSafeCall('sessionRender');
+  buildSafeCall('expectedCalc');
+  buildSafeCall('renderEmptyCrystalTrace');
+  buildSafeCall('emptyCrystalTraceRender');
+  buildSafeCall('crystalPityRender');
+  buildSafeCall('skillRender');
+  buildSafeCall('skillRefreshCombatSelect');
+  buildSafeCall('updateCombatPotionHeal');
+}
+function buildScheduleForceRender(){
+  buildForceRender();
+  try{ requestAnimationFrame(()=>buildForceRender()); }catch(e){}
+  setTimeout(()=>buildForceRender(),0);
+  setTimeout(()=>buildForceRender(),80);
+}
 function buildApplyState(state){
   if(!state || !state.inputs){ buildStatus('✘ โหลดไม่สำเร็จ: ไฟล์ไม่ใช่ build ที่ถูกต้อง','var(--red)'); return; }
   buildApplyInputs(state.inputs);
   if(state.expState){ expState=state.expState; }
   if(typeof state.moneyCopper==='number') moneyCopper=state.moneyCopper;
+  updateMoneyDisplay();
   inventoryRows=Array.isArray(state.inventoryRows)?state.inventoryRows:[];
   crystalPityState=(state.crystalPityState && typeof state.crystalPityState==='object')?state.crystalPityState:{};
   consumables=Array.isArray(state.consumables)?state.consumables:[];
@@ -3157,11 +3225,8 @@ function buildApplyState(state){
   skillRender(); skillRefreshCombatSelect(); setMpSkill(!!state.selectedMpSkill);
   if(typeof setImSkill==='function') setImSkill(!!state.selectedImSkill);
   compactCombatLog=Array.isArray(state.compactCombatLog)?state.compactCombatLog:[];
-  // Refresh UI
-  calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender();
-  equipmentRecalc('weapon'); equipmentRecalc('armor'); equipmentRender();
-  consRender(); fatigueRender(); sessionRender(); expectedCalc();
-  buildStatus(`✓ โหลด build สำเร็จ (${state.savedAt||'unknown time'})`,'var(--green)');
+  buildScheduleForceRender();
+  buildStatus(`✓ โหลด build สำเร็จ (${state.savedAt||'unknown time'}) | Money ${Number(moneyCopper||0).toLocaleString()} C`,'var(--green)');
 }
 function buildQuickSave(){
   if(buildStorageSet(buildState())) buildStatus('✓ Quick Save สำเร็จ ลง localStorage','var(--green)');
@@ -3197,8 +3262,15 @@ function buildImportFile(){
   if(!file){ buildStatus('✘ เลือกไฟล์ .json ก่อน','var(--red)'); return; }
   const reader=new FileReader();
   reader.onload=()=>{
-    try{ buildApplyState(JSON.parse(reader.result)); }
-    catch(e){ buildStatus('✘ โหลดไฟล์ไม่สำเร็จ: '+e.message,'var(--red)'); }
+    try{
+      suppressAutoSave=true;
+      const state=JSON.parse(reader.result);
+      buildApplyState(state);
+      suppressAutoSave=false;
+      buildStorageSet(buildState());
+      buildScheduleForceRender();
+    }
+    catch(e){ suppressAutoSave=false; buildStatus('✘ โหลดไฟล์ไม่สำเร็จ: '+e.message,'var(--red)'); }
   };
   reader.readAsText(file,'utf-8');
 }
