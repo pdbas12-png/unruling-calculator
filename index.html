@@ -237,6 +237,24 @@
           <div class="result-item"><span class="r-label">INNER MANA</span><span class="r-val" id="r-im">15</span></div>
           <div class="result-item"><span class="r-label">CORE STAGE</span><span class="r-val purple" id="r-core-stage">1</span></div>
         </div>
+
+        <div class="divider"></div>
+        <div class="section-label">CURRENT VITALS — ซิงก์จาก Combat Sim / Montage</div>
+        <div class="hp-bars" style="grid-template-columns:1fr;">
+          <div>
+            <div class="hp-bar-label"><span class="name">HP ไอเรน</span><span class="val" id="r-current-hp-text">—</span></div>
+            <div class="hp-bar-bg"><div class="hp-bar-fill player" id="r-current-hp-bar" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div class="hp-bar-label"><span class="name">MP</span><span class="val" id="r-current-mp-text">—</span></div>
+            <div class="hp-bar-bg"><div class="hp-bar-fill player" id="r-current-mp-bar" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div class="hp-bar-label"><span class="name">Inner Mana</span><span class="val" id="r-current-im-text">—</span></div>
+            <div class="hp-bar-bg"><div class="hp-bar-fill monster" id="r-current-im-bar" style="width:100%"></div></div>
+          </div>
+        </div>
+        <p class="small-note" id="r-current-vitals-note">ถ้ายังไม่เริ่ม Combat Sim จะแสดงค่าเต็มตาม stat. หลังต่อสู้/พัก/ใช้ potion/montage จะซิงก์ค่าปัจจุบันมาแสดงที่นี่อัตโนมัติ.</p>
         <div class="divider"></div>
         <div class="section-label">ดาเมจจริงต่อ hit</div>
         <div class="result-grid">
@@ -344,14 +362,25 @@
             </div>
             <div class="field"><label>KILLS</label><input type="number" id="reward-kills" value="1" min="1"></div>
             <div class="field"><label>HIT/KILL</label><input type="number" id="reward-hits-per-kill" value="8" min="0" step="0.5"></div>
-            <div class="field"><label>WEAR</label><select id="reward-apply-wear"><option value="1" selected>Apply weapon durability</option><option value="0">No durability wear</option></select></div>
+            <div class="field"><label>KILL SIM</label><select id="reward-hit-mode"><option value="variance" selected>Variance by tier</option><option value="fixed">Fixed HIT/KILL</option></select></div>
+            <div class="field"><label>BUTCHER</label><select id="reward-butcher-mode"><option value="fast">Fast 1m</option><option value="normal" selected>Normal 2m</option><option value="careful">Careful 4m</option></select></div>
+            <div class="field"><label>WEAR</label><select id="reward-apply-wear"><option value="1" selected>Apply weapon+armor wear</option><option value="0">No durability wear</option></select></div>
+            <div class="field"><label>REST</label><select id="reward-auto-rest"><option value="1" selected>Auto rest when low</option><option value="0">No auto rest</option></select></div>
+            <div style="margin-top:8px;padding:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);">
+              <div class="section-label">SEARCH / ENCOUNTER</div>
+              <div class="field"><label>SEARCH MODE</label><select id="search-mode"><option value="balanced" selected>Balanced</option><option value="safe">Safe route</option><option value="risky">Risky dense zone</option></select></div>
+              <div class="field"><label>SEARCH TIME</label><input type="number" id="search-minutes" value="10" min="1" step="1"></div>
+              <button class="btn sm" style="width:auto;padding:7px 10px;" onclick="searchEncounterRoll()">WALK / SEARCH</button>
+              <div class="small-note">สุ่มการเดินค้นหา: ไม่เจอ / Normal 1–3 ตัว / Elite 1 ตัว. เวลาค้นหาจะถูกนำไปรวมใน +BOTH ครั้งถัดไป.</div>
+            </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
               <button class="btn sm" style="width:auto;padding:7px 10px;" onclick="rewardSyncFromCalc()">SYNC MON</button>
               <button class="btn sm gold-btn" style="width:auto;padding:7px 10px;" onclick="rewardAddExp()">+ EXP</button>
               <button class="btn sm gold-btn" style="width:auto;padding:7px 10px;" onclick="rewardAddLoot()">+ LOOT</button>
               <button class="btn sm gold-btn" style="width:auto;padding:7px 10px;" onclick="rewardAddAll()">+ BOTH</button>
             </div>
-            <div class="small-note">EXP = Lv×10×Tier (+10% ต่อเลเวลเมื่อมอนสูงกว่า). Normal/Elite loot: Common 100%, Rare 10%. Add EXP จะหัก durability ดาบตาม HIT/KILL × 0.125 base (8 hit ≈ 1 durability/kill) และแรงดันมานา +10% durability/lv.</div>
+            <div class="small-note">EXP = Lv×10×Tier (+10% ต่อเลเวลเมื่อมอนสูงกว่า). Variance mode: Normal 6–12 hit, Elite 10–20 hit, Champion 25–45 hit. Montage จะลด durability ดาบจาก hit จริง, ลด durability เกราะจากจำนวนครั้งที่โดนมอน, เพิ่มเวลาล่า/ชำแหละ/พัก และถ้า Combat Sim เปิดอยู่จะหัก HP/MP/Inner Mana จริงแล้วพักอัตโนมัติเมื่อทรัพยากรต่ำ.</div>
+            <div id="reward-montage-summary" style="font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);margin-top:8px;white-space:pre-wrap;background:var(--panel);border:1px solid var(--border);padding:6px;min-height:54px;">Montage summary will appear here.</div>
             <div id="reward-log" style="font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);margin-top:8px;height:70px;overflow-y:auto;background:var(--panel);border:1px solid var(--border);padding:6px;"></div>
           </div>
 
@@ -1214,8 +1243,10 @@ function calcAll(){
   const mstr=+document.getElementById('m-str').value||1;
   const magi=+document.getElementById('m-agi').value||1;
   const mvit=+document.getElementById('m-vit').value||1;
+  const mdex=+document.getElementById('m-dex')?.value||1;
   const mtier=document.getElementById('m-rarity').value;
   const t=TIER[mtier];
+  const abilities=(typeof getSelectedMonsterAbilities==='function') ? getSelectedMonsterAbilities() : [];
   const mStrEff=tierEffectiveStat(mstr,mtier); const mAgiEff=tierEffectiveStat(magi,mtier); const mVitEff=tierEffectiveStat(mvit,mtier); const mDexEff=tierEffectiveStat(mdex,mtier);
   const mDMG=tierDamageFromStat(mstr,mlv,mtier);
   const mRed=tierReductionFromStat(mvit,mlv,mtier);
@@ -1239,6 +1270,38 @@ function calcAll(){
   }
   document.getElementById('est-hits-player').textContent='~'+Math.ceil(mHP/pVsM)+' hit';
   document.getElementById('est-hits-monster').textContent='~'+Math.ceil(pHP/mVsP)+' hit';
+  syncPlayerVitalsPanel();
+}
+
+function setBarText(barId,textId,current,max){
+  const bar=document.getElementById(barId), txt=document.getElementById(textId);
+  const c=Math.max(0, +current||0), m=Math.max(1, +max||1);
+  if(txt) txt.textContent=`${Math.round(c)}/${Math.round(m)}`;
+  if(bar) bar.style.width=Math.max(0, Math.min(100, c/m*100))+'%';
+}
+function syncPlayerVitalsPanel(){
+  const note=document.getElementById('r-current-vitals-note');
+  let hp,maxHP,mp,maxMP,im,maxIM,src;
+  if(combat && combat.player){
+    const p=combat.player;
+    hp=p.hp; maxHP=p.maxHP; mp=p.mp; maxMP=p.maxMP; im=p.im; maxIM=p.maxIM;
+    src='ซิงก์จาก Combat Sim ปัจจุบัน';
+  }else{
+    const lv=+document.getElementById('c-lv')?.value||1;
+    const vit=+document.getElementById('c-vit')?.value||1;
+    const intv=+document.getElementById('c-int')?.value||1;
+    const wis=+document.getElementById('c-wis')?.value||1;
+    maxHP=getHP(vit,lv); hp=maxHP; maxMP=getMP(intv,lv); mp=maxMP; maxIM=getInnerManaMax(wis,lv); im=maxIM;
+    src='ยังไม่เริ่มไฟต์: แสดงค่าเต็มจาก STAT tab';
+  }
+  setBarText('r-current-hp-bar','r-current-hp-text',hp,maxHP);
+  setBarText('r-current-mp-bar','r-current-mp-text',mp,maxMP);
+  setBarText('r-current-im-bar','r-current-im-text',im,maxIM);
+  if(note){
+    const hpPct=maxHP?Math.round(hp/maxHP*100):100, mpPct=maxMP?Math.round(mp/maxMP*100):100, imPct=maxIM?Math.round(im/maxIM*100):100;
+    note.textContent=`${src} | HP ${hpPct}% / MP ${mpPct}% / IM ${imPct}%`;
+    note.style.color=(hpPct<35||mpPct<25||imPct<25)?'var(--red)':'var(--text-dim)';
+  }
 }
 
 // ══ BEHAVIOR TABLE ══
@@ -2244,6 +2307,7 @@ function resetCombat(){
   setCombatButtonsDisabled(false);
   clearLog();
   addLog('system','// กด "เริ่มการต่อสู้" เพื่อเริ่ม');
+  syncPlayerVitalsPanel();
 }
 function setCombatButtonsDisabled(v){
   ['btn-attack','btn-dodge','btn-guard'].forEach(id=>{ const el=document.getElementById(id); if(el) el.disabled=v; });
@@ -2289,6 +2353,7 @@ function updateMPDisplay(){
   const txt=document.getElementById('mp-text'), bar=document.getElementById('mp-bar');
   if(txt) txt.textContent=`${Math.round(p.mp)}/${Math.round(p.maxMP)}`;
   if(bar) bar.style.width=Math.max(0,p.mp/p.maxMP*100)+'%';
+  syncPlayerVitalsPanel();
 }
 function getMPSkillConfig(){
   const sk=getSelectedCombatSkill();
@@ -2302,6 +2367,7 @@ function updateHPDisplay(){
   document.getElementById('m-hp-text').textContent=`${Math.round(m.hp)}/${Math.round(m.maxHP)}`;
   document.getElementById('p-hp-bar').style.width=Math.max(0,p.hp/p.maxHP*100)+'%';
   document.getElementById('m-hp-bar').style.width=Math.max(0,m.hp/m.maxHP*100)+'%';
+  syncPlayerVitalsPanel();
 }
 function updateIMDisplay(){
   if(!combat) return;
@@ -2310,6 +2376,7 @@ function updateIMDisplay(){
   clearIMPips(max);
   const pips=document.getElementById('im-pips').children;
   for(let i=0;i<pips.length;i++) pips[i].classList.toggle('filled',i<im);
+  syncPlayerVitalsPanel();
 }
 function clearIMPips(max){
   const el=document.getElementById('im-pips'); el.innerHTML='';
@@ -2838,6 +2905,48 @@ function addEXPDirect(amount){
   updateExpDisplay();
   return amount;
 }
+
+let rewardPendingSearchMinutes = 0;
+function searchRollTable(mode){
+  if(mode==='safe') return [
+    ['none',0,30], ['normal',1,45], ['normal',2,18], ['normal',3,5], ['elite',1,2]
+  ];
+  if(mode==='risky') return [
+    ['none',0,10], ['normal',1,35], ['normal',2,30], ['normal',3,15], ['elite',1,10]
+  ];
+  return [
+    ['none',0,20], ['normal',1,45], ['normal',2,22], ['normal',3,8], ['elite',1,5]
+  ];
+}
+function weightedPick(rows){
+  const total=rows.reduce((a,r)=>a+(+r[2]||0),0)||1;
+  let roll=Math.random()*total;
+  for(const r of rows){ roll-=+r[2]||0; if(roll<=0) return r; }
+  return rows[rows.length-1];
+}
+function searchEncounterRoll(){
+  const mode=document.getElementById('search-mode')?.value||'balanced';
+  const minutes=Math.max(1,Math.round(+document.getElementById('search-minutes')?.value||10));
+  rewardPendingSearchMinutes += minutes;
+  const picked=weightedPick(searchRollTable(mode));
+  const tier=picked[0], count=+picked[1]||0;
+  const monLv=+document.getElementById('reward-mlv')?.value||1;
+  let msg='';
+  if(tier==='none'){
+    msg=`SEARCH ${minutes}m (${mode}): ไม่พบมอนสเตอร์`;
+  }else{
+    document.getElementById('reward-tier').value=tier;
+    document.getElementById('reward-kills').value=count;
+    msg=`SEARCH ${minutes}m (${mode}): พบ ${tier==='elite'?'Elite':'Normal'} Lv.${monLv} ×${count} → ตั้งค่า Kill Reward แล้ว`;
+  }
+  const box=document.getElementById('reward-montage-summary');
+  if(box) box.textContent=`${msg}\nPending search time: ${rewardPendingSearchMinutes}m\nกด +BOTH เพื่อคำนวณไฟต์/loot/เวลาเดินค้นหารวมกัน`;
+  rewardLog(msg, tier==='elite'?'var(--gold)': tier==='none'?'var(--text-dim)':'var(--cyan)');
+  if(sessionState.active){ sessionState.log.push(msg); sessionRender(); }
+  if(typeof autoSave==='function') autoSave();
+  return {tier,count,minutes};
+}
+
 function rewardLog(msg,color){
   const el=document.getElementById('reward-log'); if(!el) return;
   const line=document.createElement('div'); line.style.color=color||'var(--text-dim)'; line.textContent=msg;
@@ -2856,11 +2965,112 @@ function rewardCalcExpOne(monLv,tier,playerLv){
   if(monLv>playerLv) return Math.round(base*(1+0.10*(monLv-playerLv)));
   return base;
 }
+function rewardTierHitRange(tier){
+  if(tier==='elite') return [10,20];
+  if(tier==='champion') return [25,45];
+  if(tier==='miniboss') return [45,80];
+  if(tier==='boss') return [90,160];
+  return [6,12];
+}
+function rewardRandInt(min,max){ return Math.floor(min + Math.random()*(max-min+1)); }
+function rewardButcherMinutes(){
+  const m=document.getElementById('reward-butcher-mode')?.value||'normal';
+  return m==='fast'?1:m==='careful'?4:2;
+}
+function rewardEstimateMonsterHitDamage(monLv,tier){
+  const playerLv=+document.getElementById('c-lv')?.value||expState.lv||1;
+  const pvit=+document.getElementById('c-vit')?.value||10;
+  const mstr=+document.getElementById('b-mstr')?.value || +document.getElementById('m-str')?.value || Math.max(10, Math.round(monLv*2.1));
+  let raw=0;
+  try{ raw=tierDamageFromStat(mstr, monLv, tier); }catch(e){ raw=monLv*2.5; }
+  const pred=(typeof getReduction==='function') ? getReduction(pvit, playerLv) : 0.25;
+  return Math.max(1, raw*(1-pred)*0.75);
+}
+function rewardMonsterHitsFromPlayerHits(hits,tier){
+  // Longer fights give the monster more windows to hit. Elite+ naturally punishes drawn-out fights.
+  const tierAdd = tier==='elite'?1:tier==='champion'?3:tier==='miniboss'?6:tier==='boss'?12:0;
+  const base = Math.max(0, Math.floor((hits-5)/3) + rewardRandInt(0,1) + tierAdd);
+  return Math.max(0, base);
+}
+function rewardApplyMontage(kills){
+  kills=Math.max(1,Math.round(+kills||1));
+  const apply = (document.getElementById('reward-apply-wear')?.value ?? '1') === '1';
+  const mode=document.getElementById('reward-hit-mode')?.value||'variance';
+  const tier=document.getElementById('reward-tier')?.value||'normal';
+  const monLv=+document.getElementById('reward-mlv')?.value||1;
+  const fixedHits=Math.max(0,+document.getElementById('reward-hits-per-kill')?.value||0);
+  const [hmin,hmax]=rewardTierHitRange(tier);
+  let totalHits=0, totalMonsterHits=0, longFights=0, easyFights=0;
+  for(let i=0;i<kills;i++){
+    const h = mode==='fixed' ? fixedHits : rewardRandInt(hmin,hmax);
+    totalHits += h;
+    if(h>=hmax-1) longFights++;
+    if(h<=hmin+1) easyFights++;
+    totalMonsterHits += rewardMonsterHitsFromPlayerHits(h,tier);
+  }
+  const avgHits = kills ? totalHits/kills : 0;
+  const baseWearPerHit=0.125;
+  const playerLv=+document.getElementById('c-lv')?.value||expState.lv||1;
+  const wearMult=manaPressureDurabilityMult(playerLv, monLv);
+  const weaponWear=apply ? totalHits*baseWearPerHit*wearMult : 0;
+  const armorWear=apply ? totalMonsterHits*0.25*wearMult : 0;
+  if(weaponWear>0) equipmentDamage('weapon', weaponWear);
+  if(armorWear>0) equipmentDamage('armor', armorWear);
+
+  const fightMinutes = totalHits*0.18 + totalMonsterHits*0.10; // quick abstract fight time
+  const butcherMinutes = kills*rewardButcherMinutes();
+  let restAdded=0, hpLost=0, mpLost=0, imLost=0;
+  const autoRest=(document.getElementById('reward-auto-rest')?.value ?? '1')==='1';
+  if(combat && combat.player){
+    const p=combat.player;
+    const dmgPerMonsterHit=rewardEstimateMonsterHitDamage(monLv,tier);
+    hpLost=totalMonsterHits*dmgPerMonsterHit;
+    mpLost=Math.ceil(totalHits*0.12); // normal attacks and skill clean-up consume small MP over a montage
+    const pulseOn = selectedSkill && selectedSkill!=='off';
+    imLost = pulseOn ? Math.ceil(2 + kills*0.9 + longFights*0.5) : 0;
+    p.hp=Math.max(1, p.hp-hpLost);
+    p.mp=Math.max(0, p.mp-mpLost);
+    p.im=Math.max(0, p.im-imLost);
+    if(autoRest){
+      let guard=0;
+      while(guard++<20 && (p.hp<p.maxHP*0.35 || p.mp<p.maxMP*0.25 || p.im<p.maxIM*0.25)){
+        const before={hp:p.hp,mp:p.mp,im:p.im};
+        const min=10; restAdded+=min;
+        p.hp=Math.min(p.maxHP, p.hp+p.maxHP*(min/30));
+        p.mp=Math.min(p.maxMP, p.mp+Math.ceil(p.maxMP*(min/30)));
+        p.im=Math.min(p.maxIM, p.im+Math.ceil(p.maxIM*(min/10)));
+        if(before.hp===p.hp && before.mp===p.mp && before.im===p.im) break;
+      }
+    }
+    updateHPDisplay(); updateMPDisplay(); updateIMDisplay(); updateStatusRow();
+  }
+  const searchMinutes = Math.max(0, rewardPendingSearchMinutes||0);
+  rewardPendingSearchMinutes = 0;
+  const totalMinutes = searchMinutes + fightMinutes + butcherMinutes + restAdded;
+  const summary = [
+    `MONTAGE: ${kills} kill Lv.${monLv} ${tier} (${mode==='fixed'?'fixed':'variance'} ${mode==='fixed'?fixedHits:hmin+'-'+hmax} hit/kill)`,
+    `Search/walk time: ${Math.round(searchMinutes)}m`,
+    `Avg hit/kill: ${avgHits.toFixed(1)} | Total player hits: ${Math.round(totalHits)} | Monster hits received: ${totalMonsterHits}`,
+    `Weapon dur -${weaponWear.toFixed(1)} | Armor dur -${armorWear.toFixed(1)} | Easy ${easyFights}, Long ${longFights}`,
+    combat&&combat.player ? `Vitals: HP -${Math.round(hpLost)}, MP -${mpLost}, IM -${imLost}${restAdded?` | Auto rest +${restAdded}m`:''}` : `Vitals: Combat Sim not started → time/wear only`,
+    `Time: search ${Math.round(searchMinutes)}m + fight ${Math.round(fightMinutes)}m + butcher ${Math.round(butcherMinutes)}m + rest ${restAdded}m = ${Math.round(totalMinutes)}m`
+  ].join('\n');
+  const box=document.getElementById('reward-montage-summary'); if(box) box.textContent=summary;
+  rewardLog(`MONTAGE ${kills} kill: avg ${avgHits.toFixed(1)} hit, monster hit ${totalMonsterHits}, time ${Math.round(totalMinutes)}m`,'var(--cyan)');
+  if(sessionState.active){
+    sessionState.restMinutes=(sessionState.restMinutes||0)+restAdded;
+    sessionState.log.push(summary.replace(/\n/g,' | '));
+    sessionRender();
+  }
+  if(typeof autoSave==='function') autoSave();
+  return {totalHits,totalMonsterHits,weaponWear,armorWear,totalMinutes,restAdded,hpLost,mpLost,imLost};
+}
 function rewardApplyWeaponWear(kills){
+  // Legacy button support: fixed HIT/KILL weapon wear only. +BOTH uses rewardApplyMontage().
   const apply = (document.getElementById('reward-apply-wear')?.value ?? '1') === '1';
   if(!apply) return 0;
   const hitsPerKill = Math.max(0, +document.getElementById('reward-hits-per-kill')?.value || 0);
-  const baseWearPerHit = 0.125; // Reward tracker baseline: 8 hit ≈ 1 durability per normal kill
+  const baseWearPerHit = 0.125;
   const monLv=+document.getElementById('reward-mlv')?.value||1;
   const playerLv=+document.getElementById('c-lv')?.value||expState.lv||1;
   const wearMult=manaPressureDurabilityMult(playerLv, monLv);
@@ -2873,7 +3083,7 @@ function rewardApplyWeaponWear(kills){
   }
   return totalBaseWear;
 }
-function rewardAddExp(){
+function rewardAddExp(applyWear=true){
   const monLv=+document.getElementById('reward-mlv').value||1;
   const tier=document.getElementById('reward-tier').value;
   const kills=Math.max(1,+document.getElementById('reward-kills').value||1);
@@ -2883,7 +3093,7 @@ function rewardAddExp(){
   addEXPDirect(total);
   rewardLog(`+EXP ${total} (${kills}× Lv.${monLv} ${tier}, ${expOne}/kill)`,'var(--gold)');
   if(sessionState.active){ sessionState.kills+=kills; sessionState.exp+=total; sessionState.log.push(`EXP: ${kills}× Lv.${monLv} ${tier} = ${total}`); sessionRender(); }
-  rewardApplyWeaponWear(kills);
+  if(applyWear) rewardApplyWeaponWear(kills);
   return total;
 }
 function invMergeKey(row){
@@ -2940,7 +3150,7 @@ function rewardAddLoot(){
   if(sessionState.active){ sessionState.lootValue+=total; sessionState.log.push(`LOOT: ${kills}× Lv.${monLv} ${tier}, rare ${rareCount}, ${crystalDropSummary(crystalResult.drops)} = ${invFormatCopper(total)}`); sessionRender(); }
   return total;
 }
-function rewardAddAll(){ rewardAddExp(); rewardAddLoot(); }
+function rewardAddAll(){ const kills=Math.max(1,+document.getElementById('reward-kills').value||1); rewardAddExp(false); rewardAddLoot(); rewardApplyMontage(kills); }
 function repairCalc(){
   const price=+document.getElementById('repair-price').value||0;
   const lost=(+document.getElementById('repair-lost').value||0)/100;
