@@ -1719,6 +1719,23 @@ function monsterDamageForAction(m, action, rangeRoll){
   return (m.dmg*rangeRoll)*mult*monsterDamageMult()*monsterWeakenedDamageMult();
 }
 
+
+function getPreviousCombatVitalsForNewFight(newMaxHP,newMaxMP,newMaxIM){
+  // Preserve Irein's current HP/MP/Inner Mana across repeated Combat Sim fights.
+  // Starting a new monster should reset only the monster, not refill the player for free.
+  if(combat && combat.player){
+    return {
+      hp: clampNumber(combat.player.hp, 0, newMaxHP),
+      mp: clampNumber(combat.player.mp, 0, newMaxMP),
+      im: clampNumber(combat.player.im, 0, newMaxIM),
+      activeSkill: combat.player.activeSkill || 'off',
+      pulseTurnCount: combat.player.pulseTurnCount || 0,
+      nextAttackMissPenalty: combat.player.nextAttackMissPenalty || 0
+    };
+  }
+  return { hp:newMaxHP, mp:newMaxMP, im:newMaxIM, activeSkill:'off', pulseTurnCount:0, nextAttackMissPenalty:0 };
+}
+
 function initCombat(){
   const plv=+document.getElementById('b-plv').value||1;
   const pstr=+document.getElementById('b-str').value||1;
@@ -1741,18 +1758,20 @@ function initCombat(){
 
   const mStrEff=tierEffectiveStat(mstr,mtier); const mAgiEff=tierEffectiveStat(magi,mtier); const mVitEff=tierEffectiveStat(mvit,mtier); const mDexEff=tierEffectiveStat(mdex,mtier);
   const pHP=getHP(pvit,plv); const pRed=getReduction(pvit,plv);
+  const pMaxMP=getMP(pint,plv);
   const pDMG=getTotalDMG(pstr,plv,prar);
   const mDMG=tierDamageFromStat(mstr,mlv,mtier);
   const mRed=tierReductionFromStat(mvit,mlv,mtier);
   const mHP=Math.round(getMonsterHP(mstr,mvit,mlv,mtier) * monsterHpAbilityMultFromList(abilities));
   const coreStage=getCoreStage(plv);
   const maxIM=getInnerManaMax(pwis,plv);
+  const prevVitals=getPreviousCombatVitalsForNewFight(pHP,pMaxMP,maxIM);
 
   combat={
     round:0, tier:mtier, t:t,
     player:{lv:plv,str:pstr,agi:pagi,vit:pvit,int:pint,dex:pdex,wis:pwis,coreStage:coreStage,
-            dmg:pDMG,maxHP:pHP,hp:pHP,maxMP:getMP(pint,plv),mp:getMP(pint,plv),red:pRed,im:maxIM,maxIM:maxIM,
-            rar:prar, activeSkill:'off', pulseTurnCount:0, nextAttackMissPenalty:0},
+            dmg:pDMG,maxHP:pHP,hp:prevVitals.hp,maxMP:pMaxMP,mp:prevVitals.mp,red:pRed,im:prevVitals.im,maxIM:maxIM,
+            rar:prar, activeSkill:prevVitals.activeSkill, pulseTurnCount:prevVitals.pulseTurnCount, nextAttackMissPenalty:prevVitals.nextAttackMissPenalty},
     monster:{lv:mlv,str:mStrEff,agi:mAgiEff,vit:mVitEff,dex:mDexEff,int:mint,
              dmg:mDMG,maxHP:mHP,hp:mHP,red:mRed,
              shield:mtier==='champion'||mtier==='boss',
@@ -1772,7 +1791,7 @@ function initCombat(){
   const initCombatDodge=calcRatioDodge(pagi, mAgiEff, mDexEff, initControl, 1.0);
   const initFullDodge=clamp(initCombatDodge+15, 5, 90);
   addLog('system',`Dodge: Combat ${pct(initCombatDodge)} | Full ${pct(initFullDodge)} | Monster Control ×${initControl.toFixed(2)}`);
-  addLog('system',`ไอเรน HP:${Math.round(pHP)} DMG:${fmt(pDMG)} ขั้น:${coreStage} IM:${maxIM}/${maxIM}`);
+  addLog('system',`ไอเรน HP:${Math.round(prevVitals.hp)}/${Math.round(pHP)} MP:${Math.round(prevVitals.mp)}/${Math.round(pMaxMP)} DMG:${fmt(pDMG)} ขั้น:${coreStage} IM:${prevVitals.im}/${maxIM}`);
   addLog('system',`มอนสเตอร์ HP:${Math.round(mHP)} DMG:${fmt(mDMG)} AGI_eff:${fmt(mAgiEff)}`);
   addLog('system',`Weak Point Required: ${weakPointRequired(mtier)} clean hit(s) + HP <25% → [อ่อนแอ] | Repeat weak damage +0.1/hit cap ×2.0 | Aim weak: Dodge×1.75 (Stagger opening: ×1.0)`);
   if(abilities.length) addLog('system',`Monster Abilities: ${mAbilityLabels(abilities).join(', ')}`);
@@ -2935,6 +2954,7 @@ function addEXPDirect(amount){
 
 let rewardPendingSearchMinutes = 0;
 let rewardPendingTravelMinutes = 0;
+let rewardPendingEncounter = { tier:null, count:0, group:false, foundAt:0, mode:'' };
 let rewardTimeTotals = { travel:0, search:0, fight:0, butcher:0, rest:0, total:0 };
 function rewardFmtMinutes(min){
   min=Math.max(0,Math.round(+min||0));
@@ -2954,7 +2974,10 @@ function rewardRenderTimeCounter(){
   };
   Object.entries(pairs).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.textContent=rewardFmtMinutes(val); });
   const note=document.getElementById('time-pending-note');
-  if(note) note.textContent=`Pending: travel ${rewardFmtMinutes(rewardPendingTravelMinutes||0)} / search ${rewardFmtMinutes(rewardPendingSearchMinutes||0)}. กด +BOTH เพื่อรวมเข้าตัวนับ.`;
+  if(note){
+    const enc = rewardPendingEncounter && rewardPendingEncounter.tier ? ` / encounter ${rewardPendingEncounter.tier} ×${rewardPendingEncounter.count}${rewardPendingEncounter.group?' (1 fight / swarm)':''}` : '';
+    note.textContent=`Pending: travel ${rewardFmtMinutes(rewardPendingTravelMinutes||0)} / search ${rewardFmtMinutes(rewardPendingSearchMinutes||0)}${enc}. กด +BOTH เพื่อรวมเข้าตัวนับ.`;
+  }
 }
 function rewardAddTravelTime(){
   const minutes=Math.max(0,Math.round(+document.getElementById('travel-minutes')?.value||0));
@@ -2965,21 +2988,23 @@ function rewardAddTravelTime(){
   if(typeof autoSave==='function') autoSave();
 }
 function rewardResetTimeCounter(){
-  rewardPendingSearchMinutes=0; rewardPendingTravelMinutes=0;
+  rewardPendingSearchMinutes=0; rewardPendingTravelMinutes=0; rewardPendingEncounter={tier:null,count:0,group:false,foundAt:0,mode:''};
   rewardTimeTotals={travel:0,search:0,fight:0,butcher:0,rest:0,total:0};
   rewardRenderTimeCounter();
   rewardLog('TIME COUNTER reset','var(--orange)');
   if(typeof autoSave==='function') autoSave();
 }
 function searchRollTable(mode){
+  // Per-minute encounter roll. WALK / SEARCH now rolls once for each minute and stops when something is found.
+  // "Normal ×2/×3" means one encounter/fight with multiple monsters, not separate isolated fights.
   if(mode==='safe') return [
-    ['none',0,30], ['normal',1,45], ['normal',2,18], ['normal',3,5], ['elite',1,2]
+    ['none',0,75], ['normal',1,18], ['normal',2,5], ['normal',3,1], ['elite',1,1]
   ];
   if(mode==='risky') return [
-    ['none',0,10], ['normal',1,35], ['normal',2,30], ['normal',3,15], ['elite',1,10]
+    ['none',0,50], ['normal',1,25], ['normal',2,14], ['normal',3,7], ['elite',1,4]
   ];
   return [
-    ['none',0,20], ['normal',1,45], ['normal',2,22], ['normal',3,8], ['elite',1,5]
+    ['none',0,65], ['normal',1,22], ['normal',2,8], ['normal',3,3], ['elite',1,2]
   ];
 }
 function weightedPick(rows){
@@ -2991,24 +3016,40 @@ function weightedPick(rows){
 function searchEncounterRoll(){
   const mode=document.getElementById('search-mode')?.value||'balanced';
   const minutes=Math.max(1,Math.round(+document.getElementById('search-minutes')?.value||10));
-  rewardPendingSearchMinutes += minutes;
-  const picked=weightedPick(searchRollTable(mode));
+  const table=searchRollTable(mode);
+  let picked=['none',0,0], foundMinute=minutes;
+  const minuteLogs=[];
+  for(let m=1;m<=minutes;m++){
+    const r=weightedPick(table);
+    if(r[0]!=='none'){
+      picked=r; foundMinute=m; break;
+    }
+    if(m<=5) minuteLogs.push(`${m}: -`);
+  }
+  rewardPendingSearchMinutes += foundMinute;
   const tier=picked[0], count=+picked[1]||0;
   const monLv=+document.getElementById('reward-mlv')?.value||1;
   let msg='';
   if(tier==='none'){
-    msg=`SEARCH ${minutes}m (${mode}): ไม่พบมอนสเตอร์`;
+    rewardPendingEncounter={tier:null,count:0,group:false,foundAt:0,mode};
+    msg=`SEARCH ${minutes}m (${mode}): เดินครบ ${minutes} นาที ไม่พบมอนสเตอร์`;
   }else{
+    const group=count>1;
+    rewardPendingEncounter={tier,count,group,foundAt:foundMinute,mode};
     document.getElementById('reward-tier').value=tier;
     document.getElementById('reward-kills').value=count;
-    msg=`SEARCH ${minutes}m (${mode}): พบ ${tier==='elite'?'Elite':'Normal'} Lv.${monLv} ×${count} → ตั้งค่า Kill Reward แล้ว`;
+    const bt=document.getElementById('b-mtier'); if(bt) bt.value=tier;
+    const blv=document.getElementById('b-mlv'); if(blv) blv.value=monLv;
+    const typeName=tier==='elite'?'Elite':'Normal';
+    msg=`SEARCH ${minutes}m (${mode}): นาทีที่ ${foundMinute} พบ ${typeName} Lv.${monLv} ×${count}${group?' (1 ไฟต์โดนรุม)':''} → ตั้งค่า Kill Reward + Combat Monster แล้ว`;
   }
   const box=document.getElementById('reward-montage-summary');
-  if(box) box.textContent=`${msg}\nPending search time: ${rewardPendingSearchMinutes}m\nกด +BOTH เพื่อคำนวณไฟต์/loot/เวลาเดินค้นหารวมกัน`;
+  if(box) box.textContent=`${msg}\nRoll: คำนวณทีละ 1 นาที และหยุดเมื่อพบ encounter\nPending search time: ${rewardPendingSearchMinutes}m\nกด +BOTH เพื่อคำนวณไฟต์/loot/เวลาเดินค้นหารวมกัน`;
+  rewardRenderTimeCounter();
   rewardLog(msg, tier==='elite'?'var(--gold)': tier==='none'?'var(--text-dim)':'var(--cyan)');
   if(sessionState.active){ sessionState.log.push(msg); sessionRender(); }
   if(typeof autoSave==='function') autoSave();
-  return {tier,count,minutes};
+  return {tier,count,minutes:foundMinute,group:count>1};
 }
 
 function rewardLog(msg,color){
@@ -3041,77 +3082,206 @@ function rewardButcherMinutes(){
   const m=document.getElementById('reward-butcher-mode')?.value||'normal';
   return m==='fast'?1:m==='careful'?4:2;
 }
-function rewardEstimateMonsterHitDamage(monLv,tier){
-  const playerLv=+document.getElementById('c-lv')?.value||expState.lv||1;
-  const pvit=+document.getElementById('c-vit')?.value||10;
-  const mstr=+document.getElementById('b-mstr')?.value || +document.getElementById('m-str')?.value || Math.max(10, Math.round(monLv*2.1));
-  let raw=0;
-  try{ raw=tierDamageFromStat(mstr, monLv, tier); }catch(e){ raw=monLv*2.5; }
-  const pred=(typeof getReduction==='function') ? getReduction(pvit, playerLv) : 0.25;
-  return Math.max(1, raw*(1-pred)*0.75);
+
+function rewardAbilityValue(list,key){
+  key=normalizeMAbilityKey(key);
+  return (list||[]).filter(a=>normalizeMAbilityKey(a.key)===key).reduce((sum,a)=>sum+(+a.value||0),0);
 }
-function rewardMonsterHitsFromPlayerHits(hits,tier){
-  // Longer fights give the monster more windows to hit. Elite+ naturally punishes drawn-out fights.
+function rewardReadCombatMonsterProfile(){
+  const tier=document.getElementById('b-mtier')?.value || document.getElementById('reward-tier')?.value || 'normal';
+  const lv=+document.getElementById('b-mlv')?.value || +document.getElementById('reward-mlv')?.value || 1;
+  const abilities=getSelectedMonsterAbilities();
+  const raw={
+    lv,tier,
+    str:+document.getElementById('b-mstr')?.value || +document.getElementById('m-str')?.value || Math.max(10,Math.round(lv*2.1)),
+    agi:+document.getElementById('b-magi')?.value || +document.getElementById('m-agi')?.value || Math.max(10,Math.round(lv*1.6)),
+    dex:+document.getElementById('b-mdex')?.value || +document.getElementById('m-dex')?.value || Math.max(10,Math.round(lv*1.6)),
+    vit:+document.getElementById('b-mvit')?.value || +document.getElementById('m-vit')?.value || Math.max(10,Math.round(lv*2.0)),
+    int:+document.getElementById('b-mint')?.value || +document.getElementById('m-int')?.value || 10,
+    abilities
+  };
+  const eff={
+    str:tierEffectiveStat(raw.str,tier), agi:tierEffectiveStat(raw.agi,tier), dex:tierEffectiveStat(raw.dex,tier), vit:tierEffectiveStat(raw.vit,tier), int:raw.int
+  };
+  const hpMult=monsterHpAbilityMultFromList(abilities);
+  const baseHP=getMonsterHP(raw.str, raw.vit, lv, tier);
+  const hp=Math.round(baseHP*hpMult);
+  const dmg=tierDamageFromStat(raw.str, lv, tier) * (1+rewardAbilityValue(abilities,'brutal')/100);
+  const red=tierReductionFromStat(raw.vit, lv, tier);
+  const control=monsterControlFactorFromList(abilities);
+  const evasion=clamp(1+rewardAbilityValue(abilities,'evasive')/100,0.50,1.80);
+  return {...raw, eff, hp, baseHP, hpMult, dmg, red, control, evasion};
+}
+function rewardReadCombatPlayerProfile(){
+  const lv=+document.getElementById('b-plv')?.value || +document.getElementById('c-lv')?.value || expState.lv || 1;
+  const base={
+    lv,
+    str:+document.getElementById('b-str')?.value || +document.getElementById('c-str')?.value || 10,
+    agi:+document.getElementById('b-agi')?.value || +document.getElementById('c-agi')?.value || 10,
+    vit:+document.getElementById('b-vit')?.value || +document.getElementById('c-vit')?.value || 10,
+    int:+document.getElementById('b-int')?.value || +document.getElementById('c-int')?.value || 10,
+    dex:+document.getElementById('b-dex')?.value || +document.getElementById('c-dex')?.value || 10,
+    wis:+document.getElementById('b-wis')?.value || +document.getElementById('c-wis')?.value || 10,
+    rar:+document.getElementById('b-rarity')?.value || +document.getElementById('c-rarity')?.value || 1
+  };
+  const maxHP=getHP(base.vit,lv), maxMP=getMP(base.int,lv), maxIM=getInnerManaMax(base.wis,lv);
+  const cur=(combat&&combat.player)?combat.player:null;
+  const bonus=Math.floor(base.int/3);
+  const pulse=selectedSkill||'off';
+  const eff={
+    str:base.str+(pulse==='str'?bonus:0), agi:base.agi+(pulse==='agi'?bonus:0), vit:base.vit+(pulse==='vit'?bonus:0),
+    dex:base.dex+(pulse==='dex'?bonus:0), int:base.int, wis:base.wis
+  };
+  return {
+    ...base, eff, pulse, pulseBonus:bonus,
+    maxHP, maxMP, maxIM,
+    hp:cur?cur.hp:maxHP,
+    mp:cur?cur.mp:maxMP,
+    im:cur?cur.im:maxIM,
+    red:getReduction(eff.vit,lv)
+  };
+}
+function rewardEnsureCombatVitals(p,m){
+  if(combat && combat.player){
+    // Keep current HP/MP/IM, but sync max/stat shell from Combat Sim panel.
+    combat.player.lv=p.lv; combat.player.str=p.str; combat.player.agi=p.agi; combat.player.vit=p.vit; combat.player.int=p.int; combat.player.dex=p.dex; combat.player.wis=p.wis;
+    combat.player.maxHP=p.maxHP; combat.player.maxMP=p.maxMP; combat.player.maxIM=p.maxIM; combat.player.red=p.red; combat.player.rar=p.rar;
+    combat.player.hp=Math.min(combat.player.hp,p.maxHP); combat.player.mp=Math.min(combat.player.mp,p.maxMP); combat.player.im=Math.min(combat.player.im,p.maxIM);
+  }else{
+    combat={round:0,tier:m.tier,player:{lv:p.lv,str:p.str,agi:p.agi,vit:p.vit,int:p.int,dex:p.dex,wis:p.wis,rar:p.rar,
+      maxHP:p.maxHP,hp:p.maxHP,maxMP:p.maxMP,mp:p.maxMP,maxIM:p.maxIM,im:p.maxIM,red:p.red,activeSkill:'off',pulseTurnCount:0},
+      monster:{lv:m.lv,str:m.eff.str,agi:m.eff.agi,dex:m.eff.dex,vit:m.eff.vit,int:m.eff.int,dmg:m.dmg,maxHP:m.hp,hp:m.hp,red:m.red,abilities:m.abilities||[],weakHits:0,weakReq:weakPointRequired(m.tier),weakened:false,staggered:false},over:false};
+  }
+  combat.monster={...(combat.monster||{}),lv:m.lv,str:m.eff.str,agi:m.eff.agi,dex:m.eff.dex,vit:m.eff.vit,int:m.eff.int,dmg:m.dmg,maxHP:m.hp,hp:m.hp,red:m.red,abilities:m.abilities||[],weakHits:0,weakReq:weakPointRequired(m.tier),weakened:false,staggered:false};
+}
+function rewardGetCombatSyncProfile(){
+  const monster=rewardReadCombatMonsterProfile();
+  const player=rewardReadCombatPlayerProfile();
+  rewardEnsureCombatVitals(player,monster);
+  const pressureDmg=manaPressureDmgMult(player.lv, monster.lv);
+  const pressureDef=manaPressureDefBonus(player.lv, monster.lv);
+  const monRed=Math.min(0.95, monster.red + pressureDef);
+  const thickMult=Math.max(0.05,1-rewardAbilityValue(monster.abilities,'thick_hide')/100);
+  const imDmgBonus=(selectedImSkill && getIMSkillConfig().effect==='dmg') ? (1+(+getIMSkillConfig().value||0)/100) : 1;
+  const rawPlayerDmg=getTotalDMG(player.eff.str, player.lv, player.rar) * pressureDmg * imDmgBonus;
+  const avgPlayerHit=Math.max(1, getRealDMG(rawPlayerDmg, monRed, 1.0) * thickMult);
+  const pierce=rewardAbilityValue(monster.abilities,'pierce')/100;
+  const pRed=Math.max(0, player.red - pierce);
+  const avgMonsterHit=Math.max(1, getRealDMG(monster.dmg, pRed, 1.0) * 0.75);
+  let dodge=calcRatioDodge(player.eff.agi, monster.eff.agi, monster.eff.dex, monster.control, 1.0);
+  const imCfg=getIMSkillConfig();
+  if(selectedImSkill && imCfg.effect==='dodge') dodge=clamp(dodge+(+imCfg.value||0),5,90);
+  const monsterDodge=calcRatioDodge(monster.eff.agi, player.eff.agi, player.eff.dex, 1.0, monster.evasion);
+  return {player, monster, avgPlayerHit, avgMonsterHit, playerDodge:dodge, monsterDodge};
+}
+function rewardSyncedHitRange(tier, prof){
+  const [baseMin,baseMax]=rewardTierHitRange(tier);
+  if(!prof || !prof.avgPlayerHit) return [baseMin,baseMax];
+  const estimated=Math.max(1, prof.monster.hp / Math.max(1,prof.avgPlayerHit));
+  const baseAvg=(baseMin+baseMax)/2;
+  const avg=clamp(baseAvg*0.45 + estimated*0.55, Math.max(2,baseMin*0.6), baseMax*2.5);
+  return [Math.max(1,Math.floor(avg*0.70)), Math.max(2,Math.ceil(avg*1.35))];
+}
+function rewardMonsterHitsFromPlayerHitsSynced(hits,tier,prof){
   const tierAdd = tier==='elite'?1:tier==='champion'?3:tier==='miniboss'?6:tier==='boss'?12:0;
   const base = Math.max(0, Math.floor((hits-5)/3) + rewardRandInt(0,1) + tierAdd);
-  return Math.max(0, base);
+  if(!prof) return base;
+  const hitMult=clamp((100-(prof.playerDodge||50))/50,0.10,2.20);
+  return Math.max(0, Math.round(base*hitMult));
+}
+
+function rewardEstimateMonsterHitDamage(monLv,tier){
+  const prof=rewardGetCombatSyncProfile();
+  return prof.avgMonsterHit;
+}
+function rewardMonsterHitsFromPlayerHits(hits,tier){
+  return rewardMonsterHitsFromPlayerHitsSynced(hits,tier,null);
 }
 function rewardApplyMontage(kills){
   kills=Math.max(1,Math.round(+kills||1));
   const apply = (document.getElementById('reward-apply-wear')?.value ?? '1') === '1';
   const mode=document.getElementById('reward-hit-mode')?.value||'variance';
-  const tier=document.getElementById('reward-tier')?.value||'normal';
-  const monLv=+document.getElementById('reward-mlv')?.value||1;
+
+  // Hunting Sim now uses Combat Sim as the source of truth for both Irein and monster.
+  // b-* player stats, selected pulse, monster stats, tier, and monster abilities all feed this estimate.
+  const prof=rewardGetCombatSyncProfile();
+  const tier=prof.monster.tier;
+  const monLv=prof.monster.lv;
+  if(document.getElementById('reward-tier')) document.getElementById('reward-tier').value=tier;
+  if(document.getElementById('reward-mlv')) document.getElementById('reward-mlv').value=monLv;
   const fixedHits=Math.max(0,+document.getElementById('reward-hits-per-kill')?.value||0);
-  const [hmin,hmax]=rewardTierHitRange(tier);
+  const [hmin,hmax]=rewardSyncedHitRange(tier,prof);
   let totalHits=0, totalMonsterHits=0, longFights=0, easyFights=0;
   for(let i=0;i<kills;i++){
     const h = mode==='fixed' ? fixedHits : rewardRandInt(hmin,hmax);
     totalHits += h;
     if(h>=hmax-1) longFights++;
     if(h<=hmin+1) easyFights++;
-    totalMonsterHits += rewardMonsterHitsFromPlayerHits(h,tier);
+    totalMonsterHits += rewardMonsterHitsFromPlayerHitsSynced(h,tier,prof);
+  }
+  const pendingEncounter = (rewardPendingEncounter && rewardPendingEncounter.tier) ? rewardPendingEncounter : null;
+  const isSwarmFight = !!(pendingEncounter && pendingEncounter.group && pendingEncounter.count>1 && pendingEncounter.count===kills);
+  // Realistic swarm pressure: enemies act together, then pressure drops as each one dies.
+  // 1 monster ×1.0, 2 monsters ×1.5, 3 monsters ×2.0
+  const swarmPressure = isSwarmFight ? ((kills + 1) / 2) : 1;
+  if(isSwarmFight){
+    totalMonsterHits = Math.ceil(totalMonsterHits * swarmPressure);
+    longFights += Math.max(0,kills-1);
   }
   const avgHits = kills ? totalHits/kills : 0;
   const baseWearPerHit=0.125;
-  const playerLv=+document.getElementById('c-lv')?.value||expState.lv||1;
+  const playerLv=prof.player.lv;
   const wearMult=manaPressureDurabilityMult(playerLv, monLv);
+  const armorBreaker=1+rewardAbilityValue(prof.monster.abilities,'armor_breaker')/100;
   const weaponWear=apply ? totalHits*baseWearPerHit*wearMult : 0;
-  const armorWear=apply ? totalMonsterHits*0.25*wearMult : 0;
+  const armorWear=apply ? totalMonsterHits*0.25*wearMult*armorBreaker : 0;
   if(weaponWear>0) equipmentDamage('weapon', weaponWear);
   if(armorWear>0) equipmentDamage('armor', armorWear);
 
-  const fightMinutes = totalHits*0.18 + totalMonsterHits*0.10; // quick abstract fight time
+  let fightMinutes = totalHits*0.18 + totalMonsterHits*0.10;
+  if(isSwarmFight) fightMinutes *= (1 + 0.10*(kills-1));
   const butcherMinutes = kills*rewardButcherMinutes();
   let restAdded=0, hpLost=0, mpLost=0, imLost=0;
   const autoRest=(document.getElementById('reward-auto-rest')?.value ?? '1')==='1';
-  if(combat && combat.player){
-    const p=combat.player;
-    const dmgPerMonsterHit=rewardEstimateMonsterHitDamage(monLv,tier);
-    hpLost=totalMonsterHits*dmgPerMonsterHit;
-    mpLost=Math.ceil(totalHits*0.12); // normal attacks and skill clean-up consume small MP over a montage
-    const pulseOn = selectedSkill && selectedSkill!=='off';
-    imLost = pulseOn ? Math.ceil(2 + kills*0.9 + longFights*0.5) : 0;
-    p.hp=Math.max(1, p.hp-hpLost);
-    p.mp=Math.max(0, p.mp-mpLost);
-    p.im=Math.max(0, p.im-imLost);
-    if(autoRest){
-      let guard=0;
-      while(guard++<20 && (p.hp<p.maxHP*0.35 || p.mp<p.maxMP*0.25 || p.im<p.maxIM*0.25)){
-        const before={hp:p.hp,mp:p.mp,im:p.im};
-        const min=10; restAdded+=min;
-        p.hp=Math.min(p.maxHP, p.hp+p.maxHP*(min/30));
-        p.mp=Math.min(p.maxMP, p.mp+Math.ceil(p.maxMP*(min/30)));
-        p.im=Math.min(p.maxIM, p.im+Math.ceil(p.maxIM*(min/10)));
-        if(before.hp===p.hp && before.mp===p.mp && before.im===p.im) break;
-      }
-    }
-    updateHPDisplay(); updateMPDisplay(); updateIMDisplay(); updateStatusRow();
+  const p=combat.player;
+  hpLost=totalMonsterHits*prof.avgMonsterHit;
+  // Basic attacks universally use MP through weapon circuits; active skill usage is estimated from the selected Combat Sim skill toggle.
+  const basicMpPerHit=0.35;
+  mpLost=Math.ceil(totalHits*basicMpPerHit);
+  const sk=getSelectedCombatSkill();
+  let skillUses=0, skillMpLost=0;
+  if(selectedMpSkill && sk && sk.type==='active'){
+    skillUses=Math.max(1, Math.floor(kills*0.5));
+    skillMpLost=skillUses*Math.max(0,Math.ceil(sk.mp||0));
+    mpLost+=skillMpLost;
   }
+  const pulseOn = selectedSkill && selectedSkill!=='off';
+  imLost = pulseOn ? Math.ceil(2 + kills*1.0 + longFights*0.5) : 0;
+  const imCfg=getIMSkillConfig();
+  if(selectedImSkill){
+    imLost += Math.max(0, Math.ceil((+imCfg.cost||0) * Math.max(1, Math.floor(kills*0.4))));
+  }
+  p.hp=Math.max(1, p.hp-hpLost);
+  p.mp=Math.max(0, p.mp-mpLost);
+  p.im=Math.max(0, p.im-imLost);
+  if(autoRest){
+    let guard=0;
+    while(guard++<30 && (p.hp<p.maxHP*0.35 || p.mp<p.maxMP*0.25 || p.im<p.maxIM*0.25)){
+      const before={hp:p.hp,mp:p.mp,im:p.im};
+      const min=10; restAdded+=min;
+      p.hp=Math.min(p.maxHP, p.hp+p.maxHP*(min/30));
+      p.mp=Math.min(p.maxMP, p.mp+Math.ceil(p.maxMP*(min/30)));
+      p.im=Math.min(p.maxIM, p.im+Math.ceil(p.maxIM*(min/10)));
+      if(before.hp===p.hp && before.mp===p.mp && before.im===p.im) break;
+    }
+  }
+  updateHPDisplay(); updateMPDisplay(); updateIMDisplay(); updateStatusRow(); syncPlayerVitalsPanel();
+
   const travelMinutes = Math.max(0, rewardPendingTravelMinutes||0);
   const searchMinutes = Math.max(0, rewardPendingSearchMinutes||0);
   rewardPendingTravelMinutes = 0;
   rewardPendingSearchMinutes = 0;
+  rewardPendingEncounter={tier:null,count:0,group:false,foundAt:0,mode:''};
   const totalMinutes = travelMinutes + searchMinutes + fightMinutes + butcherMinutes + restAdded;
   rewardTimeTotals.travel=(rewardTimeTotals.travel||0)+travelMinutes;
   rewardTimeTotals.search=(rewardTimeTotals.search||0)+searchMinutes;
@@ -3120,17 +3290,21 @@ function rewardApplyMontage(kills){
   rewardTimeTotals.rest=(rewardTimeTotals.rest||0)+restAdded;
   rewardTimeTotals.total=(rewardTimeTotals.total||0)+totalMinutes;
   rewardRenderTimeCounter();
+  const ab=mAbilityLabels(prof.monster.abilities||[]).join(', ') || 'none';
   const summary = [
-    `MONTAGE: ${kills} kill Lv.${monLv} ${tier} (${mode==='fixed'?'fixed':'variance'} ${mode==='fixed'?fixedHits:hmin+'-'+hmax} hit/kill)`,
+    `MONTAGE: ${kills} kill Lv.${monLv} ${tier} (${mode==='fixed'?'fixed':'combat-sync variance'} ${mode==='fixed'?fixedHits:hmin+'-'+hmax} hit/kill)`,
+    `${isSwarmFight?`Encounter: ${kills} monsters in ONE fight / realistic swarm pressure ×${swarmPressure.toFixed(2)}`:'Encounter: separate/normal hunting estimate'}`,
+    `Source: Combat Sim | Irein AGI ${fmt(prof.player.eff.agi)} DEX ${fmt(prof.player.eff.dex)} pulse ${prof.player.pulse.toUpperCase()} | Monster AGI ${fmt(prof.monster.eff.agi)} DEX ${fmt(prof.monster.eff.dex)} | Abilities: ${ab}`,
+    `Expected: Player hit≈${fmt(prof.avgPlayerHit)} dmg | Monster hit≈${fmt(prof.avgMonsterHit)} dmg | Irein dodge≈${pct(prof.playerDodge)} | Monster dodge≈${pct(prof.monsterDodge)}`,
     `Travel time: ${Math.round(travelMinutes)}m | Search/walk time: ${Math.round(searchMinutes)}m`,
     `Avg hit/kill: ${avgHits.toFixed(1)} | Total player hits: ${Math.round(totalHits)} | Monster hits received: ${totalMonsterHits}`,
     `Weapon dur -${weaponWear.toFixed(1)} | Armor dur -${armorWear.toFixed(1)} | Easy ${easyFights}, Long ${longFights}`,
-    combat&&combat.player ? `Vitals: HP -${Math.round(hpLost)}, MP -${mpLost}, IM -${imLost}${restAdded?` | Auto rest +${restAdded}m`:''}` : `Vitals: Combat Sim not started → time/wear only`,
+    `Vitals: HP -${Math.round(hpLost)}, MP -${mpLost}${skillUses?` (skill ${skillUses}×${sk.name} = ${skillMpLost})`:''}, IM -${imLost}${restAdded?` | Auto rest +${restAdded}m`:''}`,
     `Time: travel ${Math.round(travelMinutes)}m + search ${Math.round(searchMinutes)}m + fight ${Math.round(fightMinutes)}m + butcher ${Math.round(butcherMinutes)}m + rest ${restAdded}m = ${Math.round(totalMinutes)}m`,
     `Day/session total: ${rewardFmtMinutes(rewardTimeTotals.total||0)}`
   ].join('\n');
   const box=document.getElementById('reward-montage-summary'); if(box) box.textContent=summary;
-  rewardLog(`MONTAGE ${kills} kill: avg ${avgHits.toFixed(1)} hit, monster hit ${totalMonsterHits}, time ${Math.round(totalMinutes)}m`,'var(--cyan)');
+  rewardLog(`MONTAGE ${kills} kill: avg ${avgHits.toFixed(1)} hit, monster hit ${totalMonsterHits}, HP -${Math.round(hpLost)}, MP -${mpLost}, IM -${imLost}, time ${Math.round(totalMinutes)}m`,'var(--cyan)');
   if(sessionState.active){
     sessionState.restMinutes=(sessionState.restMinutes||0)+restAdded;
     sessionState.log.push(summary.replace(/\n/g,' | '));
@@ -3485,8 +3659,10 @@ function buildState(){
     skillLibrary:JSON.parse(JSON.stringify(skillLibrary||[])),
     selectedImSkill:!!selectedImSkill,
     compactCombatLog:JSON.parse(JSON.stringify(compactCombatLog||[])),
+    combatVitals:(combat&&combat.player)?{hp:combat.player.hp,mp:combat.player.mp,im:combat.player.im,maxHP:combat.player.maxHP,maxMP:combat.player.maxMP,maxIM:combat.player.maxIM}:null,
     rewardPendingSearchMinutes:rewardPendingSearchMinutes||0,
     rewardPendingTravelMinutes:rewardPendingTravelMinutes||0,
+    rewardPendingEncounter:JSON.parse(JSON.stringify(rewardPendingEncounter||{})),
     rewardTimeTotals:JSON.parse(JSON.stringify(rewardTimeTotals||{}))
   };
 }
@@ -3546,7 +3722,23 @@ function buildApplyState(state){
   compactCombatLog=Array.isArray(state.compactCombatLog)?state.compactCombatLog:[];
   rewardPendingSearchMinutes=Number(state.rewardPendingSearchMinutes||0);
   rewardPendingTravelMinutes=Number(state.rewardPendingTravelMinutes||0);
+  rewardPendingEncounter=(state.rewardPendingEncounter && typeof state.rewardPendingEncounter==='object')?state.rewardPendingEncounter:{tier:null,count:0,group:false,foundAt:0,mode:''};
   rewardTimeTotals=(state.rewardTimeTotals && typeof state.rewardTimeTotals==='object')?state.rewardTimeTotals:{travel:0,search:0,fight:0,butcher:0,rest:0,total:0};
+  if(state.combatVitals){
+    const plv=+document.getElementById('b-plv')?.value || +document.getElementById('c-lv')?.value || expState.lv || 1;
+    const pvit=+document.getElementById('b-vit')?.value || +document.getElementById('c-vit')?.value || 10;
+    const pint=+document.getElementById('b-int')?.value || +document.getElementById('c-int')?.value || 10;
+    const pwis=+document.getElementById('b-wis')?.value || +document.getElementById('c-wis')?.value || 10;
+    const maxHP=getHP(pvit,plv), maxMP=getMP(pint,plv), maxIM=getInnerManaMax(pwis,plv);
+    combat = combat || {round:0,tier:document.getElementById('b-mtier')?.value||'normal',player:{},monster:null,over:true};
+    combat.player = Object.assign(combat.player||{}, {
+      lv:plv, vit:pvit, int:pint, wis:pwis,
+      maxHP, maxMP, maxIM,
+      hp:clampNumber(state.combatVitals.hp,0,maxHP),
+      mp:clampNumber(state.combatVitals.mp,0,maxMP),
+      im:clampNumber(state.combatVitals.im,0,maxIM)
+    });
+  }
   rewardRenderTimeCounter();
   buildScheduleForceRender();
   buildStatus(`✓ โหลด build สำเร็จ (${state.savedAt||'unknown time'}) | Money ${Number(moneyCopper||0).toLocaleString()} C`,'var(--green)');
