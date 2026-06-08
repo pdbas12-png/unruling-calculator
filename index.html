@@ -2588,8 +2588,7 @@ function invAddRow(){
     qty:+document.getElementById('inv-add-qty').value||1,
     base
   };
-  inventoryRows.push(row);
-  invRender();
+  invPush(row);
 }
 function invUpdate(i,key,val){
   if(!inventoryRows[i]) return;
@@ -2887,7 +2886,39 @@ function rewardAddExp(){
   rewardApplyWeaponWear(kills);
   return total;
 }
-function invPush(row){ inventoryRows.push(row); invRender(); return invTotalRow(row); }
+function invMergeKey(row){
+  const type = row?.type || 'custom';
+  const rarity = row?.rarity || 'common';
+  const lv = Math.round(+row?.lv || 1);
+  const base = Math.round(+row?.base || 0);
+  // Custom items can share type/base, so include name. System loot/crystals merge by type+rarity+level+base.
+  const namePart = type==='custom' ? String(row?.name||'Item').trim() : '';
+  return [type, rarity, lv, base, namePart].join('|');
+}
+function invPush(row){
+  row = {
+    name: row?.name || 'Item',
+    type: row?.type || 'custom',
+    rarity: row?.rarity || 'common',
+    lv: Math.max(1, Math.round(+row?.lv || 1)),
+    qty: Math.max(0, Math.round(+row?.qty || 0)),
+    base: Math.max(0, +row?.base || 0)
+  };
+  if(row.qty<=0) return 0;
+  const addedValue = invUnitPrice(row) * row.qty;
+  const key = invMergeKey(row);
+  const existing = inventoryRows.find(r => invMergeKey(r) === key);
+  if(existing){
+    existing.qty = Math.max(0, Math.round(+existing.qty || 0)) + row.qty;
+    // Prefer the latest non-empty display name, useful for tier names like elite/champion.
+    if(row.name) existing.name = row.name;
+  }else{
+    inventoryRows.push(row);
+  }
+  invRender();
+  if(typeof autoSave==='function') autoSave();
+  return addedValue;
+}
 function rewardAddLoot(){
   const monLv=+document.getElementById('reward-mlv').value||1;
   const tier=document.getElementById('reward-tier').value;
