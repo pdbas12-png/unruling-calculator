@@ -136,6 +136,20 @@
   .skill-list input,.skill-list select{width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:5px 7px;font-family:var(--mono);font-size:0.7rem;outline:none;}
   @media(max-width:900px){.skill-manager-grid{grid-template-columns:1fr 1fr;}.skill-list{font-size:0.62rem;}}
 
+
+
+  /* Hunting field encounter editor - cleaner app layout */
+  .field-enc-box{margin-top:8px;padding:10px;border:1px solid var(--border);background:rgba(255,255,255,0.02);}
+  .field-enc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:8px;}
+  .field-enc-chance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:stretch;}
+  .field-enc-cell{display:grid;grid-template-columns:72px minmax(0,1fr);gap:6px;align-items:center;min-width:0;}
+  .field-enc-cell label{font-family:var(--mono);font-size:0.66rem;color:var(--text-dim);letter-spacing:1px;white-space:nowrap;width:auto!important;}
+  .field-enc-cell input{width:100%;min-width:0;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:7px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;}
+  .field-enc-cell input:focus{border-color:var(--cyan);}
+  .field-enc-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px;}
+  .field-enc-actions .btn{width:auto;margin-top:0;padding:8px 12px;}
+  @media(max-width:700px){.field-enc-grid,.field-enc-chance-grid{grid-template-columns:1fr;}.field-enc-cell{grid-template-columns:78px minmax(0,1fr);}}
+
   /* mobile overflow fixes */
   html,body{max-width:100%;}
   .panel,.card,.field,.stat-item,.result-item{min-width:0;}
@@ -215,7 +229,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
 <div class="wrap">
   <div class="header">
     <h1>⟨ UNRULING WORLD ⟩</h1>
-    <p>COMBAT SYSTEM v3.5 — Log Pulse/Status Fix</p>
+    <p>GM WEBAPP — Sheet Full Sync + UI Fix</p>
     <div class="header-line"></div>
   </div>
 
@@ -424,19 +438,22 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               <div class="section-label">SEARCH / ENCOUNTER</div>
               <div class="field"><label>SEARCH MODE</label><select id="search-mode" onchange="applySearchPresetFromMode()"><option value="balanced" selected>Balanced</option><option value="safe">Safe route</option><option value="risky">Risky dense zone</option></select></div>
               <div class="field"><label>SEARCH TIME</label><input type="number" id="search-minutes" value="10" min="1" step="1"></div>
-              <div style="margin-top:8px;padding:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);">
+              <div class="field-enc-box">
                 <div class="section-label">FIELD MONSTER TABLE — ตั้งค่าโซนล่าเอง</div>
-                <div class="grid2" style="gap:6px;margin-bottom:6px;">
-                  <div class="field" style="margin-bottom:0;"><label>LV MIN</label><input type="number" id="field-lv-min" value="11" min="1" max="400" step="1" oninput="updateFieldEncounterSummary()"></div>
-                  <div class="field" style="margin-bottom:0;"><label>LV MAX</label><input type="number" id="field-lv-max" value="12" min="1" max="400" step="1" oninput="updateFieldEncounterSummary()"></div>
+                <div class="field-enc-grid">
+                  <div class="field-enc-cell"><label>LV MIN</label><input type="number" id="field-lv-min" value="11" min="1" max="400" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <div class="field-enc-cell"><label>LV MAX</label><input type="number" id="field-lv-max" value="12" min="1" max="400" step="1" oninput="updateFieldEncounterSummary()"></div>
                 </div>
-                <div class="grid3" style="gap:6px;">
-                  <div class="field" style="margin-bottom:0;"><label>NONE %</label><input type="number" id="field-ch-none" value="65" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
-                  <div class="field" style="margin-bottom:0;"><label>N×1 %</label><input type="number" id="field-ch-n1" value="22" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
-                  <div class="field" style="margin-bottom:0;"><label>N×2 %</label><input type="number" id="field-ch-n2" value="8" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
-                  <div class="field" style="margin-bottom:0;"><label>N×3 %</label><input type="number" id="field-ch-n3" value="3" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
-                  <div class="field" style="margin-bottom:0;"><label>ELITE %</label><input type="number" id="field-ch-elite" value="2" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
-                  <button class="btn sm gold-btn" style="margin-top:0;" onclick="applySearchPresetFromMode()">APPLY PRESET</button>
+                <div class="field-enc-chance-grid">
+                  <div class="field-enc-cell"><label>NONE %</label><input type="number" id="field-ch-none" value="65" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <div class="field-enc-cell"><label>N×1 %</label><input type="number" id="field-ch-n1" value="22" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <div class="field-enc-cell"><label>N×2 %</label><input type="number" id="field-ch-n2" value="8" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <div class="field-enc-cell"><label>N×3 %</label><input type="number" id="field-ch-n3" value="3" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <div class="field-enc-cell"><label>ELITE %</label><input type="number" id="field-ch-elite" value="2" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
+                </div>
+                <div class="field-enc-actions">
+                  <button class="btn sm gold-btn" onclick="applySearchPresetFromMode()">APPLY PRESET</button>
+                  <button class="btn sm" onclick="updateFieldEncounterSummary()">REFRESH</button>
                 </div>
                 <div id="field-encounter-summary" class="small-note" style="line-height:1.6;margin-top:8px;">Field table: —</div>
               </div>
@@ -4175,7 +4192,7 @@ function enhanceNumberStepper(id, step=1){
 }
 function initQuickSteppers(){
   [
-    'c-lv','m-lv','b-plv','b-mlv','reward-mlv','field-lv-min','field-lv-max','field-ch-none','field-ch-n1','field-ch-n2','field-ch-n3','field-ch-elite','eq-weapon-lv','eq-armor-lv','ek-mon-lv','inv-add-lv',
+    'c-lv','m-lv','b-plv','b-mlv','reward-mlv','eq-weapon-lv','eq-armor-lv','ek-mon-lv','inv-add-lv',
     'c-str','c-agi','c-dex','c-vit','c-int','c-wis',
     'm-str','m-agi','m-dex','m-vit','m-int',
     'b-str','b-agi','b-vit','b-int','b-dex','b-wis',
@@ -4185,7 +4202,7 @@ function initQuickSteppers(){
 
 
 
-// ══ GOOGLE SHEET CLOUD SYNC (Inventory + Money) ══
+// ══ GOOGLE SHEET CLOUD SYNC (Full Save: Inventory/Money/Character/Equipment/Consumables/EmptyCrystal/SessionLog) ══
 const CLOUD_SETTINGS_KEY='unrulingCloudSheetSettings_v1';
 const CLOUD_DEFAULT_API_URL='https://script.google.com/macros/s/AKfycbzHoWaCQ53LHSjsV_zsZO4NEctDihbdXOJwqpi4u1SrSxp164X1Qeq1djDypuzHCBsZfQ/exec';
 const CLOUD_DEFAULT_SYNC_KEY='unruling-main-save';
@@ -4252,23 +4269,170 @@ function cloudSheetRowsToInventory(rows){
     };
   });
 }
+function cloudVal(id, fallback=''){
+  const el=document.getElementById(id);
+  return el ? el.value : fallback;
+}
+function cloudNum(id, fallback=0){
+  const n=Number(cloudVal(id, fallback));
+  return Number.isFinite(n) ? n : fallback;
+}
+function cloudCollectCharacter(){
+  const lv=cloudNum('c-lv', (expState&&expState.lv)||1);
+  const vit=cloudNum('c-vit',10), intv=cloudNum('c-int',10), wis=cloudNum('c-wis',10);
+  const maxHp=getHP(vit,lv), maxMp=getMP(intv,lv), maxIm=getInnerManaMax(wis,lv);
+  const p=(combat&&combat.player)?combat.player:null;
+  return {
+    level: lv,
+    exp: (expState&&Number.isFinite(Number(expState.current)))?Number(expState.current):0,
+    hp: Math.round(clampNumber(p?p.hp:maxHp,0,maxHp)),
+    maxHp: Math.round(maxHp),
+    mp: Math.round(clampNumber(p?p.mp:maxMp,0,maxMp)),
+    maxMp: Math.round(maxMp),
+    innerMana: Math.round(clampNumber(p?p.im:maxIm,0,maxIm)),
+    maxInnerMana: Math.round(maxIm),
+    str: cloudNum('c-str',10),
+    agi: cloudNum('c-agi',10),
+    vit: vit,
+    int: intv,
+    dex: cloudNum('c-dex',10),
+    wis: wis,
+    coreStage: getCoreStage(lv)
+  };
+}
+function cloudApplyCharacter(ch){
+  if(!ch || typeof ch!=='object') return;
+  const map={level:'c-lv',str:'c-str',agi:'c-agi',vit:'c-vit',int:'c-int',dex:'c-dex',wis:'c-wis'};
+  Object.entries(map).forEach(([k,id])=>{ if(ch[k]!==undefined && document.getElementById(id)) document.getElementById(id).value=ch[k]; });
+  if(ch.level!==undefined){ expState.lv=Number(ch.level)||expState.lv||1; }
+  if(ch.exp!==undefined){ expState.current=Number(ch.exp)||0; }
+  ['b-plv','b-str','b-agi','b-vit','b-int','b-dex','b-wis'].forEach(id=>{
+    const sourceId=id==='b-plv'?'c-lv':id.replace('b-','c-');
+    const src=document.getElementById(sourceId), dst=document.getElementById(id);
+    if(src&&dst) dst.value=src.value;
+  });
+  const lv=cloudNum('c-lv',1), vit=cloudNum('c-vit',10), intv=cloudNum('c-int',10), wis=cloudNum('c-wis',10);
+  const maxHP=getHP(vit,lv), maxMP=getMP(intv,lv), maxIM=getInnerManaMax(wis,lv);
+  combat = combat || {round:0,tier:document.getElementById('b-mtier')?.value||'normal',player:{},monster:null,over:true};
+  combat.player=Object.assign(combat.player||{}, {
+    lv, vit, int:intv, wis,
+    maxHP, maxMP, maxIM,
+    hp:clampNumber(ch.hp!==undefined?Number(ch.hp):maxHP,0,maxHP),
+    mp:clampNumber(ch.mp!==undefined?Number(ch.mp):maxMP,0,maxMP),
+    im:clampNumber(ch.innerMana!==undefined?Number(ch.innerMana):maxIM,0,maxIM)
+  });
+}
+function cloudCollectEquipment(){
+  return [
+    {slot:'weapon',name:cloudVal('eq-weapon-name',''),lv:cloudNum('eq-weapon-lv',1),rarity:cloudVal('eq-weapon-rarity','common'),price:cloudNum('eq-weapon-price',0),dur:cloudNum('eq-weapon-dur',100),atk:cloudNum('eq-weapon-atk',0),note:''},
+    {slot:'armor',name:cloudVal('eq-armor-name',''),lv:cloudNum('eq-armor-lv',1),rarity:cloudVal('eq-armor-rarity','common'),price:cloudNum('eq-armor-price',0),dur:cloudNum('eq-armor-dur',100),atk:0,note:''}
+  ];
+}
+function cloudApplyEquipment(rows){
+  if(!Array.isArray(rows)) return;
+  rows.forEach(r=>{
+    const slot=String(r.slot||'').toLowerCase();
+    if(slot==='weapon'){
+      [['eq-weapon-name',r.name],['eq-weapon-lv',r.lv],['eq-weapon-rarity',r.rarity],['eq-weapon-price',r.price],['eq-weapon-dur',r.dur],['eq-weapon-atk',r.atk]].forEach(([id,v])=>{ if(v!==undefined&&document.getElementById(id)) document.getElementById(id).value=v; });
+    }else if(slot==='armor'){
+      [['eq-armor-name',r.name],['eq-armor-lv',r.lv],['eq-armor-rarity',r.rarity],['eq-armor-price',r.price],['eq-armor-dur',r.dur]].forEach(([id,v])=>{ if(v!==undefined&&document.getElementById(id)) document.getElementById(id).value=v; });
+    }
+  });
+}
+function cloudCollectConsumables(){
+  return (consumables||[]).map((c,idx)=>({
+    id:c.id||`cons_${idx+1}`,
+    name:c.name||'Consumable',
+    lv:Number(c.lv||0),
+    qty:Number(c.qty||0),
+    heal:Number(c.heal||0),
+    unitPrice:Number(c.unitPrice!==undefined?c.unitPrice:(c.price||0)),
+    note:c.note||''
+  }));
+}
+function cloudApplyConsumables(rows){
+  if(!Array.isArray(rows)) return;
+  consumables=rows.filter(r=>r && (r.name||r.id)).map((r,idx)=>({
+    id:String(r.id||`cons_${idx+1}`),
+    name:String(r.name||'Consumable'),
+    lv:Number(r.lv||0),
+    qty:Number(r.qty||0),
+    heal:Number(r.heal||0),
+    unitPrice:Number(r.unitPrice!==undefined?r.unitPrice:(r.price||0)),
+    price:Number(r.unitPrice!==undefined?r.unitPrice:(r.price||0)),
+    note:String(r.note||'')
+  }));
+}
+function cloudCollectEmptyCrystal(){
+  const rows=[];
+  for(let level=1;level<=5;level++){
+    const equipLv=emptyCrystalEquipLv(level);
+    rows.push({level,progress:Number(crystalPityState[`L${equipLv}`]||0),required:CRYSTAL_PITY_KILLS,stock:emptyCrystalCount(level)});
+  }
+  return rows;
+}
+function cloudApplyEmptyCrystal(rows){
+  if(!Array.isArray(rows)) return;
+  rows.forEach(r=>{
+    const level=Number(r.level||0);
+    if(level>=1 && level<=5){
+      const equipLv=emptyCrystalEquipLv(level);
+      crystalPityState[`L${equipLv}`]=Math.max(0,Math.round(Number(r.progress||0)));
+    }
+  });
+}
+function cloudCollectSessionLog(){
+  const ss=sessionState||{};
+  const summary=Array.isArray(ss.log)?ss.log.join(' | '):'';
+  return [{
+    id:'current_session',
+    date:new Date().toISOString(),
+    field: cloudVal('search-mode',''),
+    kills:Number(ss.kills||0),
+    exp:Number(ss.exp||0),
+    lootValue:Number(ss.lootValue||0),
+    potionUsed:Number(ss.potionUsed||0),
+    repairCost:Number(ss.repairCost||0),
+    netProfit:Number((ss.lootValue||0)-(ss.repairCost||0)-(ss.consumableCost||0)),
+    summary: summary
+  }];
+}
+function cloudApplySessionLog(rows){
+  // Keep current active session state; only show imported rows as reference when needed.
+  window.cloudImportedSessionLog=Array.isArray(rows)?rows:[];
+}
 function cloudBuildPayload(){
+  const character=cloudCollectCharacter();
+  const equipment=cloudCollectEquipment();
+  const consumablesPayload=cloudCollectConsumables();
+  const emptyCrystal=cloudCollectEmptyCrystal();
+  const sessionLog=cloudCollectSessionLog();
   return {
     inventory: cloudInventoryToSheetRows(),
     money: { copper: Number(moneyCopper||0) },
+    character,
+    equipment,
+    consumables: consumablesPayload,
+    emptyCrystal,
+    sessionLog,
     meta: {
       saveName: 'Irein Main',
-      version: '1',
+      version: '2',
       source: 'Unruling World GM Tool',
       itemCount: (inventoryRows||[]).length,
       totalQty: typeof invTotalQty==='function'?invTotalQty():0,
-      inventoryValue: typeof invTotal==='function'?invTotal():0
+      inventoryValue: typeof invTotal==='function'?invTotal():0,
+      characterLevel: character.level,
+      equipmentSlots: equipment.length,
+      consumableSlots: consumablesPayload.length
     }
   };
 }
 function cloudFingerprint(){
-  try{return JSON.stringify({money:moneyCopper||0, inv:cloudInventoryToSheetRows()});}
-  catch(e){return String(Date.now());}
+  try{
+    const p=cloudBuildPayload();
+    return JSON.stringify({money:p.money, inventory:p.inventory, character:p.character, equipment:p.equipment, consumables:p.consumables, emptyCrystal:p.emptyCrystal});
+  } catch(e){return String(Date.now());}
 }
 function cloudJsonpLoad(api,key){
   return new Promise((resolve,reject)=>{
@@ -4306,7 +4470,11 @@ async function cloudSaveToSheet(){
     }
     cloudLastFingerprint=cloudFingerprint();
     const t=data.savedAt || new Date().toISOString();
-    cloudStatus(`${data.opaque?'✓ Save sent to Google Sheet (opaque / CORS fallback)':'✓ Saved to Google Sheet'}\n${new Date(t).toLocaleString()}\nInventory: ${payload.inventory.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper||0):(moneyCopper||0)+'C'}${data.opaque?'\nหมายเหตุ: Browser อ่านผลลัพธ์ POST ไม่ได้เพราะ CORS แต่คำสั่งถูกส่งแล้ว; กด LOAD เพื่อยืนยันหลังอัปเดต Apps Script แบบ JSONP':''}`,'var(--green)');
+    cloudStatus(`${data.opaque?'✓ Save sent to Google Sheet (opaque / CORS fallback)':'✓ Saved to Google Sheet'}
+${new Date(t).toLocaleString()}
+Inventory: ${payload.inventory.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper||0):(moneyCopper||0)+'C'}
+Saved tabs: Inventory, Money, Character, Equipment, Consumables, EmptyCrystal, SessionLog${data.opaque?'
+หมายเหตุ: Browser อ่านผลลัพธ์ POST ไม่ได้เพราะ CORS แต่คำสั่งถูกส่งแล้ว; กด LOAD เพื่อยืนยันหลังอัปเดต Apps Script แบบ JSONP':''}`,'var(--green)');
     if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('cloud-save');
   }catch(err){
     cloudStatus(`✘ Save failed\n${err.message}\nถ้ายัง failed: เช็ก Apps Script deploy = Execute as Me / Anyone with link และใช้โค้ด Apps Script เวอร์ชัน JSONP ที่กูส่งให้`,'var(--red)');
@@ -4334,11 +4502,27 @@ async function cloudLoadFromSheet(){
     inventoryRows=cloudSheetRowsToInventory(data.inventory||[]);
     const copper=Number((data.money&&data.money.copper!==undefined)?data.money.copper:moneyCopper||0);
     moneyCopper=Math.max(0,Math.round(copper||0));
+    if(data.character) cloudApplyCharacter(data.character);
+    if(data.equipment) cloudApplyEquipment(data.equipment);
+    if(data.consumables) cloudApplyConsumables(data.consumables);
+    if(data.emptyCrystal) cloudApplyEmptyCrystal(data.emptyCrystal);
+    if(data.sessionLog) cloudApplySessionLog(data.sessionLog);
+    if(typeof buildScheduleForceRender==='function') buildScheduleForceRender();
     invRender(); updateMoneyDisplay(); if(typeof renderEmptyCrystalTrace==='function') renderEmptyCrystalTrace(); if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('cloud-load');
     cloudLastFingerprint=cloudFingerprint();
     const loaded=data.loadedAt || new Date().toISOString();
     const meta=data.meta||{};
-    cloudStatus(`✓ Loaded from Google Sheet\n${new Date(loaded).toLocaleString()}\nInventory: ${inventoryRows.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper):moneyCopper+'C'}${meta.updatedAt?`\nSheet updated: ${new Date(meta.updatedAt).toLocaleString()}`:''}`,'var(--green)');
+    const extra=[];
+    if(data.character) extra.push('Character');
+    if(data.equipment) extra.push('Equipment');
+    if(data.consumables) extra.push('Consumables');
+    if(data.emptyCrystal) extra.push('EmptyCrystal');
+    if(data.sessionLog) extra.push('SessionLog');
+    cloudStatus(`✓ Loaded from Google Sheet
+${new Date(loaded).toLocaleString()}
+Inventory: ${inventoryRows.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper):moneyCopper+'C'}${extra.length?`
+Loaded: ${extra.join(', ')}`:''}${meta.updatedAt?`
+Sheet updated: ${new Date(meta.updatedAt).toLocaleString()}`:''}`,'var(--green)');
   }catch(err){
     cloudStatus(`✘ Load failed\n${err.message}\nถ้า fetch ติด CORS ให้ใช้ Apps Script เวอร์ชัน JSONP callback ตามที่กูส่งให้ แล้ว redeploy`,'var(--red)');
   }finally{ cloudBusy=false; }
