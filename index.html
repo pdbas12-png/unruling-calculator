@@ -4683,8 +4683,7 @@ async function cloudLoadFromSheet(){
     cloudStatus(`✓ Loaded from Google Sheet
 ${new Date(loaded).toLocaleString()}
 Lv.${lvNow} | EXP ${expState.current||0} | Inventory: ${inventoryRows.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper):moneyCopper+'C'}${meta.updatedAt?`
-Sheet updated: ${new Date(meta.updatedAt).toLocaleString()}`:''}${data.character?'':'
-⚠ Sheet response has no character object; loaded Lv only if meta.characterLevel exists. Update Apps Script if Lv still does not sync.'}`,'var(--green)');
+Sheet updated: ${new Date(meta.updatedAt).toLocaleString()}`:''}${data.character?'':'\n⚠ Sheet response has no character object; loaded Lv only if meta.characterLevel exists. Update Apps Script if Lv still does not sync.'}`,'var(--green)');
   }catch(err){
     cloudStatus(`✘ Load failed\n${err.message}\nถ้า fetch ติด CORS ให้ใช้ Apps Script เวอร์ชัน JSONP callback ตามที่กูส่งให้ แล้ว redeploy`,'var(--red)');
   }finally{ cloudBusy=false; }
