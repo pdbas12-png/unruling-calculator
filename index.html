@@ -4270,6 +4270,20 @@ function cloudFingerprint(){
   try{return JSON.stringify({money:moneyCopper||0, inv:cloudInventoryToSheetRows()});}
   catch(e){return String(Date.now());}
 }
+function cloudJsonpLoad(api,key){
+  return new Promise((resolve,reject)=>{
+    const cb='uwCloudCb_'+Date.now()+'_'+Math.floor(Math.random()*100000);
+    const url=api + (api.includes('?')?'&':'?') + `action=load&key=${encodeURIComponent(key)}&callback=${encodeURIComponent(cb)}&_=${Date.now()}`;
+    const script=document.createElement('script');
+    let done=false;
+    const cleanup=()=>{ try{delete window[cb];}catch(e){window[cb]=undefined;} if(script.parentNode) script.parentNode.removeChild(script); };
+    window[cb]=(data)=>{ done=true; cleanup(); resolve(data); };
+    script.onerror=()=>{ if(done) return; done=true; cleanup(); reject(new Error('JSONP load failed')); };
+    setTimeout(()=>{ if(done) return; done=true; cleanup(); reject(new Error('JSONP load timeout')); },15000);
+    script.src=url;
+    document.body.appendChild(script);
+  });
+}
 async function cloudSaveToSheet(){
   const {api,key}=cloudGetSettings();
   if(!api||!key){ cloudStatus('✘ Missing API URL / Sync Key','var(--red)'); return; }
@@ -4278,16 +4292,24 @@ async function cloudSaveToSheet(){
   const payload=cloudBuildPayload();
   cloudStatus(`Saving to Google Sheet...\nInventory: ${payload.inventory.length} slots\nMoney: ${Number(moneyCopper||0).toLocaleString()} C`,'var(--gold)');
   try{
-    const res=await fetch(api,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'save',key,payload})});
-    const txt=await res.text();
-    let data; try{data=JSON.parse(txt);}catch(e){data={ok:false,error:txt.slice(0,300)}}
-    if(!data.ok) throw new Error(data.error||'Save failed');
+    // Try normal fetch first. Some browsers/deployments allow it and return a readable JSON response.
+    let data=null;
+    try{
+      const res=await fetch(api,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'save',key,payload})});
+      const txt=await res.text();
+      try{data=JSON.parse(txt);}catch(e){data={ok:false,error:txt.slice(0,300)}}
+      if(!data.ok) throw new Error(data.error||'Save failed');
+    }catch(corsErr){
+      // Apps Script often blocks readable cross-origin POST responses. Fallback sends the save in no-cors mode.
+      await fetch(api,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'save',key,payload})});
+      data={ok:true, opaque:true, savedAt:new Date().toISOString()};
+    }
     cloudLastFingerprint=cloudFingerprint();
     const t=data.savedAt || new Date().toISOString();
-    cloudStatus(`✓ Saved to Google Sheet\n${new Date(t).toLocaleString()}\nInventory: ${payload.inventory.length} slots | Money: ${formatCopperShortUW ? formatCopperShortUW(moneyCopper||0) : (moneyCopper||0)+'C'}`,'var(--green)');
-    buildQueueAutoSave && buildQueueAutoSave('cloud-save');
+    cloudStatus(`${data.opaque?'✓ Save sent to Google Sheet (opaque / CORS fallback)':'✓ Saved to Google Sheet'}\n${new Date(t).toLocaleString()}\nInventory: ${payload.inventory.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper||0):(moneyCopper||0)+'C'}${data.opaque?'\nหมายเหตุ: Browser อ่านผลลัพธ์ POST ไม่ได้เพราะ CORS แต่คำสั่งถูกส่งแล้ว; กด LOAD เพื่อยืนยันหลังอัปเดต Apps Script แบบ JSONP':''}`,'var(--green)');
+    if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('cloud-save');
   }catch(err){
-    cloudStatus(`✘ Save failed\n${err.message}\nถ้าเจอ CORS/permission ให้เช็ก Apps Script deploy: Execute as Me / Anyone with link`,'var(--red)');
+    cloudStatus(`✘ Save failed\n${err.message}\nถ้ายัง failed: เช็ก Apps Script deploy = Execute as Me / Anyone with link และใช้โค้ด Apps Script เวอร์ชัน JSONP ที่กูส่งให้`,'var(--red)');
   }finally{ cloudBusy=false; }
 }
 async function cloudLoadFromSheet(){
@@ -4298,10 +4320,17 @@ async function cloudLoadFromSheet(){
   cloudStatus('Loading from Google Sheet...','var(--gold)');
   try{
     const url=api + (api.includes('?')?'&':'?') + `action=load&key=${encodeURIComponent(key)}&_=${Date.now()}`;
-    const res=await fetch(url,{method:'GET'});
-    const txt=await res.text();
-    let data; try{data=JSON.parse(txt);}catch(e){data={ok:false,error:txt.slice(0,300)}}
-    if(!data.ok) throw new Error(data.error||'Load failed');
+    let data=null;
+    try{
+      const res=await fetch(url,{method:'GET'});
+      const txt=await res.text();
+      try{data=JSON.parse(txt);}catch(e){data={ok:false,error:txt.slice(0,300)}}
+      if(!data.ok) throw new Error(data.error||'Load failed');
+    }catch(corsErr){
+      // Cross-origin GET from Apps Script may fail in fetch; JSONP avoids CORS. Requires Apps Script callback support.
+      data=await cloudJsonpLoad(api,key);
+      if(!data.ok) throw new Error(data.error||'Load failed');
+    }
     inventoryRows=cloudSheetRowsToInventory(data.inventory||[]);
     const copper=Number((data.money&&data.money.copper!==undefined)?data.money.copper:moneyCopper||0);
     moneyCopper=Math.max(0,Math.round(copper||0));
@@ -4311,7 +4340,7 @@ async function cloudLoadFromSheet(){
     const meta=data.meta||{};
     cloudStatus(`✓ Loaded from Google Sheet\n${new Date(loaded).toLocaleString()}\nInventory: ${inventoryRows.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper):moneyCopper+'C'}${meta.updatedAt?`\nSheet updated: ${new Date(meta.updatedAt).toLocaleString()}`:''}`,'var(--green)');
   }catch(err){
-    cloudStatus(`✘ Load failed\n${err.message}\nเช็ก URL, sync key, ชื่อชีต Inventory/Money/Meta และ deploy permission`,'var(--red)');
+    cloudStatus(`✘ Load failed\n${err.message}\nถ้า fetch ติด CORS ให้ใช้ Apps Script เวอร์ชัน JSONP callback ตามที่กูส่งให้ แล้ว redeploy`,'var(--red)');
   }finally{ cloudBusy=false; }
 }
 function cloudStartAutoTimer(){
