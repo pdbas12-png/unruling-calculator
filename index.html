@@ -156,6 +156,59 @@
     .field label{width:62px;font-size:0.62rem;}
   }
 
+
+  /* RPG Inventory polish */
+  .inv-hud{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 12px;}
+  .inv-hud-card{background:linear-gradient(180deg,rgba(200,150,10,0.08),rgba(0,0,0,0.08));border:1px solid var(--border);padding:10px;min-height:58px;}
+  .inv-hud-card .label{font-family:var(--mono);font-size:0.58rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;display:block;margin-bottom:4px;}
+  .inv-hud-card .value{font-family:var(--mono);font-size:1.05rem;color:var(--gold);}
+  .inv-add-grid{display:grid;grid-template-columns:1.35fr .95fr .85fr .58fr .58fr .70fr .82fr auto;gap:6px;align-items:end;}
+  .inv-panel-box{background:var(--bg);border:1px solid var(--border);padding:10px;margin-top:10px;}
+  .inv-market-row{display:grid;grid-template-columns:1fr 1fr auto auto;gap:6px;align-items:end;margin-top:8px;}
+  .inv-price-input{width:78px;background:transparent;border:1px solid var(--border);color:var(--gold);padding:4px;font-family:var(--mono);font-size:0.72rem;text-align:center;outline:none;}
+  .inv-table-wrap{overflow-x:auto;margin-top:10px;border:1px solid var(--border);background:rgba(255,255,255,0.015);}
+  #inv-table th{white-space:nowrap;background:rgba(200,150,10,0.04);}
+  #inv-table td{vertical-align:middle;}
+  .inv-name-cell{display:flex;align-items:center;gap:7px;min-width:190px;}
+  .inv-icon{width:22px;height:22px;border:1px solid var(--border-bright);display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);font-size:0.8rem;flex:0 0 auto;}
+  .inv-rarity-badge{display:inline-block;border:1px solid currentColor;padding:2px 6px;font-family:var(--mono);font-size:0.58rem;letter-spacing:1px;background:rgba(255,255,255,0.025);}
+  .inv-lock-note{font-family:var(--mono);font-size:0.58rem;color:var(--text-dim);display:block;margin-top:2px;}
+  .inv-row-actions{display:flex;gap:4px;white-space:nowrap;}
+  @media(max-width:900px){.inv-hud{grid-template-columns:1fr 1fr}.inv-add-grid,.inv-market-row{grid-template-columns:1fr 1fr}.inv-add-grid button{height:auto!important}}
+  @media(max-width:520px){.inv-hud{grid-template-columns:1fr}.inv-add-grid,.inv-market-row{grid-template-columns:1fr}}
+
+
+
+/* ═════════ WEB APP MODE v1 ═════════ */
+body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transparent 34%),radial-gradient(circle at bottom right,rgba(200,150,10,.07),transparent 32%),var(--bg);}
+.wrap.uw-app{max-width:none;width:100%;min-height:100vh;margin:0;padding:0;display:grid;grid-template-columns:278px minmax(0,1fr);gap:0;}
+.uw-sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;border-right:1px solid var(--border-bright);background:linear-gradient(180deg,rgba(13,19,24,.98),rgba(8,12,16,.98));padding:18px 14px;box-shadow:16px 0 35px rgba(0,0,0,.25);}
+.uw-sidebar .header{margin-bottom:16px;text-align:left;padding:12px;border:1px solid var(--border);background:rgba(0,0,0,.18);}
+.uw-sidebar .header h1{font-size:1.05rem;letter-spacing:2px;line-height:1.25;}
+.uw-sidebar .header p{font-size:.58rem;letter-spacing:1.3px;}
+.uw-sidebar .tabs{display:flex;flex-direction:column;gap:6px;border-bottom:none;margin:0;overflow:visible;}
+.uw-sidebar .tab{width:100%;border:1px solid var(--border);border-left:3px solid transparent;background:rgba(255,255,255,.015);padding:10px 12px;text-align:left;margin:0;border-radius:8px;color:var(--text-dim);}
+.uw-sidebar .tab:hover{border-color:var(--cyan-dim);border-left-color:var(--cyan-dim);background:rgba(0,200,200,.04);}
+.uw-sidebar .tab.active{margin:0;border:1px solid var(--border-bright);border-left:3px solid var(--cyan);background:linear-gradient(90deg,rgba(0,200,200,.12),rgba(0,0,0,.04));color:var(--cyan);box-shadow:0 0 18px rgba(0,200,200,.05) inset;}
+.uw-main{min-width:0;padding:18px 20px 28px;}
+.uw-topbar{position:sticky;top:0;z-index:5;margin:-18px -20px 18px;padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(8,12,16,.92);backdrop-filter:blur(10px);display:flex;justify-content:space-between;align-items:center;gap:14px;}
+.uw-title{display:flex;flex-direction:column;gap:2px;}
+.uw-title strong{font-family:var(--mono);color:var(--gold);font-size:.9rem;letter-spacing:2px;text-transform:uppercase;}
+.uw-title span{font-family:var(--mono);color:var(--text-dim);font-size:.62rem;letter-spacing:1.5px;}
+.uw-chips{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
+.uw-chip{border:1px solid var(--border-bright);background:rgba(255,255,255,.025);padding:6px 9px;border-radius:999px;font-family:var(--mono);font-size:.66rem;color:var(--text-dim);white-space:nowrap;}
+.uw-chip b{color:var(--cyan);font-weight:normal;}
+.uw-chip.gold b{color:var(--gold);}.uw-chip.red b{color:var(--red);}.uw-chip.green b{color:var(--green);}
+.uw-quick{margin-top:14px;padding:10px;border:1px solid var(--border);background:rgba(0,0,0,.18);border-radius:10px;}
+.uw-quick-title{font-family:var(--mono);font-size:.62rem;color:var(--gold);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;}
+.uw-quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.uw-quick-btn{padding:7px 6px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--text-dim);font-family:var(--mono);font-size:.58rem;letter-spacing:1px;border-radius:7px;cursor:pointer;}
+.uw-quick-btn:hover{color:var(--cyan);border-color:var(--cyan-dim);background:rgba(0,200,200,.06);}
+.uw-app .card{border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);}
+.uw-app .field input,.uw-app .field select,.uw-app .exp-input,.uw-app input,.uw-app select{border-radius:7px;}
+.uw-app .btn{border-radius:8px;}
+@media(max-width:900px){.wrap.uw-app{grid-template-columns:1fr}.uw-sidebar{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--border-bright)}.uw-sidebar .tabs{flex-direction:row;overflow-x:auto}.uw-sidebar .tab{min-width:130px;text-align:center}.uw-main{padding:14px 10px 22px}.uw-topbar{position:relative;margin:-14px -10px 14px;padding:12px 10px;align-items:flex-start;flex-direction:column}.uw-chips{justify-content:flex-start}.uw-quick{display:none}}
+
 </style>
 </head>
 <body>
@@ -369,8 +422,37 @@
             <div class="field"><label>REST</label><select id="reward-auto-rest"><option value="1" selected>Auto rest when low</option><option value="0">No auto rest</option></select></div>
             <div style="margin-top:8px;padding:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);">
               <div class="section-label">SEARCH / ENCOUNTER</div>
-              <div class="field"><label>SEARCH MODE</label><select id="search-mode"><option value="balanced" selected>Balanced</option><option value="safe">Safe route</option><option value="risky">Risky dense zone</option></select></div>
+              <div class="field"><label>SEARCH MODE</label><select id="search-mode" onchange="applySearchPresetFromMode()"><option value="balanced" selected>Balanced</option><option value="safe">Safe route</option><option value="risky">Risky dense zone</option></select></div>
               <div class="field"><label>SEARCH TIME</label><input type="number" id="search-minutes" value="10" min="1" step="1"></div>
+              <div style="margin-top:8px;padding:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);">
+                <div class="section-label">FIELD MONSTER TABLE — ตั้งค่าโซนล่าเอง</div>
+                <div class="grid2" style="gap:6px;margin-bottom:6px;">
+                  <div class="field" style="margin-bottom:0;"><label>LV MIN</label><input type="number" id="field-lv-min" value="11" min="1" max="400" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <div class="field" style="margin-bottom:0;"><label>LV MAX</label><input type="number" id="field-lv-max" value="12" min="1" max="400" step="1" oninput="updateFieldEncounterSummary()"></div>
+                </div>
+                <div class="grid3" style="gap:6px;">
+                  <div class="field" style="margin-bottom:0;"><label>NONE %</label><input type="number" id="field-ch-none" value="65" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <div class="field" style="margin-bottom:0;"><label>N×1 %</label><input type="number" id="field-ch-n1" value="22" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <div class="field" style="margin-bottom:0;"><label>N×2 %</label><input type="number" id="field-ch-n2" value="8" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <div class="field" style="margin-bottom:0;"><label>N×3 %</label><input type="number" id="field-ch-n3" value="3" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <div class="field" style="margin-bottom:0;"><label>ELITE %</label><input type="number" id="field-ch-elite" value="2" min="0" step="1" oninput="updateFieldEncounterSummary()"></div>
+                  <button class="btn sm gold-btn" style="margin-top:0;" onclick="applySearchPresetFromMode()">APPLY PRESET</button>
+                </div>
+                <div id="field-encounter-summary" class="small-note" style="line-height:1.6;margin-top:8px;">Field table: —</div>
+              </div>
+              <div style="margin-top:8px;padding:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);">
+                <div class="section-label">MANUAL MONTAGE LOOT ONLY — กำหนดจำนวนมอนเอง / สุ่มเฉพาะของ</div>
+                <textarea id="manual-loot-lines" rows="4" oninput="if(typeof autoSave==='function') autoSave()" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:7px 9px;font-family:var(--mono);font-size:0.74rem;outline:none;resize:vertical;" placeholder="ตัวอย่าง:
+12 normal x7
+11 normal x2
+13 elite x1">12 normal x7
+11 normal x2</textarea>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+                  <button class="btn sm gold-btn" style="width:auto;padding:7px 10px;" onclick="manualLootRollOnly()">ROLL LOOT ONLY</button>
+                  <button class="btn sm" style="width:auto;padding:7px 10px;" onclick="manualLootLoadCurrentReward()">USE CURRENT ROW</button>
+                </div>
+                <div id="manual-loot-summary" class="small-note" style="line-height:1.6;margin-top:8px;white-space:pre-wrap;background:var(--panel);border:1px solid var(--border);padding:6px;min-height:44px;">Manual loot: ใส่รูปแบบ Lv Tier xKills เช่น 12 normal x7 แล้วกด ROLL LOOT ONLY. ไม่เพิ่ม EXP / ไม่หัก HP MP IM / ไม่คิดเวลา / ไม่ลด durability.</div>
+              </div>
               <button class="btn sm" style="width:auto;padding:7px 10px;" onclick="searchEncounterRoll()">WALK / SEARCH</button>
               <div class="field" style="margin-top:8px;"><label>TRAVEL TIME</label><input type="number" id="travel-minutes" value="0" min="0" step="1"></div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
@@ -596,6 +678,31 @@
         <div id="money-log" style="font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);margin-top:8px;height:44px;overflow-y:auto;background:var(--bg);border:1px solid var(--border);padding:6px;"></div>
       </div>
 
+      <div class="card" style="grid-column:1/-1">
+        <div class="card-title">GOOGLE SHEET CLOUD SYNC</div>
+        <div class="grid3">
+          <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
+            <div class="section-label">SHEET CONNECTION</div>
+            <div class="field"><label>API URL</label><input id="cloud-api-url" value="https://script.google.com/macros/s/AKfycbzHoWaCQ53LHSjsV_zsZO4NEctDihbdXOJwqpi4u1SrSxp164X1Qeq1djDypuzHCBsZfQ/exec" style="font-family:var(--mono);font-size:0.68rem;"></div>
+            <div class="field"><label>SYNC KEY</label><input id="cloud-sync-key" value="unruling-main-save" style="font-family:var(--mono);font-size:0.75rem;"></div>
+            <div class="small-note">ใช้ Google Sheet เป็นคลังกลางของ Inventory + Money. คอม/มือถือให้กด Load/Save จากชีตเดียวกัน.</div>
+          </div>
+          <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
+            <div class="section-label">CLOUD ACTION</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button class="btn sm" style="width:auto;padding:7px 12px;" onclick="cloudLoadFromSheet()">LOAD FROM SHEET</button>
+              <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;" onclick="cloudSaveToSheet()">SAVE TO SHEET</button>
+              <button class="btn sm" style="width:auto;padding:7px 12px;" onclick="cloudToggleAutoSync()" id="cloud-auto-btn">AUTO SYNC: OFF</button>
+            </div>
+            <div class="small-note" style="line-height:1.6;margin-top:8px;">Auto Sync จะเช็กทุก 60 วิ ถ้า Inventory/Money เปลี่ยนจะ Save ขึ้น Sheet เอง. แนะนำกด Load ตอนเริ่มเขียนในอีกเครื่องก่อน.</div>
+          </div>
+          <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
+            <div class="section-label">SYNC STATUS</div>
+            <div id="cloud-sync-status" style="font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);background:var(--panel);border:1px solid var(--border);padding:8px;min-height:70px;white-space:pre-wrap;line-height:1.6;">Cloud Sync: not loaded</div>
+          </div>
+        </div>
+      </div>
+
       <div class="card gold" style="grid-column:1/-1">
         <div class="card-title gold">EMPTY MANA CRYSTAL TRACE</div>
         <div id="empty-crystal-trace-inv" style="font-family:var(--mono);font-size:0.70rem;color:var(--text-dim);background:var(--bg);border:1px solid var(--border);padding:8px;line-height:1.7;">Empty Crystal Trace: —</div>
@@ -628,62 +735,98 @@
       <!-- Inventory Tracker -->
       <div class="card gold" style="grid-column:1/-1">
         <div class="card-title gold">INVENTORY / LOOT TRACKER</div>
-        <div style="display:grid;grid-template-columns:1.2fr 1fr 0.9fr 0.8fr 0.8fr auto;gap:6px;align-items:end;">
-          <div>
-            <div class="section-label" style="margin-bottom:4px">ITEM NAME</div>
-            <input id="inv-add-name" value="ชิ้นส่วนมอนสเตอร์" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--thai);font-size:0.82rem;outline:none;">
-          </div>
-          <div>
-            <div class="section-label" style="margin-bottom:4px">TYPE</div>
-            <select id="inv-add-type" onchange="invTypeChanged()" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
-              <option value="monster_part">Monster Part Lv×5</option>
-              <option value="elite_monster_part">Elite Part Lv×10</option>
-              <option value="ore">Ore Lv×10</option>
-              <option value="hide_bone">Hide/Bone Lv×6</option>
-              <option value="rare_material">Rare Material Lv×20</option>
-              <option value="elite_rare_material">Elite Rare Lv×30</option>
-              <option value="crystal_shard">ผลึกเศษเสี้ยวมานา</option>
-              <option value="crystal_low">ผลึกมานาเข้มข้นต่ำ</option>
-              <option value="crystal_mid">ผลึกมานาเข้มข้นกลาง</option>
-              <option value="crystal_high">ผลึกมานาเข้มข้นสูง</option>
-              <option value="empty_crystal">ผลึกไร้มานา</option>
-              <option value="core_fragment">เศษเสี้ยวแก่นมานา</option>
-              <option value="custom">Custom</option>
-            </select>
-          </div>
-          <div>
-            <div class="section-label" style="margin-bottom:4px">RARITY</div>
-            <select id="inv-add-rarity" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
-              <option value="common">Common ×1</option>
-              <option value="uncommon">Uncommon ×2</option>
-              <option value="rare">Rare ×4</option>
-              <option value="epic">Epic ×10</option>
-              <option value="unique">Unique ×20</option>
-              <option value="legendary">Legendary ×50</option>
-            </select>
-          </div>
-          <div>
-            <div class="section-label" style="margin-bottom:4px">LV</div>
-            <input id="inv-add-lv" type="number" value="1" min="1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
-          </div>
-          <div>
-            <div class="section-label" style="margin-bottom:4px">QTY</div>
-            <input id="inv-add-qty" type="number" value="1" min="1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
-          </div>
-          <button class="btn sm gold-btn" style="margin-top:0;height:32px;" onclick="invAddRow()">+ ADD</button>
+
+        <div class="inv-hud">
+          <div class="inv-hud-card"><span class="label">Slots</span><span class="value" id="inv-slots">0</span></div>
+          <div class="inv-hud-card"><span class="label">Total Qty</span><span class="value" id="inv-total-qty">0</span></div>
+          <div class="inv-hud-card"><span class="label">Sell Value</span><span class="value" id="inv-total-value">0 C</span></div>
+          <div class="inv-hud-card"><span class="label">Market Rate</span><span class="value" id="inv-market-show">100%</span></div>
         </div>
-        <div class="small-note">ราคาอัตโนมัติ: Unit Price = Item Lv × Base/Lv × Rarity Multiplier | Loot generator ใช้ Common 100%, Rare 10%; Elite common ตั้งต้นแพงกว่า</div>
-        <div style="overflow-x:auto;margin-top:10px;">
+
+        <div class="inv-panel-box">
+          <div class="section-label">ADD ITEM</div>
+          <div class="inv-add-grid">
+            <div>
+              <div class="section-label" style="margin-bottom:4px">ITEM NAME</div>
+              <input id="inv-add-name" value="ชิ้นส่วนมอนสเตอร์" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--thai);font-size:0.82rem;outline:none;">
+            </div>
+            <div>
+              <div class="section-label" style="margin-bottom:4px">TYPE</div>
+              <select id="inv-add-type" onchange="invTypeChanged()" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+                <option value="monster_part">Monster Part Lv×5</option>
+                <option value="elite_monster_part">Elite Part Lv×10</option>
+                <option value="ore">Ore Lv×10</option>
+                <option value="hide_bone">Hide/Bone Lv×6</option>
+                <option value="rare_material">Rare Material Lv×20</option>
+                <option value="elite_rare_material">Elite Rare Lv×30</option>
+                <option value="crystal_shard">ผลึกเศษเสี้ยวมานา</option>
+                <option value="crystal_low">ผลึกมานาเข้มข้นต่ำ</option>
+                <option value="crystal_mid">ผลึกมานาเข้มข้นกลาง</option>
+                <option value="crystal_high">ผลึกมานาเข้มข้นสูง</option>
+                <option value="empty_crystal">ผลึกไร้มานา</option>
+                <option value="core_fragment">เศษเสี้ยวแก่นมานา</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div>
+              <div class="section-label" style="margin-bottom:4px">RARITY</div>
+              <select id="inv-add-rarity" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+                <option value="common">Common ×1</option>
+                <option value="uncommon">Uncommon ×2</option>
+                <option value="rare">Rare ×4</option>
+                <option value="epic">Epic ×10</option>
+                <option value="unique">Unique ×20</option>
+                <option value="legendary">Legendary ×50</option>
+              </select>
+            </div>
+            <div>
+              <div class="section-label" style="margin-bottom:4px">LV</div>
+              <input id="inv-add-lv" type="number" value="1" min="1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+            </div>
+            <div>
+              <div class="section-label" style="margin-bottom:4px">QTY</div>
+              <input id="inv-add-qty" type="number" value="1" min="1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+            </div>
+            <div>
+              <div class="section-label" style="margin-bottom:4px">MARKET %</div>
+              <input id="inv-add-market" type="number" value="100" min="0" step="5" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+            </div>
+            <div>
+              <div class="section-label" style="margin-bottom:4px">UNIT FIX</div>
+              <input id="inv-add-unit-override" type="number" value="0" min="0" placeholder="0=Auto" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--gold);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+            </div>
+            <button class="btn sm gold-btn" style="margin-top:0;height:32px;" onclick="invAddRow()">+ ADD</button>
+          </div>
+          <div class="small-note">Unit Fix = ตั้งราคาขายต่อชิ้นเอง | Market % = ตัวคูณตลาดเฉพาะ item ถ้า Unit Fix เป็น 0 จะคำนวณจากสูตร auto × market%</div>
+        </div>
+
+        <div class="inv-panel-box">
+          <div class="section-label">MARKET CONTROL</div>
+          <div class="inv-market-row">
+            <div>
+              <div class="section-label" style="margin-bottom:4px">GLOBAL MARKET %</div>
+              <input id="inv-global-market" type="number" value="100" min="0" step="5" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+            </div>
+            <div class="small-note">ใช้ปรับราคาของทั้งหมดที่ไม่ได้ล็อก Unit Fix เช่น demand วันนี้ +20% หรือของตลาดล้น -30%</div>
+            <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;margin-top:0" onclick="invApplyGlobalMarket()">APPLY TO AUTO ITEMS</button>
+            <button class="btn sm" style="width:auto;padding:7px 12px;margin-top:0" onclick="invClearUnitOverrides()">CLEAR UNIT FIX</button>
+          </div>
+        </div>
+
+        <div class="small-note">ราคาอัตโนมัติ: Unit Price = Item Lv × Base/Lv × Rarity Multiplier × Market% | กดแก้ Unit Sell หรือ Market% รายแถวได้ทันที</div>
+        <div class="inv-table-wrap">
           <table class="beh-table" id="inv-table">
             <thead>
               <tr>
-                <th style="min-width:160px">Item</th>
+                <th style="min-width:190px">Item</th>
                 <th>Type</th>
                 <th>Rarity</th>
                 <th>Lv</th>
                 <th>Qty</th>
                 <th>Base/Lv</th>
-                <th>Unit</th>
+                <th>Market%</th>
+                <th>Auto</th>
+                <th>Unit Sell</th>
                 <th>Total</th>
                 <th></th>
               </tr>
@@ -1242,6 +1385,7 @@ function switchTab(id){
     if(typeof rewardRenderTimeCounter==='function') rewardRenderTimeCounter();
     if(typeof emptyCrystalRenderTrace==='function') emptyCrystalRenderTrace();
   }
+  if(typeof updateAppStatus==='function') updateAppStatus();
 }
 
 // ══ STAT CALC ══
@@ -2672,15 +2816,30 @@ function getCrystalUnitPrice(type, monLv){
   const equipLv=getCrystalEquipLv(monLv);
   return cleanRoundCopper(getEquipmentBasePrice('weapon', equipLv)*factor);
 }
-function invUnitPrice(row){
+function invAutoUnitPrice(row){
   if(row.type==='empty_crystal') return emptyCrystalUnitPrice(row.lv);
   const crystalPrice=getCrystalUnitPrice(row.type,row.lv);
   if(crystalPrice!==null) return crystalPrice;
   const rar=INV_RARITY[row.rarity]||INV_RARITY.common;
   return Math.round((+row.lv||1) * (+row.base||0) * rar.mult);
 }
+function invUnitPrice(row){
+  const fixed = Math.round(+row.unitOverride || 0);
+  if(fixed>0) return fixed;
+  const market = Math.max(0,+row.market || 100);
+  return Math.round(invAutoUnitPrice(row) * market / 100);
+}
 function invTotalRow(row){ return invUnitPrice(row) * (+row.qty||0); }
 function invTotal(){ return inventoryRows.reduce((sum,r)=>sum+invTotalRow(r),0); }
+function invTotalQty(){ return inventoryRows.reduce((sum,r)=>sum+(+r.qty||0),0); }
+function invIconForType(type){
+  if(String(type||'').includes('crystal')) return '◆';
+  if(type==='core_fragment') return '◇';
+  if(String(type||'').includes('rare')) return '✦';
+  if(type==='ore') return '⬡';
+  if(type==='hide_bone') return '▰';
+  return '◈';
+}
 function invFormatCopper(total){
   const d=copperToDisplay(total);
   const parts=[];
@@ -2699,13 +2858,15 @@ function invAddRow(){
     rarity:document.getElementById('inv-add-rarity').value,
     lv:+document.getElementById('inv-add-lv').value||1,
     qty:+document.getElementById('inv-add-qty').value||1,
-    base
+    base,
+    market:Math.max(0,+document.getElementById('inv-add-market')?.value||100),
+    unitOverride:Math.max(0,+document.getElementById('inv-add-unit-override')?.value||0)
   };
   invPush(row);
 }
 function invUpdate(i,key,val){
   if(!inventoryRows[i]) return;
-  if(key==='lv'||key==='qty'||key==='base') inventoryRows[i][key]=Math.max(0,+val||0);
+  if(key==='lv'||key==='qty'||key==='base'||key==='market'||key==='unitOverride') inventoryRows[i][key]=Math.max(0,+val||0);
   else inventoryRows[i][key]=val;
   if(key==='type' && val!=='custom') inventoryRows[i].base=(INV_TYPE_BASE[val]||INV_TYPE_BASE.monster_part).base;
   invRender();
@@ -2738,12 +2899,23 @@ function invCopy(){
   inventoryRows.forEach((r,idx)=>{
     const rar=INV_RARITY[r.rarity]||INV_RARITY.common;
     const type=INV_TYPE_BASE[r.type]||INV_TYPE_BASE.custom;
-    lines.push(`${idx+1}. ${r.name} | ${type.label} | ${rar.label} | Lv.${r.lv} | Qty ${r.qty} | Unit ${invUnitPrice(r)}C | Total ${invTotalRow(r)}C`);
+    lines.push(`${idx+1}. ${r.name} | ${type.label} | ${rar.label} | Lv.${r.lv} | Qty ${r.qty} | Auto ${invAutoUnitPrice(r)}C | Market ${(+r.market||100)}% | Unit ${invUnitPrice(r)}C | Total ${invTotalRow(r)}C`);
   });
   lines.push(`TOTAL = ${invFormatCopper(invTotal())}`);
   navigator.clipboard?.writeText(lines.join('\n'));
   const totalEl=document.getElementById('inv-total');
   if(totalEl){ const old=totalEl.textContent; totalEl.textContent='COPIED'; setTimeout(()=>totalEl.textContent=old,800); }
+}
+function invApplyGlobalMarket(){
+  const rate=Math.max(0,+document.getElementById('inv-global-market')?.value||100);
+  inventoryRows.forEach(r=>{ if(!(Math.round(+r.unitOverride||0)>0)) r.market=rate; });
+  invRender();
+  if(typeof autoSave==='function') autoSave();
+}
+function invClearUnitOverrides(){
+  inventoryRows.forEach(r=>{ r.unitOverride=0; });
+  invRender();
+  if(typeof autoSave==='function') autoSave();
 }
 function invRender(){
   const body=document.getElementById('inv-body');
@@ -2751,31 +2923,55 @@ function invRender(){
   body.innerHTML='';
   if(inventoryRows.length===0){
     const tr=document.createElement('tr');
-    tr.innerHTML='<td colspan="9" style="color:var(--text-dim);text-align:center;padding:12px;">ยังไม่มีของใน Inventory</td>';
+    tr.innerHTML='<td colspan="11" style="color:var(--text-dim);text-align:center;padding:16px;">ยังไม่มีของใน Inventory</td>';
     body.appendChild(tr);
   } else {
     inventoryRows.forEach((r,i)=>{
+      if(r.market===undefined || r.market===null) r.market=100;
+      if(r.unitOverride===undefined || r.unitOverride===null) r.unitOverride=0;
+      const autoUnit=invAutoUnitPrice(r);
       const unit=invUnitPrice(r); const total=invTotalRow(r);
       const rar=INV_RARITY[r.rarity]||INV_RARITY.common;
       const tr=document.createElement('tr');
       tr.innerHTML=`
-        <td><input value="${String(r.name).replace(/"/g,'&quot;')}" onchange="invUpdate(${i},'name',this.value)" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--thai);font-size:0.75rem;outline:none;"></td>
+        <td>
+          <div class="inv-name-cell">
+            <span class="inv-icon" style="color:${rar.color}">${invIconForType(r.type)}</span>
+            <div style="flex:1;min-width:0;">
+              <input value="${String(r.name).replace(/"/g,'&quot;')}" onchange="invUpdate(${i},'name',this.value)" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--thai);font-size:0.75rem;outline:none;">
+              <span class="inv-lock-note">${Math.round(+r.unitOverride||0)>0?'FIXED PRICE':'AUTO PRICE'}</span>
+            </div>
+          </div>
+        </td>
         <td><select onchange="invUpdate(${i},'type',this.value)" style="background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--mono);font-size:0.7rem;outline:none;">${Object.entries(INV_TYPE_BASE).map(([k,v])=>`<option value="${k}" ${r.type===k?'selected':''}>${v.label}</option>`).join('')}</select></td>
-        <td><select onchange="invUpdate(${i},'rarity',this.value)" style="background:var(--bg);border:1px solid var(--border);color:${rar.color};padding:4px;font-family:var(--mono);font-size:0.7rem;outline:none;">${Object.entries(INV_RARITY).map(([k,v])=>`<option value="${k}" ${r.rarity===k?'selected':''}>${v.label}×${v.mult}</option>`).join('')}</select></td>
-        <td><input type="number" min="1" value="${r.lv}" onchange="invUpdate(${i},'lv',this.value)" style="width:58px;background:transparent;border:1px solid var(--border);color:var(--cyan);padding:4px;font-family:var(--mono);font-size:0.75rem;text-align:center;outline:none;"></td>
-        <td><input type="number" min="0" value="${r.qty}" onchange="invUpdate(${i},'qty',this.value)" style="width:64px;background:transparent;border:1px solid var(--border);color:var(--cyan);padding:4px;font-family:var(--mono);font-size:0.75rem;text-align:center;outline:none;"></td>
-        <td><input type="number" min="0" value="${r.base}" onchange="invUpdate(${i},'base',this.value)" style="width:72px;background:transparent;border:1px solid var(--border);color:var(--gold);padding:4px;font-family:var(--mono);font-size:0.75rem;text-align:center;outline:none;"></td>
-        <td style="color:var(--gold)">${unit.toLocaleString()} C</td>
-        <td style="color:var(--green)">${total.toLocaleString()} C</td>
-        <td style="white-space:nowrap"><button onclick="invSellRow(${i})" style="background:transparent;border:1px solid var(--gold-dim);color:var(--gold);font-family:var(--mono);font-size:0.62rem;padding:3px 7px;cursor:pointer;">SELL</button> <button onclick="invRemove(${i})" style="background:transparent;border:1px solid var(--red-dim);color:var(--red);font-family:var(--mono);font-size:0.62rem;padding:3px 7px;cursor:pointer;">×</button></td>
+        <td><select onchange="invUpdate(${i},'rarity',this.value)" style="background:var(--bg);border:1px solid var(--border);color:${rar.color};padding:4px;font-family:var(--mono);font-size:0.7rem;outline:none;">${Object.entries(INV_RARITY).map(([k,v])=>`<option value="${k}" ${r.rarity===k?'selected':''}>${v.label}×${v.mult}</option>`).join('')}</select><br><span class="inv-rarity-badge" style="color:${rar.color};margin-top:3px;">${rar.label}</span></td>
+        <td><input type="number" min="1" value="${r.lv}" onchange="invUpdate(${i},'lv',this.value)" style="width:54px;background:transparent;border:1px solid var(--border);color:var(--cyan);padding:4px;font-family:var(--mono);font-size:0.75rem;text-align:center;outline:none;"></td>
+        <td><input type="number" min="0" value="${r.qty}" onchange="invUpdate(${i},'qty',this.value)" style="width:58px;background:transparent;border:1px solid var(--border);color:var(--cyan);padding:4px;font-family:var(--mono);font-size:0.75rem;text-align:center;outline:none;"></td>
+        <td><input type="number" min="0" value="${r.base}" onchange="invUpdate(${i},'base',this.value)" style="width:62px;background:transparent;border:1px solid var(--border);color:var(--gold);padding:4px;font-family:var(--mono);font-size:0.75rem;text-align:center;outline:none;"></td>
+        <td><input type="number" min="0" step="5" value="${Math.round(+r.market||100)}" onchange="invUpdate(${i},'market',this.value)" class="inv-price-input" style="color:var(--cyan);">%</td>
+        <td style="color:var(--text-dim)">${autoUnit.toLocaleString()} C</td>
+        <td><input type="number" min="0" value="${Math.round(+r.unitOverride||0)}" onchange="invUpdate(${i},'unitOverride',this.value)" class="inv-price-input"><span class="inv-lock-note">0 = Auto</span></td>
+        <td style="color:var(--green);font-weight:600;">${total.toLocaleString()} C</td>
+        <td><div class="inv-row-actions"><button onclick="invSellRow(${i})" style="background:transparent;border:1px solid var(--gold-dim);color:var(--gold);font-family:var(--mono);font-size:0.62rem;padding:3px 7px;cursor:pointer;">SELL</button><button onclick="invRemove(${i})" style="background:transparent;border:1px solid var(--red-dim);color:var(--red);font-family:var(--mono);font-size:0.62rem;padding:3px 7px;cursor:pointer;">×</button></div></td>
       `;
       body.appendChild(tr);
     });
   }
+  const totalVal=invTotal();
   const totalEl=document.getElementById('inv-total');
-  if(totalEl) totalEl.textContent=invFormatCopper(invTotal());
+  if(totalEl) totalEl.textContent=invFormatCopper(totalVal);
+  const slotsEl=document.getElementById('inv-slots'); if(slotsEl) slotsEl.textContent=String(inventoryRows.length);
+  const qtyEl=document.getElementById('inv-total-qty'); if(qtyEl) qtyEl.textContent=String(invTotalQty());
+  const valEl=document.getElementById('inv-total-value'); if(valEl) valEl.textContent=invFormatCopper(totalVal);
+  const marketShow=document.getElementById('inv-market-show');
+  if(marketShow){
+    const autoRows=inventoryRows.filter(r=>!(Math.round(+r.unitOverride||0)>0));
+    const avg=autoRows.length?Math.round(autoRows.reduce((s,r)=>s+(+r.market||100),0)/autoRows.length):100;
+    marketShow.textContent=avg+'%';
+  }
   if(typeof renderEmptyCrystalTrace==='function') renderEmptyCrystalTrace();
 }
+
 
 
 // ══ REWARD / LOOT / REPAIR / SESSION SYSTEM ══
@@ -2829,6 +3025,65 @@ function consumeEmptyCrystal(level, qty){
   if(qty-left>0) invRender();
   return qty-left;
 }
+function emptyCrystalAddShardResult(results, monLv, qty, source){
+  qty=Math.max(0,Math.round(+qty||0));
+  if(qty<=0) return;
+  const map=CRYSTAL_TYPE_MAP.shard;
+  const existing=results.find(r=>r.key==='shard' && r.type===map.type && Math.round(+r.lv||0)===Math.round(+monLv||0));
+  if(existing){
+    existing.qty += qty;
+    existing.guaranteed=(existing.guaranteed||0)+qty;
+    existing.emptyConsumed=(existing.emptyConsumed||0)+qty;
+    existing.source = existing.source==='drop' ? 'drop+pity' : (source||existing.source||'pity');
+  }else{
+    results.push({key:'shard',type:map.type,name:map.name,lv:monLv,qty,guaranteed:qty,emptyConsumed:qty,source:source||'pity'});
+  }
+}
+function emptyCrystalResolvePity(equipLv, monLv, incomingKills, results){
+  const emptyLv=emptyCrystalLevelFromEquipLv(equipLv);
+  if(!emptyLv) return 0;
+  const pityKey=`L${equipLv}`;
+  let count=Math.max(0,Math.round(crystalPityState[pityKey]||0));
+  const kills=Math.max(0,Math.round(+incomingKills||0));
+  const stock=emptyCrystalCount(emptyLv);
+
+  // ถ้าไม่มีผลึกไร้มานาใน inventory จะไม่เดิน pity ต่อ แต่เก็บ progress เก่าไว้เป็น paused.
+  if(stock<=0){
+    crystalPityState[pityKey]=Math.min(count, CRYSTAL_PITY_KILLS);
+    return 0;
+  }
+
+  const total=count+kills;
+  const shouldConvert=Math.floor(total/CRYSTAL_PITY_KILLS);
+  const convert=Math.min(stock, shouldConvert);
+  const consumed=convert>0 ? consumeEmptyCrystal(emptyLv, convert) : 0;
+
+  if(consumed>0){
+    emptyCrystalAddShardResult(results, monLv, consumed, 'pity');
+  }
+
+  // ถ้า stock หมดก่อน convert ครบ ให้ค้าง progress ไว้ที่ 150/150 paused เพื่อบอกว่าต้องซื้อผลึกไร้มานาเพิ่ม.
+  if(shouldConvert>consumed && emptyCrystalCount(emptyLv)<=0){
+    crystalPityState[pityKey]=CRYSTAL_PITY_KILLS;
+  }else{
+    crystalPityState[pityKey]=total % CRYSTAL_PITY_KILLS;
+  }
+  return consumed;
+}
+function emptyCrystalNormalizePity(){
+  const results=[];
+  for(let lv=1;lv<=5;lv++){
+    const equipLv=emptyCrystalEquipLv(lv);
+    const key=`L${equipLv}`;
+    const count=Math.max(0,Math.round(crystalPityState[key]||0));
+    if(count>=CRYSTAL_PITY_KILLS && emptyCrystalCount(lv)>0){
+      emptyCrystalResolvePity(equipLv, equipLv, 0, results);
+    }
+  }
+  if(results.length){
+    results.forEach(d=>invPush({name:d.name,type:d.type,rarity:'common',lv:d.lv,qty:d.qty,base:0}));
+  }
+}
 function renderEmptyCrystalTrace(){
   const lines=[];
   for(let lv=1;lv<=5;lv++){
@@ -2848,7 +3103,7 @@ function renderEmptyCrystalTrace(){
 function rollCrystalDrops(tier, monLv, kills){
   const results=[];
   monLv=+monLv||0; kills=Math.max(0,Math.round(+kills||0));
-  if(monLv<10 || kills<=0) return results;
+  if(monLv<10 || kills<=0){ renderEmptyCrystalTrace(); return results; }
   const cfg=CRYSTAL_DROP[tier]||CRYSTAL_DROP.normal;
   Object.keys(cfg).forEach(key=>{
     const [chance,min,max]=cfg[key];
@@ -2861,39 +3116,9 @@ function rollCrystalDrops(tier, monLv, kills){
       results.push({key,type:map.type,name:map.name,lv:monLv,qty,source:'drop'});
     }
   });
-  // ผลึกไร้มานา guarantee: only counts when a matching Empty Mana Crystal exists in inventory.
+  // ผลึกไร้มานา guarantee: ถ้ามี stock ตรงระดับ ครบ 150 kill จะใช้ผลึกไร้มานา 1 ก้อนและเพิ่มผลึกเศษเสี้ยวมานา 1 ก้อนทันที.
   const equipLv=getCrystalEquipLv(monLv);
-  const emptyLv=emptyCrystalLevelFromEquipLv(equipLv);
-  if(emptyLv){
-    const pityKey=`L${equipLv}`;
-    let count=Math.max(0,Math.round(crystalPityState[pityKey]||0));
-    let remaining=kills;
-    let available=emptyCrystalCount(emptyLv);
-    let guaranteed=0;
-    while(remaining>0 && available>0){
-      const need=CRYSTAL_PITY_KILLS-count;
-      if(remaining>=need){
-        remaining-=need;
-        count=0;
-        guaranteed++;
-        available--;
-      }else{
-        count+=remaining;
-        remaining=0;
-      }
-    }
-    crystalPityState[pityKey]=count;
-    if(guaranteed>0){
-      const consumed=consumeEmptyCrystal(emptyLv, guaranteed);
-      const map=CRYSTAL_TYPE_MAP.shard;
-      const existing=results.find(r=>r.key==='shard' && r.type===map.type);
-      if(existing){ existing.qty += consumed; existing.guaranteed=(existing.guaranteed||0)+consumed; existing.emptyConsumed=(existing.emptyConsumed||0)+consumed; }
-      else results.push({key:'shard',type:map.type,name:map.name,lv:monLv,qty:consumed,guaranteed:consumed,emptyConsumed:consumed,source:'pity'});
-      if(guaranteed>consumed){
-        crystalPityState[pityKey]=0;
-      }
-    }
-  }
+  emptyCrystalResolvePity(equipLv, monLv, kills, results);
   renderEmptyCrystalTrace();
   return results;
 }
@@ -2928,6 +3153,7 @@ function buyEmptyCrystal(){
   moneyCopper-=cost;
   updateMoneyDisplay();
   invPush({name:`ผลึกไร้มานา ระดับ ${lv}`,type:'empty_crystal',rarity:'common',lv,qty,base:0});
+  if(typeof emptyCrystalNormalizePity==='function') emptyCrystalNormalizePity();
   moneyLog(`ซื้อผลึกไร้มานา ระดับ ${lv} ×${qty} = ${invFormatCopper(cost)}`,'var(--red)');
   if(sessionState.active){ sessionState.consumableCost=(sessionState.consumableCost||0)+cost; sessionState.log.push(`BUY EMPTY CRYSTAL Lv.${lv} x${qty}: ${invFormatCopper(cost)}`); sessionRender(); }
   emptyCrystalUpdatePrice();
@@ -2975,7 +3201,7 @@ function rewardRenderTimeCounter(){
   Object.entries(pairs).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.textContent=rewardFmtMinutes(val); });
   const note=document.getElementById('time-pending-note');
   if(note){
-    const enc = rewardPendingEncounter && rewardPendingEncounter.tier ? ` / encounter ${rewardPendingEncounter.tier} ×${rewardPendingEncounter.count}${rewardPendingEncounter.group?' (1 fight / swarm)':''}` : '';
+    const enc = rewardPendingEncounter && rewardPendingEncounter.tier ? ` / encounter Lv.${rewardPendingEncounter.lv||'?'} ${rewardPendingEncounter.tier} ×${rewardPendingEncounter.count}${rewardPendingEncounter.group?' (1 fight / swarm)':''}` : '';
     note.textContent=`Pending: travel ${rewardFmtMinutes(rewardPendingTravelMinutes||0)} / search ${rewardFmtMinutes(rewardPendingSearchMinutes||0)}${enc}. กด +BOTH เพื่อรวมเข้าตัวนับ.`;
   }
 }
@@ -2994,18 +3220,65 @@ function rewardResetTimeCounter(){
   rewardLog('TIME COUNTER reset','var(--orange)');
   if(typeof autoSave==='function') autoSave();
 }
+
+const FIELD_SEARCH_PRESETS = {
+  safe:     { none:75, n1:18, n2:5,  n3:1, elite:1 },
+  balanced: { none:65, n1:22, n2:8,  n3:3, elite:2 },
+  risky:    { none:50, n1:25, n2:14, n3:7, elite:4 }
+};
+function fieldNum(id, def=0){
+  const el=document.getElementById(id);
+  const v=Number(el?.value);
+  return Number.isFinite(v)?v:def;
+}
+function getFieldLvRange(){
+  let min=Math.max(1, Math.round(fieldNum('field-lv-min', +document.getElementById('reward-mlv')?.value || 1)));
+  let max=Math.max(1, Math.round(fieldNum('field-lv-max', min)));
+  if(max<min){ const t=min; min=max; max=t; }
+  return {min,max};
+}
+function rollFieldMonsterLv(){
+  const {min,max}=getFieldLvRange();
+  return randInt(min,max);
+}
+function applySearchPreset(mode){
+  const p=FIELD_SEARCH_PRESETS[mode]||FIELD_SEARCH_PRESETS.balanced;
+  const set=(id,val)=>{ const el=document.getElementById(id); if(el) el.value=val; };
+  set('field-ch-none',p.none); set('field-ch-n1',p.n1); set('field-ch-n2',p.n2); set('field-ch-n3',p.n3); set('field-ch-elite',p.elite);
+  updateFieldEncounterSummary();
+  if(typeof autoSave==='function') autoSave();
+}
+function applySearchPresetFromMode(){
+  applySearchPreset(document.getElementById('search-mode')?.value || 'balanced');
+}
+function readFieldRollTable(){
+  const rows = [
+    ['none',0,Math.max(0,fieldNum('field-ch-none',65))],
+    ['normal',1,Math.max(0,fieldNum('field-ch-n1',22))],
+    ['normal',2,Math.max(0,fieldNum('field-ch-n2',8))],
+    ['normal',3,Math.max(0,fieldNum('field-ch-n3',3))],
+    ['elite',1,Math.max(0,fieldNum('field-ch-elite',2))]
+  ];
+  const total=rows.reduce((a,r)=>a+(+r[2]||0),0);
+  return total>0 ? rows : [['none',0,100]];
+}
+function updateFieldEncounterSummary(){
+  const rows=readFieldRollTable();
+  const total=rows.reduce((a,r)=>a+(+r[2]||0),0)||1;
+  const none=rows.find(r=>r[0]==='none')?.[2]||0;
+  const encounterChance=(total-none)/total;
+  const expectedMobs=rows.reduce((a,r)=>a+(r[0]==='none'?0:(+r[1]||0)*(+r[2]||0)),0)/total;
+  const eliteChance=(rows.find(r=>r[0]==='elite')?.[2]||0)/total;
+  const {min,max}=getFieldLvRange();
+  const el=document.getElementById('field-encounter-summary');
+  if(el){
+    el.textContent=`Lv.${min}–${max} | เจอมอน/นาที ≈ ${(encounterChance*100).toFixed(1)}% | Elite/นาที ≈ ${(eliteChance*100).toFixed(1)}% | มอนเฉลี่ย ${(expectedMobs).toFixed(2)} ตัว/นาที | N×2/N×3 = 1 ไฟต์โดนรุม`;
+  }
+}
 function searchRollTable(mode){
-  // Per-minute encounter roll. WALK / SEARCH now rolls once for each minute and stops when something is found.
-  // "Normal ×2/×3" means one encounter/fight with multiple monsters, not separate isolated fights.
-  if(mode==='safe') return [
-    ['none',0,75], ['normal',1,18], ['normal',2,5], ['normal',3,1], ['elite',1,1]
-  ];
-  if(mode==='risky') return [
-    ['none',0,50], ['normal',1,25], ['normal',2,14], ['normal',3,7], ['elite',1,4]
-  ];
-  return [
-    ['none',0,65], ['normal',1,22], ['normal',2,8], ['normal',3,3], ['elite',1,2]
-  ];
+  // Per-minute encounter roll from editable FIELD MONSTER TABLE.
+  // SEARCH MODE is now just a quick preset; actual rates are read from the field inputs.
+  return readFieldRollTable();
 }
 function weightedPick(rows){
   const total=rows.reduce((a,r)=>a+(+r[2]||0),0)||1;
@@ -3028,18 +3301,23 @@ function searchEncounterRoll(){
   }
   rewardPendingSearchMinutes += foundMinute;
   const tier=picked[0], count=+picked[1]||0;
-  const monLv=+document.getElementById('reward-mlv')?.value||1;
   let msg='';
   if(tier==='none'){
-    rewardPendingEncounter={tier:null,count:0,group:false,foundAt:0,mode};
-    msg=`SEARCH ${minutes}m (${mode}): เดินครบ ${minutes} นาที ไม่พบมอนสเตอร์`;
+    const {min,max}=getFieldLvRange();
+    rewardPendingEncounter={tier:null,count:0,group:false,foundAt:0,mode,lv:null,minLv:min,maxLv:max};
+    msg=`SEARCH ${minutes}m (${mode}): เดินครบ ${minutes} นาที ไม่พบมอนสเตอร์ใน Field Lv.${min}–${max}`;
   }else{
+    const monLv=rollFieldMonsterLv();
     const group=count>1;
-    rewardPendingEncounter={tier,count,group,foundAt:foundMinute,mode};
+    rewardPendingEncounter={tier,count,group,foundAt:foundMinute,mode,lv:monLv};
+    document.getElementById('reward-mlv').value=monLv;
     document.getElementById('reward-tier').value=tier;
     document.getElementById('reward-kills').value=count;
     const bt=document.getElementById('b-mtier'); if(bt) bt.value=tier;
     const blv=document.getElementById('b-mlv'); if(blv) blv.value=monLv;
+    const mt=document.getElementById('m-rarity'); if(mt) mt.value=tier;
+    const mlv=document.getElementById('m-lv'); if(mlv) mlv.value=monLv;
+    if(typeof calcAll==='function') calcAll();
     const typeName=tier==='elite'?'Elite':'Normal';
     msg=`SEARCH ${minutes}m (${mode}): นาทีที่ ${foundMinute} พบ ${typeName} Lv.${monLv} ×${count}${group?' (1 ไฟต์โดนรุม)':''} → ตั้งค่า Kill Reward + Combat Monster แล้ว`;
   }
@@ -3360,7 +3638,9 @@ function invPush(row){
     rarity: row?.rarity || 'common',
     lv: Math.max(1, Math.round(+row?.lv || 1)),
     qty: Math.max(0, Math.round(+row?.qty || 0)),
-    base: Math.max(0, +row?.base || 0)
+    base: Math.max(0, +row?.base || 0),
+    market: Math.max(0, +row?.market || 100),
+    unitOverride: Math.max(0, +row?.unitOverride || 0)
   };
   if(row.qty<=0) return 0;
   const addedValue = invUnitPrice(row) * row.qty;
@@ -3370,6 +3650,8 @@ function invPush(row){
     existing.qty = Math.max(0, Math.round(+existing.qty || 0)) + row.qty;
     // Prefer the latest non-empty display name, useful for tier names like elite/champion.
     if(row.name) existing.name = row.name;
+    if(Math.round(+row.unitOverride||0)>0) existing.unitOverride = row.unitOverride;
+    if(row.market!==undefined) existing.market = row.market;
   }else{
     inventoryRows.push(row);
   }
@@ -3377,6 +3659,75 @@ function invPush(row){
   if(typeof autoSave==='function') autoSave();
   return addedValue;
 }
+
+function manualLootLoadCurrentReward(){
+  const lv=Math.max(1,Math.round(+document.getElementById('reward-mlv')?.value||1));
+  const tier=document.getElementById('reward-tier')?.value||'normal';
+  const kills=Math.max(1,Math.round(+document.getElementById('reward-kills')?.value||1));
+  const el=document.getElementById('manual-loot-lines');
+  if(el) el.value=`${lv} ${tier} x${kills}`;
+  const box=document.getElementById('manual-loot-summary');
+  if(box) box.textContent=`Loaded current reward row: Lv.${lv} ${tier} ×${kills}\nกด ROLL LOOT ONLY เพื่อสุ่มเฉพาะของรางวัล`;
+  if(typeof autoSave==='function') autoSave();
+}
+function manualLootParseLine(line){
+  const raw=String(line||'').trim();
+  if(!raw || raw.startsWith('#') || raw.startsWith('//')) return null;
+  const low=raw.toLowerCase();
+  let tier='normal';
+  if(/mini\s*boss|miniboss/.test(low)) tier='miniboss';
+  else if(/boss/.test(low)) tier='boss';
+  else if(/champion|champ/.test(low)) tier='champion';
+  else if(/elite|อีลีท/.test(low)) tier='elite';
+  else if(/normal|ธรรมดา/.test(low)) tier='normal';
+  const nums=raw.match(/\d+/g)||[];
+  if(nums.length<1) return null;
+  let lv=Math.max(1,Math.round(+nums[0]||1));
+  let kills=1;
+  const xMatch=low.match(/[x×]\s*(\d+)/);
+  if(xMatch) kills=Math.max(1,Math.round(+xMatch[1]||1));
+  else if(nums.length>=2) kills=Math.max(1,Math.round(+nums[1]||1));
+  return {raw, lv, tier, kills};
+}
+function manualLootRollOnly(){
+  const src=document.getElementById('manual-loot-lines')?.value||'';
+  const lines=src.split(/\n+/).map(manualLootParseLine).filter(Boolean);
+  const box=document.getElementById('manual-loot-summary');
+  if(!lines.length){
+    if(box) box.textContent='Manual loot: ยังไม่มีบรรทัดที่อ่านได้. ตัวอย่าง: 12 normal x7';
+    rewardLog('MANUAL LOOT: no valid lines','var(--red)');
+    return 0;
+  }
+  let totalValue=0, totalKills=0, out=[];
+  for(const entry of lines){
+    const {lv,tier,kills}=entry;
+    const cfg=LOOT_TIER_PRICE[tier]||LOOT_TIER_PRICE.normal;
+    let rareCount=0;
+    for(let i=0;i<kills;i++) if(Math.random()<0.10) rareCount++;
+    const commonValue=invPush({name:cfg.commonName,type:cfg.commonType,rarity:'common',lv,qty:kills,base:cfg.commonBase});
+    let rareValue=0;
+    if(rareCount>0){
+      rareValue=invPush({name:cfg.rareName,type:cfg.rareType,rarity:'common',lv,qty:rareCount,base:cfg.rareBase});
+    }
+    const crystalResult=addCrystalDropsToInventory(tier, lv, kills);
+    const value=commonValue+rareValue+crystalResult.total;
+    totalValue+=value; totalKills+=kills;
+    const crystalText=(+lv>=10)?crystalDropSummary(crystalResult.drops):'Crystal locked (<Lv.10)';
+    out.push(`Lv.${lv} ${tier} ×${kills}: common ×${kills}${rareCount?`, rare ×${rareCount}`:''} | ${crystalText} | ${invFormatCopper(value)}`);
+  }
+  const summary=[
+    `MANUAL LOOT ONLY: ${totalKills} monster(s) / ${lines.length} line(s)`,
+    ...out,
+    `รวมมูลค่า loot: ${invFormatCopper(totalValue)}`,
+    `หมายเหตุ: ไม่เพิ่ม EXP / ไม่หัก HP MP IM / ไม่คิดเวลา / ไม่ลด durability`
+  ].join('\n');
+  if(box) box.textContent=summary;
+  rewardLog(`MANUAL LOOT ONLY: ${totalKills} monsters = ${invFormatCopper(totalValue)}`,'var(--green)');
+  if(sessionState.active){ sessionState.lootValue+=totalValue; sessionState.log.push(summary.replace(/\n/g,' | ')); sessionRender(); }
+  if(typeof autoSave==='function') autoSave();
+  return totalValue;
+}
+
 function rewardAddLoot(){
   const monLv=+document.getElementById('reward-mlv').value||1;
   const tier=document.getElementById('reward-tier').value;
@@ -3688,11 +4039,12 @@ function buildForceRender(){
   buildSafeCall('sessionRender');
   buildSafeCall('expectedCalc');
   buildSafeCall('renderEmptyCrystalTrace');
-  buildSafeCall('emptyCrystalTraceRender');
+  buildSafeCall('renderEmptyCrystalTrace');
   buildSafeCall('crystalPityRender');
   buildSafeCall('skillRender');
   buildSafeCall('skillRefreshCombatSelect');
   buildSafeCall('updateCombatPotionHeal');
+  buildSafeCall('updateFieldEncounterSummary');
   buildSafeCall('rewardRenderTimeCounter');
 }
 function buildScheduleForceRender(){
@@ -3823,7 +4175,7 @@ function enhanceNumberStepper(id, step=1){
 }
 function initQuickSteppers(){
   [
-    'c-lv','m-lv','b-plv','b-mlv','reward-mlv','eq-weapon-lv','eq-armor-lv','ek-mon-lv','inv-add-lv',
+    'c-lv','m-lv','b-plv','b-mlv','reward-mlv','field-lv-min','field-lv-max','field-ch-none','field-ch-n1','field-ch-n2','field-ch-n3','field-ch-elite','eq-weapon-lv','eq-armor-lv','ek-mon-lv','inv-add-lv',
     'c-str','c-agi','c-dex','c-vit','c-int','c-wis',
     'm-str','m-agi','m-dex','m-vit','m-int',
     'b-str','b-agi','b-vit','b-int','b-dex','b-wis',
@@ -3831,13 +4183,229 @@ function initQuickSteppers(){
   ].forEach(id=>enhanceNumberStepper(id,1));
 }
 
+
+
+// ══ GOOGLE SHEET CLOUD SYNC (Inventory + Money) ══
+const CLOUD_SETTINGS_KEY='unrulingCloudSheetSettings_v1';
+const CLOUD_DEFAULT_API_URL='https://script.google.com/macros/s/AKfycbzHoWaCQ53LHSjsV_zsZO4NEctDihbdXOJwqpi4u1SrSxp164X1Qeq1djDypuzHCBsZfQ/exec';
+const CLOUD_DEFAULT_SYNC_KEY='unruling-main-save';
+let cloudAutoSyncEnabled=false;
+let cloudAutoSyncTimer=null;
+let cloudLastFingerprint='';
+let cloudBusy=false;
+function cloudStatus(msg,color){
+  const el=document.getElementById('cloud-sync-status');
+  if(!el) return;
+  el.style.color=color||'var(--text-dim)';
+  el.textContent=msg;
+}
+function cloudGetSettings(){
+  const api=(document.getElementById('cloud-api-url')?.value||CLOUD_DEFAULT_API_URL).trim();
+  const key=(document.getElementById('cloud-sync-key')?.value||CLOUD_DEFAULT_SYNC_KEY).trim();
+  try{ localStorage.setItem(CLOUD_SETTINGS_KEY, JSON.stringify({api,key,auto:cloudAutoSyncEnabled})); }catch(e){}
+  return {api,key};
+}
+function cloudLoadSettings(){
+  try{
+    const raw=localStorage.getItem(CLOUD_SETTINGS_KEY);
+    if(!raw) return;
+    const s=JSON.parse(raw);
+    if(s.api && document.getElementById('cloud-api-url')) document.getElementById('cloud-api-url').value=s.api;
+    if(s.key && document.getElementById('cloud-sync-key')) document.getElementById('cloud-sync-key').value=s.key;
+    if(s.auto) { cloudAutoSyncEnabled=true; cloudStartAutoTimer(); }
+  }catch(e){}
+}
+function cloudRowId(row,idx){
+  if(row && row.id) return String(row.id);
+  const safeName=String(row?.name||'item').replace(/[^a-zA-Z0-9ก-๙_-]+/g,'_').slice(0,28);
+  return `${safeName}_${Date.now()}_${idx}`;
+}
+function cloudInventoryToSheetRows(){
+  return (inventoryRows||[]).map((r,idx)=>({
+    id:cloudRowId(r,idx),
+    name:r.name||'Item',
+    type:r.type||'monster_part',
+    rarity:r.rarity||'common',
+    lv:Number(r.lv||1),
+    qty:Number(r.qty||0),
+    basePerLv:Number(r.base||0),
+    marketPct:Number(r.market===undefined?100:r.market),
+    unitFixed:Number(r.unitOverride||0),
+    note:r.note||''
+  }));
+}
+function cloudSheetRowsToInventory(rows){
+  return (Array.isArray(rows)?rows:[]).filter(r=>r && (r.name||r.id)).map((r,idx)=>{
+    const type=String(r.type||'monster_part');
+    const def=INV_TYPE_BASE[type]||INV_TYPE_BASE.monster_part;
+    return {
+      id:String(r.id||cloudRowId(r,idx)),
+      name:String(r.name||def.label||'Item'),
+      type,
+      rarity:String(r.rarity||'common'),
+      lv:Math.max(1,Number(r.lv||1)),
+      qty:Math.max(0,Number(r.qty||0)),
+      base:Math.max(0,Number(r.basePerLv!==undefined?r.basePerLv:(r.base!==undefined?r.base:def.base))),
+      market:Math.max(0,Number(r.marketPct!==undefined?r.marketPct:(r.market!==undefined?r.market:100))),
+      unitOverride:Math.max(0,Number(r.unitFixed!==undefined?r.unitFixed:(r.unitOverride||0))),
+      note:String(r.note||'')
+    };
+  });
+}
+function cloudBuildPayload(){
+  return {
+    inventory: cloudInventoryToSheetRows(),
+    money: { copper: Number(moneyCopper||0) },
+    meta: {
+      saveName: 'Irein Main',
+      version: '1',
+      source: 'Unruling World GM Tool',
+      itemCount: (inventoryRows||[]).length,
+      totalQty: typeof invTotalQty==='function'?invTotalQty():0,
+      inventoryValue: typeof invTotal==='function'?invTotal():0
+    }
+  };
+}
+function cloudFingerprint(){
+  try{return JSON.stringify({money:moneyCopper||0, inv:cloudInventoryToSheetRows()});}
+  catch(e){return String(Date.now());}
+}
+async function cloudSaveToSheet(){
+  const {api,key}=cloudGetSettings();
+  if(!api||!key){ cloudStatus('✘ Missing API URL / Sync Key','var(--red)'); return; }
+  if(cloudBusy) return;
+  cloudBusy=true;
+  const payload=cloudBuildPayload();
+  cloudStatus(`Saving to Google Sheet...\nInventory: ${payload.inventory.length} slots\nMoney: ${Number(moneyCopper||0).toLocaleString()} C`,'var(--gold)');
+  try{
+    const res=await fetch(api,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'save',key,payload})});
+    const txt=await res.text();
+    let data; try{data=JSON.parse(txt);}catch(e){data={ok:false,error:txt.slice(0,300)}}
+    if(!data.ok) throw new Error(data.error||'Save failed');
+    cloudLastFingerprint=cloudFingerprint();
+    const t=data.savedAt || new Date().toISOString();
+    cloudStatus(`✓ Saved to Google Sheet\n${new Date(t).toLocaleString()}\nInventory: ${payload.inventory.length} slots | Money: ${formatCopperShortUW ? formatCopperShortUW(moneyCopper||0) : (moneyCopper||0)+'C'}`,'var(--green)');
+    buildQueueAutoSave && buildQueueAutoSave('cloud-save');
+  }catch(err){
+    cloudStatus(`✘ Save failed\n${err.message}\nถ้าเจอ CORS/permission ให้เช็ก Apps Script deploy: Execute as Me / Anyone with link`,'var(--red)');
+  }finally{ cloudBusy=false; }
+}
+async function cloudLoadFromSheet(){
+  const {api,key}=cloudGetSettings();
+  if(!api||!key){ cloudStatus('✘ Missing API URL / Sync Key','var(--red)'); return; }
+  if(cloudBusy) return;
+  cloudBusy=true;
+  cloudStatus('Loading from Google Sheet...','var(--gold)');
+  try{
+    const url=api + (api.includes('?')?'&':'?') + `action=load&key=${encodeURIComponent(key)}&_=${Date.now()}`;
+    const res=await fetch(url,{method:'GET'});
+    const txt=await res.text();
+    let data; try{data=JSON.parse(txt);}catch(e){data={ok:false,error:txt.slice(0,300)}}
+    if(!data.ok) throw new Error(data.error||'Load failed');
+    inventoryRows=cloudSheetRowsToInventory(data.inventory||[]);
+    const copper=Number((data.money&&data.money.copper!==undefined)?data.money.copper:moneyCopper||0);
+    moneyCopper=Math.max(0,Math.round(copper||0));
+    invRender(); updateMoneyDisplay(); if(typeof renderEmptyCrystalTrace==='function') renderEmptyCrystalTrace(); if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('cloud-load');
+    cloudLastFingerprint=cloudFingerprint();
+    const loaded=data.loadedAt || new Date().toISOString();
+    const meta=data.meta||{};
+    cloudStatus(`✓ Loaded from Google Sheet\n${new Date(loaded).toLocaleString()}\nInventory: ${inventoryRows.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper):moneyCopper+'C'}${meta.updatedAt?`\nSheet updated: ${new Date(meta.updatedAt).toLocaleString()}`:''}`,'var(--green)');
+  }catch(err){
+    cloudStatus(`✘ Load failed\n${err.message}\nเช็ก URL, sync key, ชื่อชีต Inventory/Money/Meta และ deploy permission`,'var(--red)');
+  }finally{ cloudBusy=false; }
+}
+function cloudStartAutoTimer(){
+  const btn=document.getElementById('cloud-auto-btn');
+  if(btn) btn.textContent=cloudAutoSyncEnabled?'AUTO SYNC: ON':'AUTO SYNC: OFF';
+  if(cloudAutoSyncTimer) clearInterval(cloudAutoSyncTimer);
+  if(!cloudAutoSyncEnabled) return;
+  cloudLastFingerprint=cloudFingerprint();
+  cloudAutoSyncTimer=setInterval(()=>{
+    const fp=cloudFingerprint();
+    if(fp!==cloudLastFingerprint && !cloudBusy){ cloudSaveToSheet(); }
+  },60000);
+}
+function cloudToggleAutoSync(){
+  cloudAutoSyncEnabled=!cloudAutoSyncEnabled;
+  cloudGetSettings();
+  cloudStartAutoTimer();
+  cloudStatus(cloudAutoSyncEnabled?'Auto Sync ON — จะ save เมื่อ Inventory/Money เปลี่ยน ทุก 60 วิ':'Auto Sync OFF','var(--cyan)');
+}
+
+
+// ══ WEB APP SHELL / PROGRAM MODE ══
+function formatCopperShortUW(total){
+  total = Math.max(0, Number(total)||0);
+  const s = Math.floor(total/1000); const c = total%1000;
+  if(s>0) return `${s}S ${c}C`;
+  return `${c}C`;
+}
+function getPanelNameUW(){
+  const active=document.querySelector('.tab.active');
+  return active ? active.textContent.trim() : 'DASHBOARD';
+}
+function updateAppStatus(){
+  const set=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
+  const lv=document.getElementById('c-lv')?.value || '—';
+  const exp=document.getElementById('exp-text')?.textContent || '—';
+  const hp=document.getElementById('r-current-hp-text')?.textContent || document.getElementById('r-hp')?.textContent || '—';
+  const mp=document.getElementById('r-current-mp-text')?.textContent || document.getElementById('r-mp')?.textContent || '—';
+  const im=document.getElementById('r-current-im-text')?.textContent || document.getElementById('r-im')?.textContent || '—';
+  const money=(typeof moneyCopper!=='undefined') ? formatCopperShortUW(moneyCopper) : '—';
+  set('uw-current-panel',getPanelNameUW()); set('uw-lv',lv); set('uw-exp',exp); set('uw-hp',hp); set('uw-mp',mp); set('uw-im',im); set('uw-money',money);
+}
+function initWebAppShell(){
+  const wrap=document.querySelector('.wrap');
+  if(!wrap || wrap.classList.contains('uw-app')) return;
+  const header=wrap.querySelector(':scope > .header');
+  const tabs=wrap.querySelector(':scope > .tabs');
+  const panels=[...wrap.querySelectorAll(':scope > .panel')];
+  if(!header || !tabs || !panels.length) return;
+  const sidebar=document.createElement('aside'); sidebar.className='uw-sidebar';
+  const main=document.createElement('main'); main.className='uw-main';
+  const top=document.createElement('div'); top.className='uw-topbar';
+  top.innerHTML=`
+    <div class="uw-title"><strong id="uw-current-panel">DASHBOARD</strong><span>UNRULING WORLD GM TOOL — WEB APP MODE</span></div>
+    <div class="uw-chips">
+      <span class="uw-chip">LV <b id="uw-lv">—</b></span>
+      <span class="uw-chip gold">EXP <b id="uw-exp">—</b></span>
+      <span class="uw-chip green">HP <b id="uw-hp">—</b></span>
+      <span class="uw-chip">MP <b id="uw-mp">—</b></span>
+      <span class="uw-chip red">IM <b id="uw-im">—</b></span>
+      <span class="uw-chip gold">MONEY <b id="uw-money">—</b></span>
+    </div>`;
+  const quick=document.createElement('div'); quick.className='uw-quick';
+  quick.innerHTML=`<div class="uw-quick-title">Quick Actions</div><div class="uw-quick-grid">
+    <button class="uw-quick-btn" onclick="switchTab('hunting')">HUNTING</button>
+    <button class="uw-quick-btn" onclick="switchTab('combat')">COMBAT</button>
+    <button class="uw-quick-btn" onclick="switchTab('inventory')">BAG</button>
+    <button class="uw-quick-btn" onclick="buildQuickSave();updateAppStatus();">SAVE</button>
+  </div>`;
+  sidebar.appendChild(header); sidebar.appendChild(tabs); sidebar.appendChild(quick);
+  main.appendChild(top); panels.forEach(p=>main.appendChild(p));
+  wrap.textContent=''; wrap.className='wrap uw-app'; wrap.appendChild(sidebar); wrap.appendChild(main);
+  updateAppStatus();
+}
+// auto-refresh top HUD when key systems redraw
+if(typeof updateMoneyDisplay==='function'){
+  const __uwUpdateMoneyDisplay=updateMoneyDisplay;
+  updateMoneyDisplay=function(){ __uwUpdateMoneyDisplay(); if(typeof updateAppStatus==='function') updateAppStatus(); };
+}
+if(typeof calcAll==='function'){
+  const __uwCalcAll=calcAll;
+  calcAll=function(){ __uwCalcAll(); if(typeof updateAppStatus==='function') updateAppStatus(); };
+}
+
 // init
+initWebAppShell();
+cloudLoadSettings();
 initQuickSteppers();
 skillLibrary=skillDefaults().map(normalizeSkill); skillRender(); skillRefreshCombatSelect(); updateCombatPotionHeal();
-autoFillStats(); calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender(); equipmentRecalc('weapon'); equipmentRecalc('armor'); consRender(); fatigueRender(); expectedCalc(); clearIMPips(15);
+autoFillStats(); calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender(); equipmentRecalc('weapon'); equipmentRecalc('armor'); consRender(); fatigueRender(); expectedCalc(); updateFieldEncounterSummary(); clearIMPips(15);
 document.querySelectorAll('#im-pips .im-pip').forEach(p=>p.classList.add('filled'));
 buildTryAutoLoad();
 buildEnableAutoSave();
+updateAppStatus();
 </script>
 </body>
 </html>
