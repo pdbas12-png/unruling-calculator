@@ -541,8 +541,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               ศิลาเสริมอาวุธ: ใช้ตีบวกอาวุธเท่านั้น | +1/+2/+3 เพิ่ม ATK รวม +1/+2/+3 แบบ flat<br>
               ศิลาเสริมเกราะ: ใช้ตีบวกชุดเกราะรวมเท่านั้น | +1/+2/+3 เพิ่ม DEF +1/+2/+3 และลด durability loss 2/4/6%<br>
               บาเทียน / ก่อน Lv.25: NPC ทำได้สูงสุด +3 | +1 100%, +2 90%, +3 75% | พลาดเสียศิลา+ค่าช่าง (+3 พลาด durability ลด 10%)<br>
-              ศิลาแบ่งช่วง: เศษศิลาเสริม Lv.10–19, ศิลาเสริมต่ำ Lv.20–39, กลาง Lv.40–79, สูง Lv.80+<br>
-              ศิลาเป็น universal economy item จึงหายากกว่าผลึกมานาทั่วไป; Mini boss/Boss ไม่การันตีหลายก้อน เพื่อกันของเฟ้อ
+              ศิลาแบ่งช่วง: เศษศิลาเสริม Lv.10–19, ศิลาเสริมต่ำ Lv.20–39, กลาง Lv.40–79, สูง Lv.80+
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               <b>ระบบตรามอนสเตอร์</b><br>
@@ -554,11 +553,11 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>Tier</th><th>ศิลาอาวุธ</th><th>ศิลาเกราะ</th><th>ตรามอนสเตอร์</th></tr></thead>
               <tbody>
-                <tr><td class="t-n">Normal</td><td>0.05%</td><td>0.05%</td><td>0.05%</td></tr>
-                <tr><td class="t-e">Elite</td><td>0.3%</td><td>0.3%</td><td>0.5%</td></tr>
-                <tr><td class="t-c">Champion</td><td>2%</td><td>2%</td><td>5%</td></tr>
-                <tr><td class="t-m">Mini boss</td><td colspan="2">12% สุ่ม 1 ชิ้น</td><td>25%</td></tr>
-                <tr><td class="t-b">Boss</td><td colspan="2">45% สุ่ม 1 ชิ้น</td><td>70–100%</td></tr>
+                <tr><td class="t-n">Normal</td><td>0.3%</td><td>0.3%</td><td>0.05%</td></tr>
+                <tr><td class="t-e">Elite</td><td>2%</td><td>2%</td><td>0.5%</td></tr>
+                <tr><td class="t-c">Champion</td><td>25%</td><td>25%</td><td>5%</td></tr>
+                <tr><td class="t-m">Mini boss</td><td colspan="2">การันตีสุ่มรวม 2–4 ชิ้น</td><td>25%</td></tr>
+                <tr><td class="t-b">Boss</td><td colspan="2">การันตีสุ่มรวม 6–10 ชิ้น</td><td>70–100%</td></tr>
               </tbody>
             </table>
           </div>
@@ -3208,12 +3207,11 @@ function crystalDropSummary(drops){
 
 // ══ UPGRADE STONE / MONSTER SEAL DROPS ══
 const UPGRADE_STONE_DROP = {
-  // Universal upgrade stones must stay scarce. Tier raises chance, not quantity spam.
-  normal:   { weapon:[0.0005,1,1], armor:[0.0005,1,1] },
-  elite:    { weapon:[0.003,1,1],  armor:[0.003,1,1] },
-  champion: { weapon:[0.02,1,1],   armor:[0.02,1,1] },
-  miniboss: { total:[0.12,1,1] },
-  boss:     { total:[0.45,1,1] }
+  normal:   { weapon:[0.003,1,1], armor:[0.003,1,1] },
+  elite:    { weapon:[0.02,1,1],  armor:[0.02,1,1] },
+  champion: { weapon:[0.25,1,1],  armor:[0.25,1,1] },
+  miniboss: { total:[1,2,4] },
+  boss:     { total:[1,6,10] }
 };
 const MONSTER_SEAL_DROP = {
   normal:[0.0005,1,1], elite:[0.005,1,1], champion:[0.05,1,1], miniboss:[0.25,1,1], boss:[0.85,1,1]
@@ -4612,7 +4610,7 @@ async function cloudSaveToSheet(){
   if(cloudBusy) return;
   cloudBusy=true;
   const payload=cloudBuildPayload();
-  cloudStatus(`Saving to Google Sheet...\nInventory: ${payload.inventory.length} slots\nMoney: ${Number(moneyCopper||0).toLocaleString()} C`,'var(--gold)');
+  cloudStatus(`Saving to Google Sheet...\nLv.${payload.character.level} / EXP ${payload.character.exp}\nInventory: ${payload.inventory.length} slots\nMoney: ${Number(moneyCopper||0).toLocaleString()} C`,'var(--gold)');
   try{
     // Try normal fetch first. Some browsers/deployments allow it and return a readable JSON response.
     let data=null;
@@ -4628,7 +4626,7 @@ async function cloudSaveToSheet(){
     }
     cloudLastFingerprint=cloudFingerprint();
     const t=data.savedAt || new Date().toISOString();
-    cloudStatus(`${data.opaque?'✓ Save sent to Google Sheet (opaque / CORS fallback)':'✓ Saved to Google Sheet'}\n${new Date(t).toLocaleString()}\nInventory: ${payload.inventory.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper||0):(moneyCopper||0)+'C'}${data.opaque?'\nหมายเหตุ: Browser อ่านผลลัพธ์ POST ไม่ได้เพราะ CORS แต่คำสั่งถูกส่งแล้ว; กด LOAD เพื่อยืนยันหลังอัปเดต Apps Script แบบ JSONP':''}`,'var(--green)');
+    cloudStatus(`${data.opaque?'✓ Save sent to Google Sheet (opaque / CORS fallback)':'✓ Saved to Google Sheet'}\n${new Date(t).toLocaleString()}\nLv.${payload.character.level} | EXP ${payload.character.exp} | Inventory: ${payload.inventory.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper||0):(moneyCopper||0)+'C'}${data.opaque?'\nหมายเหตุ: Browser อ่านผลลัพธ์ POST ไม่ได้เพราะ CORS แต่คำสั่งถูกส่งแล้ว; กด LOAD เพื่อยืนยันหลังอัปเดต Apps Script แบบ JSONP':''}`,'var(--green)');
     if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('cloud-save');
   }catch(err){
     cloudStatus(`✘ Save failed\n${err.message}\nถ้ายัง failed: เช็ก Apps Script deploy = Execute as Me / Anyone with link และใช้โค้ด Apps Script เวอร์ชัน JSONP ที่กูส่งให้`,'var(--red)');
@@ -4656,11 +4654,37 @@ async function cloudLoadFromSheet(){
     inventoryRows=cloudSheetRowsToInventory(data.inventory||[]);
     const copper=Number((data.money&&data.money.copper!==undefined)?data.money.copper:moneyCopper||0);
     moneyCopper=Math.max(0,Math.round(copper||0));
-    invRender(); updateMoneyDisplay(); if(typeof renderEmptyCrystalTrace==='function') renderEmptyCrystalTrace(); if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('cloud-load');
+
+    // Full sync apply: previous build loaded Inventory/Money only, so character Lv/EXP and equipment did not link back from Google Sheet.
+    if(data.character && typeof data.character==='object'){
+      cloudApplyCharacter(data.character);
+    }else if(data.meta && data.meta.characterLevel!==undefined){
+      const lv=Number(data.meta.characterLevel)||1;
+      if(document.getElementById('c-lv')) document.getElementById('c-lv').value=lv;
+      expState.lv=lv;
+    }
+    if(Array.isArray(data.equipment)) cloudApplyEquipment(data.equipment);
+    if(Array.isArray(data.consumables)) cloudApplyConsumables(data.consumables);
+    if(Array.isArray(data.emptyCrystal)) cloudApplyEmptyCrystal(data.emptyCrystal);
+    if(Array.isArray(data.sessionLog)) cloudApplySessionLog(data.sessionLog);
+
+    invRender();
+    updateMoneyDisplay();
+    updateExpDisplay();
+    if(typeof calcAll==='function') calcAll();
+    if(typeof equipmentRecalc==='function'){ equipmentRecalc('weapon'); equipmentRecalc('armor'); }
+    if(typeof consRender==='function') consRender();
+    if(typeof renderEmptyCrystalTrace==='function') renderEmptyCrystalTrace();
+    if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('cloud-load');
     cloudLastFingerprint=cloudFingerprint();
     const loaded=data.loadedAt || new Date().toISOString();
     const meta=data.meta||{};
-    cloudStatus(`✓ Loaded from Google Sheet\n${new Date(loaded).toLocaleString()}\nInventory: ${inventoryRows.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper):moneyCopper+'C'}${meta.updatedAt?`\nSheet updated: ${new Date(meta.updatedAt).toLocaleString()}`:''}`,'var(--green)');
+    const lvNow=(expState&&expState.lv)||(+document.getElementById('c-lv')?.value||1);
+    cloudStatus(`✓ Loaded from Google Sheet
+${new Date(loaded).toLocaleString()}
+Lv.${lvNow} | EXP ${expState.current||0} | Inventory: ${inventoryRows.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper):moneyCopper+'C'}${meta.updatedAt?`
+Sheet updated: ${new Date(meta.updatedAt).toLocaleString()}`:''}${data.character?'':'
+⚠ Sheet response has no character object; loaded Lv only if meta.characterLevel exists. Update Apps Script if Lv still does not sync.'}`,'var(--green)');
   }catch(err){
     cloudStatus(`✘ Load failed\n${err.message}\nถ้า fetch ติด CORS ให้ใช้ Apps Script เวอร์ชัน JSONP callback ตามที่กูส่งให้ แล้ว redeploy`,'var(--red)');
   }finally{ cloudBusy=false; }
