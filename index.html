@@ -522,7 +522,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               Elite: เศษเสี้ยว 5%, ต่ำ 1%, กลาง 0.1%<br>
               Champion: เศษเสี้ยว 100%×1, ต่ำ 10%, กลาง 1.5%, สูง 0.1%<br>
               Mini-boss: เศษเสี้ยว 100%×2–4, ต่ำ 50%, กลาง 5%, สูง 1%<br>
-              Boss: เศษเสี้ยว 100%×6–10, ต่ำ 100%×2–4, กลาง 40%, สูง 5%, เศษเสี้ยวแก่น 0.01%<br>
+              Boss: เศษเสี้ยว 100%×6–10, ต่ำ 100%×2–4, กลาง 40%, สูง 5%<br>
               ผลึกไร้มานา: ต้องมีใน Inventory ก่อน จึงนับ kill; ฆ่าครบ 150 ตัวในช่วงระดับเดียวกัน → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้เศษเสี้ยว x1
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
@@ -532,6 +532,35 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               ผลึกไร้มานา price = ผลึกเศษเสี้ยว×20% = Weapon base×0.05 (ระดับ 1–5 = อุปกรณ์ Lv.10/15/20/25/30)<br>
               Mana Pressure: มอนสูงกว่า 1 Lv = ตีเบาลง 5%, DEF มอน +5%, durability lost +10%, EXP +10%
             </div>
+          </div>
+
+          <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
+            <div class="section-label">UPGRADE STONE / MONSTER SEAL RULES</div>
+            <div class="small-note" style="line-height:1.7">
+              <b>ระบบตีบวก</b><br>
+              ศิลาเสริมอาวุธ: ใช้ตีบวกอาวุธเท่านั้น | +1/+2/+3 เพิ่ม ATK รวม +1/+2/+3 แบบ flat<br>
+              ศิลาเสริมเกราะ: ใช้ตีบวกชุดเกราะรวมเท่านั้น | +1/+2/+3 เพิ่ม DEF +1/+2/+3 และลด durability loss 2/4/6%<br>
+              บาเทียน / ก่อน Lv.25: NPC ทำได้สูงสุด +3 | +1 100%, +2 90%, +3 75% | พลาดเสียศิลา+ค่าช่าง (+3 พลาด durability ลด 10%)<br>
+              ศิลาแบ่งช่วง: เศษศิลาเสริม Lv.10–19, ศิลาเสริมต่ำ Lv.20–39, กลาง Lv.40–79, สูง Lv.80+<br>
+              ศิลาเป็น universal economy item จึงหายากกว่าผลึกมานาทั่วไป; Mini boss/Boss ไม่การันตีหลายก้อน เพื่อกันของเฟ้อ
+            </div>
+            <div class="small-note" style="line-height:1.7;margin-top:8px">
+              <b>ระบบตรามอนสเตอร์</b><br>
+              ตรา = passive เฉพาะ species; คุณภาพไม่แยก Normal/Elite/Champion. Tier สูงขึ้นแค่ทำให้ดรอปง่ายขึ้น ไม่ทำให้ตราแรงขึ้น<br>
+              ตอนนี้อุปกรณ์มี 2 ชิ้นใหญ่: อาวุธ / ชุดเกราะรวม → ตราแบ่งเป็น [อาวุธ] และ [เกราะ] เท่านั้น<br>
+              ตราใช้ผ่าน “แผ่นตราวงจร” แล้วเสียบเข้า slot ของอุปกรณ์. Common ปกติ 0 slot, Common มีร่องวงจร/Uncommon อาจมี 1, Rare มี 1, Epic 1–2<br>
+              ตราทั่วไปจาก species เดียวกัน effect เท่ากันทุก tier; Named/Boss เฉพาะตัวเท่านั้นที่อาจมีตราพิเศษ
+            </div>
+            <table class="beh-table" style="margin-top:8px">
+              <thead><tr><th>Tier</th><th>ศิลาอาวุธ</th><th>ศิลาเกราะ</th><th>ตรามอนสเตอร์</th></tr></thead>
+              <tbody>
+                <tr><td class="t-n">Normal</td><td>0.05%</td><td>0.05%</td><td>0.05%</td></tr>
+                <tr><td class="t-e">Elite</td><td>0.3%</td><td>0.3%</td><td>0.5%</td></tr>
+                <tr><td class="t-c">Champion</td><td>2%</td><td>2%</td><td>5%</td></tr>
+                <tr><td class="t-m">Mini boss</td><td colspan="2">12% สุ่ม 1 ชิ้น</td><td>25%</td></tr>
+                <tr><td class="t-b">Boss</td><td colspan="2">45% สุ่ม 1 ชิ้น</td><td>70–100%</td></tr>
+              </tbody>
+            </table>
           </div>
 
           <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
@@ -780,8 +809,13 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
                 <option value="crystal_low">ผลึกมานาเข้มข้นต่ำ</option>
                 <option value="crystal_mid">ผลึกมานาเข้มข้นกลาง</option>
                 <option value="crystal_high">ผลึกมานาเข้มข้นสูง</option>
+                <option value="stone_weapon">ศิลาเสริมอาวุธ</option>
+                <option value="stone_armor">ศิลาเสริมเกราะ</option>
+                <option value="monster_seal_weapon">ตรามอนสเตอร์ [อาวุธ]</option>
+                <option value="monster_seal_armor">ตรามอนสเตอร์ [เกราะ]</option>
+                <option value="seal_plate_weapon">แผ่นตราวงจร [อาวุธ]</option>
+                <option value="seal_plate_armor">แผ่นตราวงจร [เกราะ]</option>
                 <option value="empty_crystal">ผลึกไร้มานา</option>
-                <option value="core_fragment">เศษเสี้ยวแก่นมานา</option>
                 <option value="custom">Custom</option>
               </select>
             </div>
@@ -2181,9 +2215,13 @@ function addCombatLootToInventory(tier, lv, lines){
     ? ` | ${crystalDropSummary(crystalResult.drops)}`
     : ' | Crystal locked (<Lv.10)';
 
-  const total = commonValue + rareValue + (crystalResult.total||0);
+  const upgradeSealResult = (typeof addUpgradeAndSealDropsToInventory === 'function')
+    ? addUpgradeAndSealDropsToInventory(tier, lv, 1)
+    : {stones:[],seals:[],total:0};
+  const upgradeSealText = (typeof upgradeSealDropSummary === 'function') ? ` | ${upgradeSealDropSummary(upgradeSealResult)}` : '';
+  const total = commonValue + rareValue + (crystalResult.total||0) + (upgradeSealResult.total||0);
   const rareText = rareDropped ? ` | Rare DROP → ${cfg.rareName} Lv.${lv} ×1 (~${rareValue} Copper)` : ' | Rare MISS';
-  lines.push('system', `📦 Added to Inventory: ${cfg.commonName} Lv.${lv} ×1 (~${commonValue} Copper)${rareText}${crystalText}`);
+  lines.push('system', `📦 Added to Inventory: ${cfg.commonName} Lv.${lv} ×1 (~${commonValue} Copper)${rareText}${crystalText}${upgradeSealText}`);
   if(activeTurnSummary){
     activeTurnSummary.lootOutcomes = activeTurnSummary.lootOutcomes || [];
     activeTurnSummary.lootOutcomes.push(`${cfg.commonName} Lv.${lv} ×1 (${commonValue}C)`);
@@ -2195,6 +2233,7 @@ function addCombatLootToInventory(tier, lv, lines){
     if(+lv>=10 && typeof crystalDropSummary === 'function'){
       activeTurnSummary.lootOutcomes.push(crystalDropSummary(crystalResult.drops));
     }
+    if(typeof upgradeSealDropSummary === 'function') activeTurnSummary.lootOutcomes.push(upgradeSealDropSummary(upgradeSealResult));
   }
 
   if(sessionState && sessionState.active){
@@ -2779,7 +2818,12 @@ const INV_TYPE_BASE = {
   crystal_mid: { label:'ผลึกมานาเข้มข้นกลาง', base:0 },
   crystal_high: { label:'ผลึกมานาเข้มข้นสูง', base:0 },
   empty_crystal: { label:'ผลึกไร้มานา', base:0 },
-  core_fragment: { label:'เศษเสี้ยวแก่นมานา', base:0 },
+  stone_weapon: { label:'ศิลาเสริมอาวุธ', base:0 },
+  stone_armor: { label:'ศิลาเสริมเกราะ', base:0 },
+  monster_seal_weapon: { label:'ตรามอนสเตอร์ [อาวุธ]', base:0 },
+  monster_seal_armor: { label:'ตรามอนสเตอร์ [เกราะ]', base:0 },
+  seal_plate_weapon: { label:'แผ่นตราวงจร [อาวุธ]', base:0 },
+  seal_plate_armor: { label:'แผ่นตราวงจร [เกราะ]', base:0 },
   custom: { label:'Custom', base:5 },
 };
 const INV_RARITY = {
@@ -2803,8 +2847,13 @@ function invTypeChanged(){
   else if(type==='crystal_low') name.value='ผลึกมานาเข้มข้นต่ำ';
   else if(type==='crystal_mid') name.value='ผลึกมานาเข้มข้นกลาง';
   else if(type==='crystal_high') name.value='ผลึกมานาเข้มข้นสูง';
+  else if(type==='stone_weapon') name.value='ศิลาเสริมอาวุธ';
+  else if(type==='stone_armor') name.value='ศิลาเสริมเกราะ';
+  else if(type==='monster_seal_weapon') name.value='ตรามอนสเตอร์ [อาวุธ]';
+  else if(type==='monster_seal_armor') name.value='ตรามอนสเตอร์ [เกราะ]';
+  else if(type==='seal_plate_weapon') name.value='แผ่นตราวงจร [อาวุธ]';
+  else if(type==='seal_plate_armor') name.value='แผ่นตราวงจร [เกราะ]';
   else if(type==='empty_crystal') name.value='ผลึกไร้มานา';
-  else if(type==='core_fragment') name.value='เศษเสี้ยวแก่นมานา';
   else name.value='Custom Item';
 }
 function getCrystalEquipLv(monLv){
@@ -2824,7 +2873,6 @@ function crystalPriceFactor(type){
   if(type==='crystal_low') return 1.25;      // shard ×5
   if(type==='crystal_mid') return 6.25;      // shard ×25
   if(type==='crystal_high') return 25;       // shard ×100
-  if(type==='core_fragment') return 250;     // legendary-grade reference, usually auction-only
   return null;
 }
 function getCrystalUnitPrice(type, monLv){
@@ -2835,6 +2883,10 @@ function getCrystalUnitPrice(type, monLv){
 }
 function invAutoUnitPrice(row){
   if(row.type==='empty_crystal') return emptyCrystalUnitPrice(row.lv);
+  if(row.type==='stone_weapon') return getUpgradeStoneUnitPrice('weapon', row.lv);
+  if(row.type==='stone_armor') return getUpgradeStoneUnitPrice('armor', row.lv);
+  if(row.type==='monster_seal_weapon' || row.type==='monster_seal_armor') return getMonsterSealUnitPrice(row.type, row.lv);
+  if(row.type==='seal_plate_weapon' || row.type==='seal_plate_armor') return getSealPlateUnitPrice(row.type, row.lv);
   const crystalPrice=getCrystalUnitPrice(row.type,row.lv);
   if(crystalPrice!==null) return crystalPrice;
   const rar=INV_RARITY[row.rarity]||INV_RARITY.common;
@@ -2851,7 +2903,8 @@ function invTotal(){ return inventoryRows.reduce((sum,r)=>sum+invTotalRow(r),0);
 function invTotalQty(){ return inventoryRows.reduce((sum,r)=>sum+(+r.qty||0),0); }
 function invIconForType(type){
   if(String(type||'').includes('crystal')) return '◆';
-  if(type==='core_fragment') return '◇';
+  if(String(type||'').includes('stone_')) return '⬘';
+  if(String(type||'').includes('seal')) return '◇';
   if(String(type||'').includes('rare')) return '✦';
   if(type==='ore') return '⬡';
   if(type==='hide_bone') return '▰';
@@ -3005,7 +3058,7 @@ const CRYSTAL_DROP = {
   elite:    { shard:[0.05,1,1],  low:[0.01,1,1],    mid:[0.001,1,1] },
   champion: { shard:[1,1,1],     low:[0.10,1,1],   mid:[0.015,1,1], high:[0.001,1,1] },
   miniboss: { shard:[1,2,4],     low:[0.50,1,1],   mid:[0.05,1,1],  high:[0.01,1,1] },
-  boss:     { shard:[1,6,10],    low:[1,2,4],      mid:[0.40,1,1],  high:[0.05,1,1],  core:[0.0001,1,1] }
+  boss:     { shard:[1,6,10],    low:[1,2,4],      mid:[0.40,1,1],  high:[0.05,1,1] }
 };
 const CRYSTAL_PITY_KILLS = 150;
 let crystalPityState = {};
@@ -3013,8 +3066,7 @@ const CRYSTAL_TYPE_MAP = {
   shard:{type:'crystal_shard', name:'ผลึกเศษเสี้ยวมานา'},
   low:{type:'crystal_low', name:'ผลึกมานาเข้มข้นต่ำ'},
   mid:{type:'crystal_mid', name:'ผลึกมานาเข้มข้นกลาง'},
-  high:{type:'crystal_high', name:'ผลึกมานาเข้มข้นสูง'},
-  core:{type:'core_fragment', name:'เศษเสี้ยวแก่นมานา'}
+  high:{type:'crystal_high', name:'ผลึกมานาเข้มข้นสูง'}
 };
 function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 function emptyCrystalLevelFromEquipLv(equipLv){
@@ -3152,6 +3204,108 @@ function addCrystalDropsToInventory(tier, monLv, kills){
 function crystalDropSummary(drops){
   if(!drops || !drops.length) return 'Crystal MISS';
   return drops.map(d=>`${d.name} Lv.${d.lv} ×${d.qty}${d.guaranteed?` (การันตี ${d.guaranteed}${d.emptyConsumed?`, ใช้ไร้มานา ${d.emptyConsumed}`:''})`:''}`).join(', ');
+}
+
+// ══ UPGRADE STONE / MONSTER SEAL DROPS ══
+const UPGRADE_STONE_DROP = {
+  // Universal upgrade stones must stay scarce. Tier raises chance, not quantity spam.
+  normal:   { weapon:[0.0005,1,1], armor:[0.0005,1,1] },
+  elite:    { weapon:[0.003,1,1],  armor:[0.003,1,1] },
+  champion: { weapon:[0.02,1,1],   armor:[0.02,1,1] },
+  miniboss: { total:[0.12,1,1] },
+  boss:     { total:[0.45,1,1] }
+};
+const MONSTER_SEAL_DROP = {
+  normal:[0.0005,1,1], elite:[0.005,1,1], champion:[0.05,1,1], miniboss:[0.25,1,1], boss:[0.85,1,1]
+};
+const UPGRADE_STONE_TYPE_MAP = {
+  weapon:{type:'stone_weapon', name:'ศิลาเสริมอาวุธ'},
+  armor:{type:'stone_armor', name:'ศิลาเสริมเกราะ'}
+};
+const MONSTER_SEAL_TYPE_MAP = {
+  weapon:{type:'monster_seal_weapon', name:'ตรามอนสเตอร์ [อาวุธ]'},
+  armor:{type:'monster_seal_armor', name:'ตรามอนสเตอร์ [เกราะ]'}
+};
+function upgradeStoneTierName(monLv){
+  monLv=Math.max(1,+monLv||1);
+  if(monLv<20) return 'เศษ';
+  if(monLv<40) return 'ต่ำ';
+  if(monLv<80) return 'กลาง';
+  return 'สูง';
+}
+function getUpgradeStoneUnitPrice(kind, monLv){
+  const base=getEquipmentBasePrice('weapon', getCrystalEquipLv(monLv));
+  const factor = kind==='armor' ? 0.20 : 0.25;
+  return cleanRoundCopper(base*factor);
+}
+function getMonsterSealUnitPrice(type, monLv){
+  const base=getEquipmentBasePrice('weapon', getCrystalEquipLv(monLv));
+  const factor = type==='monster_seal_armor' ? 1.8 : 2.0;
+  return cleanRoundCopper(base*factor);
+}
+function getSealPlateUnitPrice(type, monLv){
+  const base=getEquipmentBasePrice('weapon', getCrystalEquipLv(monLv));
+  return cleanRoundCopper(base*0.15);
+}
+function rollUpgradeStoneDrops(tier, monLv, kills){
+  const results=[]; kills=Math.max(0,Math.round(+kills||0)); if(kills<=0) return results;
+  const cfg=UPGRADE_STONE_DROP[tier]||UPGRADE_STONE_DROP.normal;
+  const tierName=upgradeStoneTierName(monLv);
+  function add(kind, qty){
+    if(qty<=0) return;
+    const map=UPGRADE_STONE_TYPE_MAP[kind];
+    const existing=results.find(r=>r.type===map.type && Math.round(+r.lv||0)===Math.round(+monLv||0));
+    const name=`${tierName}${map.name}`;
+    if(existing) existing.qty+=qty;
+    else results.push({type:map.type,name,lv:monLv,qty});
+  }
+  if(cfg.total){
+    const [chance,min,max]=cfg.total;
+    for(let i=0;i<kills;i++) if(Math.random()<chance){
+      const qty=randInt(min,max);
+      for(let j=0;j<qty;j++) add(Math.random()<0.5?'weapon':'armor',1);
+    }
+  }else{
+    ['weapon','armor'].forEach(kind=>{
+      const [chance,min,max]=cfg[kind]; let qty=0;
+      for(let i=0;i<kills;i++) if(Math.random()<chance) qty+=randInt(min,max);
+      add(kind,qty);
+    });
+  }
+  return results;
+}
+function rollMonsterSealDrops(tier, monLv, kills){
+  const results=[]; kills=Math.max(0,Math.round(+kills||0)); if(kills<=0) return results;
+  const cfg=MONSTER_SEAL_DROP[tier]||MONSTER_SEAL_DROP.normal;
+  const [chance,min,max]=cfg; let weapon=0, armor=0;
+  for(let i=0;i<kills;i++) if(Math.random()<chance){
+    const qty=randInt(min,max);
+    for(let j=0;j<qty;j++) (Math.random()<0.5 ? weapon++ : armor++);
+  }
+  function add(kind, qty){
+    if(qty<=0) return;
+    const map=MONSTER_SEAL_TYPE_MAP[kind];
+    results.push({type:map.type,name:map.name,lv:monLv,qty});
+  }
+  add('weapon',weapon); add('armor',armor);
+  return results;
+}
+function addUpgradeAndSealDropsToInventory(tier, monLv, kills){
+  const stones=rollUpgradeStoneDrops(tier, monLv, kills);
+  const seals=rollMonsterSealDrops(tier, monLv, kills);
+  let total=0;
+  [...stones,...seals].forEach(d=>{ total += invPush({name:d.name,type:d.type,rarity:'common',lv:d.lv,qty:d.qty,base:0}); });
+  if(typeof autoSave==='function') autoSave();
+  return {stones,seals,total};
+}
+function upgradeSealDropSummary(result){
+  if(!result) return 'Upgrade/Seal: —';
+  const parts=[];
+  if(result.stones && result.stones.length) parts.push('Stone: '+result.stones.map(d=>`${d.name} Lv.${d.lv} ×${d.qty}`).join(', '));
+  else parts.push('Stone MISS');
+  if(result.seals && result.seals.length) parts.push('Seal: '+result.seals.map(d=>`${d.name} Lv.${d.lv} ×${d.qty}`).join(', '));
+  else parts.push('Seal MISS');
+  return parts.join(' | ');
 }
 function emptyCrystalUpdatePrice(){
   const lv=Math.max(1,Math.min(5,+document.getElementById('empty-crystal-lv')?.value||1));
@@ -3727,10 +3881,12 @@ function manualLootRollOnly(){
       rareValue=invPush({name:cfg.rareName,type:cfg.rareType,rarity:'common',lv,qty:rareCount,base:cfg.rareBase});
     }
     const crystalResult=addCrystalDropsToInventory(tier, lv, kills);
-    const value=commonValue+rareValue+crystalResult.total;
+    const upgradeSealResult=addUpgradeAndSealDropsToInventory(tier, lv, kills);
+    const value=commonValue+rareValue+crystalResult.total+upgradeSealResult.total;
     totalValue+=value; totalKills+=kills;
     const crystalText=(+lv>=10)?crystalDropSummary(crystalResult.drops):'Crystal locked (<Lv.10)';
-    out.push(`Lv.${lv} ${tier} ×${kills}: common ×${kills}${rareCount?`, rare ×${rareCount}`:''} | ${crystalText} | ${invFormatCopper(value)}`);
+    const upgradeSealText=upgradeSealDropSummary(upgradeSealResult);
+    out.push(`Lv.${lv} ${tier} ×${kills}: common ×${kills}${rareCount?`, rare ×${rareCount}`:''} | ${crystalText} | ${upgradeSealText} | ${invFormatCopper(value)}`);
   }
   const summary=[
     `MANUAL LOOT ONLY: ${totalKills} monster(s) / ${lines.length} line(s)`,
@@ -3760,10 +3916,12 @@ function rewardAddLoot(){
     rareValue=invPush(rareRow);
   }
   const crystalResult=addCrystalDropsToInventory(tier, monLv, kills);
-  const total=commonValue+rareValue+crystalResult.total;
+  const upgradeSealResult=addUpgradeAndSealDropsToInventory(tier, monLv, kills);
+  const total=commonValue+rareValue+crystalResult.total+upgradeSealResult.total;
   const crystalText = (+monLv>=10) ? ` | ${crystalDropSummary(crystalResult.drops)}` : ' | Crystal locked (<Lv.10)';
-  rewardLog(`+LOOT ${kills} common${rareCount?`, ${rareCount} rare`:''}${crystalText} = ${invFormatCopper(total)}`,'var(--green)');
-  if(sessionState.active){ sessionState.lootValue+=total; sessionState.log.push(`LOOT: ${kills}× Lv.${monLv} ${tier}, rare ${rareCount}, ${crystalDropSummary(crystalResult.drops)} = ${invFormatCopper(total)}`); sessionRender(); }
+  const upgradeSealText = ` | ${upgradeSealDropSummary(upgradeSealResult)}`;
+  rewardLog(`+LOOT ${kills} common${rareCount?`, ${rareCount} rare`:''}${crystalText}${upgradeSealText} = ${invFormatCopper(total)}`,'var(--green)');
+  if(sessionState.active){ sessionState.lootValue+=total; sessionState.log.push(`LOOT: ${kills}× Lv.${monLv} ${tier}, rare ${rareCount}, ${crystalDropSummary(crystalResult.drops)}, ${upgradeSealDropSummary(upgradeSealResult)} = ${invFormatCopper(total)}`); sessionRender(); }
   return total;
 }
 function rewardAddAll(){ const kills=Math.max(1,+document.getElementById('reward-kills').value||1); rewardAddExp(false); rewardAddLoot(); rewardApplyMontage(kills); }
