@@ -553,11 +553,11 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>Tier</th><th>ศิลาอาวุธ</th><th>ศิลาเกราะ</th><th>ตรามอนสเตอร์</th></tr></thead>
               <tbody>
-                <tr><td class="t-n">Normal</td><td>0.3%</td><td>0.3%</td><td>0.05%</td></tr>
-                <tr><td class="t-e">Elite</td><td>2%</td><td>2%</td><td>0.5%</td></tr>
-                <tr><td class="t-c">Champion</td><td>25%</td><td>25%</td><td>5%</td></tr>
-                <tr><td class="t-m">Mini boss</td><td colspan="2">การันตีสุ่มรวม 2–4 ชิ้น</td><td>25%</td></tr>
-                <tr><td class="t-b">Boss</td><td colspan="2">การันตีสุ่มรวม 6–10 ชิ้น</td><td>70–100%</td></tr>
+                <tr><td class="t-n">Normal</td><td>0.05%</td><td>0.05%</td><td>0.05%</td></tr>
+                <tr><td class="t-e">Elite</td><td>0.3%</td><td>0.3%</td><td>0.5%</td></tr>
+                <tr><td class="t-c">Champion</td><td>2%</td><td>2%</td><td>5%</td></tr>
+                <tr><td class="t-m">Mini boss</td><td>12%</td><td>12%</td><td>25%</td></tr>
+                <tr><td class="t-b">Boss</td><td>45%</td><td>45%</td><td>85%</td></tr>
               </tbody>
             </table>
           </div>
@@ -3207,11 +3207,12 @@ function crystalDropSummary(drops){
 
 // ══ UPGRADE STONE / MONSTER SEAL DROPS ══
 const UPGRADE_STONE_DROP = {
-  normal:   { weapon:[0.003,1,1], armor:[0.003,1,1] },
-  elite:    { weapon:[0.02,1,1],  armor:[0.02,1,1] },
-  champion: { weapon:[0.25,1,1],  armor:[0.25,1,1] },
-  miniboss: { total:[1,2,4] },
-  boss:     { total:[1,6,10] }
+  // Rare economy item like Elunium/Oridecon: universal, so do NOT guarantee many pieces.
+  normal:   { weapon:[0.0005,1,1], armor:[0.0005,1,1] },
+  elite:    { weapon:[0.003,1,1],  armor:[0.003,1,1] },
+  champion: { weapon:[0.02,1,1],   armor:[0.02,1,1] },
+  miniboss: { weapon:[0.12,1,1],   armor:[0.12,1,1] },
+  boss:     { weapon:[0.45,1,1],   armor:[0.45,1,1] }
 };
 const MONSTER_SEAL_DROP = {
   normal:[0.0005,1,1], elite:[0.005,1,1], champion:[0.05,1,1], miniboss:[0.25,1,1], boss:[0.85,1,1]
@@ -4774,10 +4775,13 @@ if(typeof calcAll==='function'){
 // Explicitly expose core functions for inline onclick after the Web App shell moves DOM nodes.
 try{
   [
-    'switchTab','rewardAddAll','rewardAddExp','rewardAddLoot','searchEncounterRoll','manualLootOnlyRoll','manualLootUseCurrentRow',
+    'switchTab','rewardAddAll','rewardAddExp','rewardAddLoot','searchEncounterRoll','manualLootRollOnly','manualLootLoadCurrentReward',
     'cloudSaveToSheet','cloudLoadFromSheet','cloudToggleAutoSync','buildQuickSave','buildQuickLoad',
     'invAddRow','invSellAll','invClear','equipmentRepair','equipmentWearManual','restMinutes','restFull'
-  ].forEach(fn=>{ if(typeof window[fn]==='undefined' && typeof eval(fn)==='function') window[fn]=eval(fn); });
+  ].forEach(fn=>{
+    // Avoid eval: Safari/inline handlers can fail hard if an undefined function is eval-checked.
+    if(typeof window[fn]==='undefined' && typeof globalThis[fn]==='function') window[fn]=globalThis[fn];
+  });
 }catch(e){ console.warn('Expose globals skipped:', e); }
 
 // Force tab buttons and all UI buttons to be non-submit buttons, then add delegated tab routing.
