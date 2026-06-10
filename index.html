@@ -4470,11 +4470,7 @@ async function cloudSaveToSheet(){
     }
     cloudLastFingerprint=cloudFingerprint();
     const t=data.savedAt || new Date().toISOString();
-    cloudStatus(`${data.opaque?'✓ Save sent to Google Sheet (opaque / CORS fallback)':'✓ Saved to Google Sheet'}
-${new Date(t).toLocaleString()}
-Inventory: ${payload.inventory.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper||0):(moneyCopper||0)+'C'}
-Saved tabs: Inventory, Money, Character, Equipment, Consumables, EmptyCrystal, SessionLog${data.opaque?'
-หมายเหตุ: Browser อ่านผลลัพธ์ POST ไม่ได้เพราะ CORS แต่คำสั่งถูกส่งแล้ว; กด LOAD เพื่อยืนยันหลังอัปเดต Apps Script แบบ JSONP':''}`,'var(--green)');
+    cloudStatus(`${data.opaque?'✓ Save sent to Google Sheet (opaque / CORS fallback)':'✓ Saved to Google Sheet'}\n${new Date(t).toLocaleString()}\nInventory: ${payload.inventory.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper||0):(moneyCopper||0)+'C'}${data.opaque?'\nหมายเหตุ: Browser อ่านผลลัพธ์ POST ไม่ได้เพราะ CORS แต่คำสั่งถูกส่งแล้ว; กด LOAD เพื่อยืนยันหลังอัปเดต Apps Script แบบ JSONP':''}`,'var(--green)');
     if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('cloud-save');
   }catch(err){
     cloudStatus(`✘ Save failed\n${err.message}\nถ้ายัง failed: เช็ก Apps Script deploy = Execute as Me / Anyone with link และใช้โค้ด Apps Script เวอร์ชัน JSONP ที่กูส่งให้`,'var(--red)');
@@ -4502,27 +4498,11 @@ async function cloudLoadFromSheet(){
     inventoryRows=cloudSheetRowsToInventory(data.inventory||[]);
     const copper=Number((data.money&&data.money.copper!==undefined)?data.money.copper:moneyCopper||0);
     moneyCopper=Math.max(0,Math.round(copper||0));
-    if(data.character) cloudApplyCharacter(data.character);
-    if(data.equipment) cloudApplyEquipment(data.equipment);
-    if(data.consumables) cloudApplyConsumables(data.consumables);
-    if(data.emptyCrystal) cloudApplyEmptyCrystal(data.emptyCrystal);
-    if(data.sessionLog) cloudApplySessionLog(data.sessionLog);
-    if(typeof buildScheduleForceRender==='function') buildScheduleForceRender();
     invRender(); updateMoneyDisplay(); if(typeof renderEmptyCrystalTrace==='function') renderEmptyCrystalTrace(); if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('cloud-load');
     cloudLastFingerprint=cloudFingerprint();
     const loaded=data.loadedAt || new Date().toISOString();
     const meta=data.meta||{};
-    const extra=[];
-    if(data.character) extra.push('Character');
-    if(data.equipment) extra.push('Equipment');
-    if(data.consumables) extra.push('Consumables');
-    if(data.emptyCrystal) extra.push('EmptyCrystal');
-    if(data.sessionLog) extra.push('SessionLog');
-    cloudStatus(`✓ Loaded from Google Sheet
-${new Date(loaded).toLocaleString()}
-Inventory: ${inventoryRows.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper):moneyCopper+'C'}${extra.length?`
-Loaded: ${extra.join(', ')}`:''}${meta.updatedAt?`
-Sheet updated: ${new Date(meta.updatedAt).toLocaleString()}`:''}`,'var(--green)');
+    cloudStatus(`✓ Loaded from Google Sheet\n${new Date(loaded).toLocaleString()}\nInventory: ${inventoryRows.length} slots | Money: ${typeof formatCopperShortUW==='function'?formatCopperShortUW(moneyCopper):moneyCopper+'C'}${meta.updatedAt?`\nSheet updated: ${new Date(meta.updatedAt).toLocaleString()}`:''}`,'var(--green)');
   }catch(err){
     cloudStatus(`✘ Load failed\n${err.message}\nถ้า fetch ติด CORS ให้ใช้ Apps Script เวอร์ชัน JSONP callback ตามที่กูส่งให้ แล้ว redeploy`,'var(--red)');
   }finally{ cloudBusy=false; }
@@ -4609,16 +4589,58 @@ if(typeof calcAll==='function'){
   calcAll=function(){ __uwCalcAll(); if(typeof updateAppStatus==='function') updateAppStatus(); };
 }
 
-// init
-initWebAppShell();
-cloudLoadSettings();
-initQuickSteppers();
-skillLibrary=skillDefaults().map(normalizeSkill); skillRender(); skillRefreshCombatSelect(); updateCombatPotionHeal();
-autoFillStats(); calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender(); equipmentRecalc('weapon'); equipmentRecalc('armor'); consRender(); fatigueRender(); expectedCalc(); updateFieldEncounterSummary(); clearIMPips(15);
-document.querySelectorAll('#im-pips .im-pip').forEach(p=>p.classList.add('filled'));
-buildTryAutoLoad();
-buildEnableAutoSave();
-updateAppStatus();
+// ══ SAFE BOOTSTRAP / CLICK FIX ══
+// Explicitly expose core functions for inline onclick after the Web App shell moves DOM nodes.
+try{
+  [
+    'switchTab','rewardAddAll','rewardAddExp','rewardAddLoot','searchEncounterRoll','manualLootOnlyRoll','manualLootUseCurrentRow',
+    'cloudSaveToSheet','cloudLoadFromSheet','cloudToggleAutoSync','buildQuickSave','buildQuickLoad',
+    'invAddRow','invSellAll','invClear','equipmentRepair','equipmentWearManual','restMinutes','restFull'
+  ].forEach(fn=>{ if(typeof window[fn]==='undefined' && typeof eval(fn)==='function') window[fn]=eval(fn); });
+}catch(e){ console.warn('Expose globals skipped:', e); }
+
+// Force tab buttons and all UI buttons to be non-submit buttons, then add delegated tab routing.
+function initClickSafetyFix(){
+  document.querySelectorAll('button').forEach(b=>{ if(!b.getAttribute('type')) b.setAttribute('type','button'); });
+  document.addEventListener('click', function(e){
+    const tab=e.target.closest && e.target.closest('.tab[data-tab]');
+    if(tab){
+      e.preventDefault();
+      e.stopPropagation();
+      if(typeof switchTab==='function') switchTab(tab.dataset.tab);
+      return false;
+    }
+  }, true);
+}
+
+// init — isolated so one broken widget does not kill the whole app.
+function safeBoot(){
+  const steps=[
+    ['initClickSafetyFix',()=>initClickSafetyFix()],
+    ['initWebAppShell',()=>initWebAppShell()],
+    ['cloudLoadSettings',()=>cloudLoadSettings()],
+    ['initQuickSteppers',()=>initQuickSteppers()],
+    ['skillInit',()=>{ skillLibrary=skillDefaults().map(normalizeSkill); skillRender(); skillRefreshCombatSelect(); updateCombatPotionHeal(); }],
+    ['calcRender',()=>{ autoFillStats(); calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender(); equipmentRecalc('weapon'); equipmentRecalc('armor'); consRender(); fatigueRender(); expectedCalc(); updateFieldEncounterSummary(); clearIMPips(15); }],
+    ['imPips',()=>document.querySelectorAll('#im-pips .im-pip').forEach(p=>p.classList.add('filled'))],
+    ['autoLoad',()=>buildTryAutoLoad()],
+    ['autoSave',()=>buildEnableAutoSave()],
+    ['appStatus',()=>updateAppStatus()]
+  ];
+  const errors=[];
+  for(const [name,fn] of steps){
+    try{ fn(); }catch(e){ console.error('BOOT STEP FAILED:', name, e); errors.push(name+': '+(e && e.message ? e.message : e)); }
+  }
+  if(errors.length){
+    const box=document.createElement('div');
+    box.style.cssText='position:fixed;right:12px;bottom:12px;z-index:99999;max-width:360px;background:#2b0d0d;border:1px solid #e03030;color:#ffd0d0;padding:10px;font:12px monospace;white-space:pre-wrap;';
+    box.textContent='BOOT WARNING:\n'+errors.join('\n');
+    document.body.appendChild(box);
+  }
+}
+
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', safeBoot);
+else safeBoot();
 </script>
 </body>
 </html>
