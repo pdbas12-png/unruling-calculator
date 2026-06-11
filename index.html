@@ -552,6 +552,23 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               Seal ใช้ผ่าน “แผ่นตราวงจร” แล้วเสียบเข้า slot ของอุปกรณ์. Common ปกติ 0 slot, Common มีร่องวงจร/Uncommon อาจมี 1, Rare มี 1, Epic 1–2<br>
               คุณสมบัติ Seal ปรับเองได้ในหน้า MONSTER SEAL และถูก link เข้า Combat Sim โดยตรง
             </div>
+            <div class="small-note" style="line-height:1.7;margin-top:8px">
+              <b>ระบบ Material Drop หลายเกรด</b><br>
+              ชื่อ item เป็น generic ก่อน: Common 1 / Common 2 / Uncommon 1 / Uncommon 2 / Rare 1 / Rare 2. ผู้เขียนค่อย define เป็นชื่อเฉพาะของมอนแต่ละชนิดทีหลัง<br>
+              Normal base: Common1 100% Lv×3, Common2 50% Lv×4, Uncommon1 25% Lv×6, Uncommon2 10% Lv×10, Rare1 5% Lv×15, Rare2 1% Lv×25<br>
+              Tier สูงขึ้นเพิ่ม chance/จำนวน/มูลค่า material แต่ไม่เพิ่มเรท Monster Seal
+            </div>
+            <table class="beh-table" style="margin-top:8px">
+              <thead><tr><th>Drop grade</th><th>Normal chance</th><th>Base price</th></tr></thead>
+              <tbody>
+                <tr><td>Common 1</td><td>100%</td><td>Lv×3</td></tr>
+                <tr><td>Common 2</td><td>50%</td><td>Lv×4</td></tr>
+                <tr><td>Uncommon 1</td><td>25%</td><td>Lv×6</td></tr>
+                <tr><td>Uncommon 2</td><td>10%</td><td>Lv×10</td></tr>
+                <tr><td>Rare 1</td><td>5%</td><td>Lv×15</td></tr>
+                <tr><td>Rare 2</td><td>1%</td><td>Lv×25</td></tr>
+              </tbody>
+            </table>
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>Tier</th><th>ศิลาอาวุธ</th><th>ศิลาเกราะ</th><th>ตรามอนสเตอร์</th></tr></thead>
               <tbody>
@@ -2442,59 +2459,110 @@ function handleMonsterFeint(strategy, p, m, effVit, lines, idx, total){
   return incoming;
 }
 
+
+// ══ MULTI-GRADE MONSTER MATERIAL DROP SYSTEM ══
+// Generic material slots only. Rename/define species-specific names later in narrative or inventory.
+// Price target: Common1 Lv×3, Common2 Lv×4, Uncommon1 Lv×6, Uncommon2 Lv×10, Rare1 Lv×15, Rare2 Lv×25.
+const MATERIAL_DROP_GRADES = [
+  { key:'common1',   type:'mat_common1',   name:'Common 1 Material',   chance:1.00, base:3  },
+  { key:'common2',   type:'mat_common2',   name:'Common 2 Material',   chance:0.50, base:4  },
+  { key:'uncommon1', type:'mat_uncommon1', name:'Uncommon 1 Material', chance:0.25, base:6  },
+  { key:'uncommon2', type:'mat_uncommon2', name:'Uncommon 2 Material', chance:0.10, base:10 },
+  { key:'rare1',     type:'mat_rare1',     name:'Rare 1 Material',     chance:0.05, base:15 },
+  { key:'rare2',     type:'mat_rare2',     name:'Rare 2 Material',     chance:0.01, base:25 },
+];
+const MATERIAL_TIER_RULES = {
+  normal: {
+    label:'Normal', valueMult:1,
+    common1:{chance:1.00, qty:[1,1]}, common2:{chance:0.50, qty:[1,1]}, uncommon1:{chance:0.25, qty:[1,1]}, uncommon2:{chance:0.10, qty:[1,1]}, rare1:{chance:0.05, qty:[1,1]}, rare2:{chance:0.01, qty:[1,1]}
+  },
+  elite: {
+    label:'Elite', valueMult:2,
+    common1:{chance:1.00, qty:[1,1]}, common2:{chance:0.80, qty:[1,1]}, uncommon1:{chance:0.60, qty:[1,1]}, uncommon2:{chance:0.35, qty:[1,1]}, rare1:{chance:0.15, qty:[1,1]}, rare2:{chance:0.05, qty:[1,1]}
+  },
+  champion: {
+    label:'Champion', valueMult:4,
+    common1:{chance:1.00, qty:[2,2]}, common2:{chance:1.00, qty:[1,1]}, uncommon1:{chance:1.00, qty:[1,1]}, uncommon2:{chance:0.70, qty:[1,1]}, rare1:{chance:0.35, qty:[1,1]}, rare2:{chance:0.12, qty:[1,1]}
+  },
+  miniboss: {
+    label:'Mini boss', valueMult:8,
+    common1:{chance:1.00, qty:[3,5]}, common2:{chance:1.00, qty:[2,3]}, uncommon1:{chance:1.00, qty:[2,2]}, uncommon2:{chance:1.00, qty:[1,1]}, rare1:{chance:0.80, qty:[1,1]}, rare2:{chance:0.35, qty:[1,1]}
+  },
+  boss: {
+    label:'Boss', valueMult:20,
+    common1:{chance:1.00, qty:[8,12]}, common2:{chance:1.00, qty:[5,8]}, uncommon1:{chance:1.00, qty:[4,6]}, uncommon2:{chance:1.00, qty:[2,4]}, rare1:{chance:1.00, qty:[1,2]}, rare2:{chance:0.70, qty:[1,1]}
+  }
+};
+function materialTierRule(tier){ return MATERIAL_TIER_RULES[tier] || MATERIAL_TIER_RULES.normal; }
+function materialDropDisplayName(grade, tier){
+  const rule=materialTierRule(tier);
+  return `${grade.name} [${rule.label}]`;
+}
+function materialRollOneKill(tier, lv){
+  const rule=materialTierRule(tier);
+  const out=[];
+  for(const grade of MATERIAL_DROP_GRADES){
+    const gRule=rule[grade.key] || {chance:grade.chance, qty:[1,1]};
+    if(Math.random() < (+gRule.chance||0)){
+      const qMin=Math.max(1,Math.round((gRule.qty&&gRule.qty[0])||1));
+      const qMax=Math.max(qMin,Math.round((gRule.qty&&gRule.qty[1])||qMin));
+      const qty=randInt(qMin,qMax);
+      out.push({
+        key:grade.key,
+        name:materialDropDisplayName(grade,tier),
+        type:grade.type,
+        rarity:'common',
+        lv:lv,
+        qty:qty,
+        base:(+grade.base||0)*(+rule.valueMult||1)
+      });
+    }
+  }
+  return out;
+}
+function aggregateMaterialDrops(drops){
+  const map=new Map();
+  for(const d of drops){
+    const key=[d.type,d.lv,d.base,d.name].join('|');
+    if(!map.has(key)) map.set(key,{...d});
+    else map.get(key).qty += d.qty;
+  }
+  return [...map.values()];
+}
+function rollMaterialDrops(tier, lv, kills){
+  let drops=[];
+  kills=Math.max(1,Math.round(+kills||1));
+  lv=Math.max(1,Math.round(+lv||1));
+  for(let i=0;i<kills;i++) drops.push(...materialRollOneKill(tier, lv));
+  return aggregateMaterialDrops(drops);
+}
+function addMaterialDropsToInventory(tier, lv, kills){
+  const drops=rollMaterialDrops(tier, lv, kills);
+  let total=0;
+  for(const d of drops) total += invPush(d);
+  return {drops,total};
+}
+function materialDropSummary(drops){
+  if(!drops || !drops.length) return 'Material: none';
+  return 'Material: ' + drops.map(d=>`${d.name} ×${d.qty}`).join(', ');
+}
 function getKillTrashReport(tier, lv){
-  const cfgMap={
-    normal:{name:'ชิ้นส่วนมอนสเตอร์',base:5,rare:'วัตถุดิบหายาก',rareBase:20},
-    elite:{name:'ชิ้นส่วนมอนสเตอร์อีลีท',base:10,rare:'วัตถุดิบหายากอีลีท',rareBase:30},
-    champion:{name:'ชิ้นส่วนแชมเปี้ยน',base:20,rare:'วัตถุดิบหายากแชมเปี้ยน',rareBase:60},
-    miniboss:{name:'ชิ้นส่วนมินิบอส',base:40,rare:'วัตถุดิบหายากมินิบอส',rareBase:120},
-    boss:{name:'ชิ้นส่วนบอส',base:100,rare:'วัตถุดิบหายากบอส',rareBase:300}
-  };
-  const cfg=cfgMap[tier]||cfgMap.normal;
-  const commonValue=lv*cfg.base;
-  const rareValue=lv*cfg.rareBase;
+  const rule=materialTierRule(tier);
+  const parts=MATERIAL_DROP_GRADES.map(g=>{
+    const gr=rule[g.key]||{chance:g.chance,qty:[1,1]};
+    const ch=Math.round((+gr.chance||0)*100);
+    const qty=(gr.qty&&gr.qty[0]!==gr.qty[1])?`×${gr.qty[0]}–${gr.qty[1]}`:`×${(gr.qty&&gr.qty[0])||1}`;
+    return `${g.name} ${ch}% ${qty} (~Lv×${g.base*rule.valueMult})`;
+  });
   return {
-    commonName:cfg.name,
-    commonValue,
-    rareName:cfg.rare,
-    rareValue,
-    text:`Loot report: ขยะพื้นฐาน 100% → ${cfg.name} Lv.${lv} ×1 (~${commonValue} Copper) | Rare chance 10% → ${cfg.rare} (~${rareValue} Copper)`
+    commonName:'Common 1 Material', commonValue:lv*3*rule.valueMult,
+    text:`Loot report: ${rule.label} material table → ${parts.join(' | ')}`
   };
 }
 
-
 function addCombatLootToInventory(tier, lv, lines){
-  // Auto add loot from a real combat kill into Inventory.
-  // Common drop is guaranteed. Rare drop is rolled at 10%.
-  const cfg = (typeof LOOT_TIER_PRICE !== 'undefined' && LOOT_TIER_PRICE[tier]) ? LOOT_TIER_PRICE[tier] : {
-    commonType:'monster_part', commonName:'ชิ้นส่วนมอนสเตอร์', commonBase:5,
-    rareType:'rare_material', rareName:'วัตถุดิบหายาก', rareBase:20
-  };
-  const commonRow = {
-    name: cfg.commonName,
-    type: cfg.commonType,
-    rarity: 'common',
-    lv: lv,
-    qty: 1,
-    base: cfg.commonBase
-  };
-  const commonValue = invPush(commonRow);
-
-  let rareValue = 0;
-  let rareDropped = false;
-  if(Math.random() < 0.10){
-    rareDropped = true;
-    const rareRow = {
-      name: cfg.rareName,
-      type: cfg.rareType,
-      rarity: 'common',
-      lv: lv,
-      qty: 1,
-      base: cfg.rareBase
-    };
-    rareValue = invPush(rareRow);
-  }
-
+  // Auto add multi-grade material loot from a real combat kill into Inventory.
+  const materialResult = addMaterialDropsToInventory(tier, lv, 1);
   const crystalResult = (typeof addCrystalDropsToInventory === 'function')
     ? addCrystalDropsToInventory(tier, lv, 1)
     : {drops:[], total:0};
@@ -2506,31 +2574,25 @@ function addCombatLootToInventory(tier, lv, lines){
     ? addUpgradeAndSealDropsToInventory(tier, lv, 1)
     : {stones:[],seals:[],total:0};
   const upgradeSealText = (typeof upgradeSealDropSummary === 'function') ? ` | ${upgradeSealDropSummary(upgradeSealResult)}` : '';
-  const total = commonValue + rareValue + (crystalResult.total||0) + (upgradeSealResult.total||0);
-  const rareText = rareDropped ? ` | Rare DROP → ${cfg.rareName} Lv.${lv} ×1 (~${rareValue} Copper)` : ' | Rare MISS';
-  lines.push('system', `📦 Added to Inventory: ${cfg.commonName} Lv.${lv} ×1 (~${commonValue} Copper)${rareText}${crystalText}${upgradeSealText}`);
+  const total = (materialResult.total||0) + (crystalResult.total||0) + (upgradeSealResult.total||0);
+  const materialText = materialDropSummary(materialResult.drops);
+  lines.push('system', `📦 Added to Inventory: ${materialText}${crystalText}${upgradeSealText} | Total ${invFormatCopper(total)}`);
   if(activeTurnSummary){
     activeTurnSummary.lootOutcomes = activeTurnSummary.lootOutcomes || [];
-    activeTurnSummary.lootOutcomes.push(`${cfg.commonName} Lv.${lv} ×1 (${commonValue}C)`);
-    if(rareDropped){
-      activeTurnSummary.lootOutcomes.push(`${cfg.rareName} Lv.${lv} ×1 (${rareValue}C)`);
-    } else {
-      activeTurnSummary.lootOutcomes.push(`Rare: ไม่ดรอป`);
-    }
-    if(+lv>=10 && typeof crystalDropSummary === 'function'){
-      activeTurnSummary.lootOutcomes.push(crystalDropSummary(crystalResult.drops));
-    }
+    (materialResult.drops||[]).forEach(d=>activeTurnSummary.lootOutcomes.push(`${d.name} Lv.${lv} ×${d.qty}`));
+    if(+lv>=10 && typeof crystalDropSummary === 'function') activeTurnSummary.lootOutcomes.push(crystalDropSummary(crystalResult.drops));
     if(typeof upgradeSealDropSummary === 'function') activeTurnSummary.lootOutcomes.push(upgradeSealDropSummary(upgradeSealResult));
   }
 
   if(sessionState && sessionState.active){
     sessionState.kills += 1;
     sessionState.lootValue += total;
-    sessionState.log.push(`COMBAT LOOT: Lv.${lv} ${tier} = ${invFormatCopper(total)}${rareDropped?' + rare':''}`);
+    sessionState.log.push(`COMBAT LOOT: Lv.${lv} ${tier} = ${materialText}, ${invFormatCopper(total)}`);
     if(typeof sessionRender === 'function') sessionRender();
   }
-  return { total, rareDropped };
+  return { total, drops:materialResult.drops };
 }
+
 
 
 function hitboxSimpleLabel(hbLbl){
@@ -3097,6 +3159,12 @@ let inventoryRows = [];
 const INV_TYPE_BASE = {
   monster_part: { label:'Monster Part', base:5 },
   elite_monster_part: { label:'Elite Part', base:10 },
+  mat_common1: { label:'Material Common 1', base:3 },
+  mat_common2: { label:'Material Common 2', base:4 },
+  mat_uncommon1: { label:'Material Uncommon 1', base:6 },
+  mat_uncommon2: { label:'Material Uncommon 2', base:10 },
+  mat_rare1: { label:'Material Rare 1', base:15 },
+  mat_rare2: { label:'Material Rare 2', base:25 },
   ore: { label:'Ore', base:10 },
   hide_bone: { label:'Hide/Bone', base:6 },
   rare_material: { label:'Rare Material', base:20 },
@@ -3127,6 +3195,12 @@ function invTypeChanged(){
   const name=document.getElementById('inv-add-name');
   if(type==='monster_part') name.value='ชิ้นส่วนมอนสเตอร์';
   else if(type==='elite_monster_part') name.value='ชิ้นส่วนมอนสเตอร์อีลีท';
+  else if(type==='mat_common1') name.value='Common 1 Material';
+  else if(type==='mat_common2') name.value='Common 2 Material';
+  else if(type==='mat_uncommon1') name.value='Uncommon 1 Material';
+  else if(type==='mat_uncommon2') name.value='Uncommon 2 Material';
+  else if(type==='mat_rare1') name.value='Rare 1 Material';
+  else if(type==='mat_rare2') name.value='Rare 2 Material';
   else if(type==='ore') name.value='แร่';
   else if(type==='hide_bone') name.value='หนัง/กระดูก';
   else if(type==='rare_material') name.value='วัตถุดิบหายาก';
@@ -4162,28 +4236,22 @@ function manualLootRollOnly(){
   let totalValue=0, totalKills=0, out=[];
   for(const entry of lines){
     const {lv,tier,kills}=entry;
-    const cfg=LOOT_TIER_PRICE[tier]||LOOT_TIER_PRICE.normal;
-    let rareCount=0;
-    for(let i=0;i<kills;i++) if(Math.random()<0.10) rareCount++;
-    const commonValue=invPush({name:cfg.commonName,type:cfg.commonType,rarity:'common',lv,qty:kills,base:cfg.commonBase});
-    let rareValue=0;
-    if(rareCount>0){
-      rareValue=invPush({name:cfg.rareName,type:cfg.rareType,rarity:'common',lv,qty:rareCount,base:cfg.rareBase});
-    }
+    const materialResult=addMaterialDropsToInventory(tier, lv, kills);
     const crystalResult=addCrystalDropsToInventory(tier, lv, kills);
     const upgradeSealResult=addUpgradeAndSealDropsToInventory(tier, lv, kills);
-    const value=commonValue+rareValue+crystalResult.total+upgradeSealResult.total;
+    const value=materialResult.total+crystalResult.total+upgradeSealResult.total;
     totalValue+=value; totalKills+=kills;
     const crystalText=(+lv>=10)?crystalDropSummary(crystalResult.drops):'Crystal locked (<Lv.10)';
     const upgradeSealText=upgradeSealDropSummary(upgradeSealResult);
-    out.push(`Lv.${lv} ${tier} ×${kills}: common ×${kills}${rareCount?`, rare ×${rareCount}`:''} | ${crystalText} | ${upgradeSealText} | ${invFormatCopper(value)}`);
+    out.push(`Lv.${lv} ${tier} ×${kills}: ${materialDropSummary(materialResult.drops)} | ${crystalText} | ${upgradeSealText} | ${invFormatCopper(value)}`);
   }
   const summary=[
     `MANUAL LOOT ONLY: ${totalKills} monster(s) / ${lines.length} line(s)`,
     ...out,
     `รวมมูลค่า loot: ${invFormatCopper(totalValue)}`,
     `หมายเหตุ: ไม่เพิ่ม EXP / ไม่หัก HP MP IM / ไม่คิดเวลา / ไม่ลด durability`
-  ].join('\n');
+  ].join('
+');
   if(box) box.textContent=summary;
   rewardLog(`MANUAL LOOT ONLY: ${totalKills} monsters = ${invFormatCopper(totalValue)}`,'var(--green)');
   if(sessionState.active){ sessionState.lootValue+=totalValue; sessionState.log.push(summary.replace(/\n/g,' | ')); sessionRender(); }
@@ -4195,23 +4263,14 @@ function rewardAddLoot(){
   const monLv=+document.getElementById('reward-mlv').value||1;
   const tier=document.getElementById('reward-tier').value;
   const kills=Math.max(1,+document.getElementById('reward-kills').value||1);
-  const cfg=LOOT_TIER_PRICE[tier]||LOOT_TIER_PRICE.normal;
-  let rareCount=0;
-  for(let i=0;i<kills;i++) if(Math.random()<0.10) rareCount++;
-  const commonRow={name:cfg.commonName,type:cfg.commonType,rarity:'common',lv:monLv,qty:kills,base:cfg.commonBase};
-  const commonValue=invPush(commonRow);
-  let rareValue=0;
-  if(rareCount>0){
-    const rareRow={name:cfg.rareName,type:cfg.rareType,rarity:'common',lv:monLv,qty:rareCount,base:cfg.rareBase};
-    rareValue=invPush(rareRow);
-  }
+  const materialResult=addMaterialDropsToInventory(tier, monLv, kills);
   const crystalResult=addCrystalDropsToInventory(tier, monLv, kills);
   const upgradeSealResult=addUpgradeAndSealDropsToInventory(tier, monLv, kills);
-  const total=commonValue+rareValue+crystalResult.total+upgradeSealResult.total;
+  const total=materialResult.total+crystalResult.total+upgradeSealResult.total;
   const crystalText = (+monLv>=10) ? ` | ${crystalDropSummary(crystalResult.drops)}` : ' | Crystal locked (<Lv.10)';
   const upgradeSealText = ` | ${upgradeSealDropSummary(upgradeSealResult)}`;
-  rewardLog(`+LOOT ${kills} common${rareCount?`, ${rareCount} rare`:''}${crystalText}${upgradeSealText} = ${invFormatCopper(total)}`,'var(--green)');
-  if(sessionState.active){ sessionState.lootValue+=total; sessionState.log.push(`LOOT: ${kills}× Lv.${monLv} ${tier}, rare ${rareCount}, ${crystalDropSummary(crystalResult.drops)}, ${upgradeSealDropSummary(upgradeSealResult)} = ${invFormatCopper(total)}`); sessionRender(); }
+  rewardLog(`+LOOT ${kills} kill(s): ${materialDropSummary(materialResult.drops)}${crystalText}${upgradeSealText} = ${invFormatCopper(total)}`,'var(--green)');
+  if(sessionState.active){ sessionState.lootValue+=total; sessionState.log.push(`LOOT: ${kills}× Lv.${monLv} ${tier}, ${materialDropSummary(materialResult.drops)}, ${crystalDropSummary(crystalResult.drops)}, ${upgradeSealDropSummary(upgradeSealResult)} = ${invFormatCopper(total)}`); sessionRender(); }
   return total;
 }
 function rewardAddAll(){ const kills=Math.max(1,+document.getElementById('reward-kills').value||1); rewardAddExp(false); rewardAddLoot(); rewardApplyMontage(kills); }
