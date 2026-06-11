@@ -239,6 +239,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
     <button class="tab" data-tab="combat" onclick="switchTab('combat')">COMBAT SIM</button>
     <button class="tab" data-tab="skill" onclick="switchTab('skill')">SKILL</button>
     <button class="tab" data-tab="inventory" onclick="switchTab('inventory')">INVENTORY</button>
+    <button class="tab" data-tab="seal" onclick="switchTab('seal')">MONSTER SEAL</button>
     <button class="tab" data-tab="hunting" onclick="switchTab('hunting')">HUNTING</button>
     <button class="tab" data-tab="tools" onclick="switchTab('tools')">TOOLS</button>
     <button class="tab" data-tab="behavior" onclick="switchTab('behavior')">MONSTER TIER</button>
@@ -544,20 +545,21 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               ศิลาแบ่งช่วง: เศษศิลาเสริม Lv.10–19, ศิลาเสริมต่ำ Lv.20–39, กลาง Lv.40–79, สูง Lv.80+
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
-              <b>ระบบตรามอนสเตอร์</b><br>
-              ตรา = passive เฉพาะ species; คุณภาพไม่แยก Normal/Elite/Champion. Tier สูงขึ้นแค่ทำให้ดรอปง่ายขึ้น ไม่ทำให้ตราแรงขึ้น<br>
-              ตอนนี้อุปกรณ์มี 2 ชิ้นใหญ่: อาวุธ / ชุดเกราะรวม → ตราแบ่งเป็น [อาวุธ] และ [เกราะ] เท่านั้น<br>
-              ตราใช้ผ่าน “แผ่นตราวงจร” แล้วเสียบเข้า slot ของอุปกรณ์. Common ปกติ 0 slot, Common มีร่องวงจร/Uncommon อาจมี 1, Rare มี 1, Epic 1–2<br>
-              ตราทั่วไปจาก species เดียวกัน effect เท่ากันทุก tier; Named/Boss เฉพาะตัวเท่านั้นที่อาจมีตราพิเศษ
+              <b>ระบบ Monster Seal / การ์ด</b><br>
+              อัตราดรอปการ์ดพื้นฐาน = 0.01% เท่ากันทุก Tier มอนสเตอร์. Normal ก็มีสิทธิ์ดรอปของตำนานเซิร์ฟได้<br>
+              Tier มอนสเตอร์ไม่เพิ่มเรทการ์ดแล้ว แต่เพิ่มมูลค่าวัตถุดิบ/ผลึก/ศิลา/ของคราฟแทน เพื่อคุมสเกลระยะยาว<br>
+              ตอนนี้อุปกรณ์มี 2 ชิ้นใหญ่: อาวุธ / ชุดเกราะรวม → Monster Seal แบ่งเป็น [อาวุธ] และ [เกราะ] เท่านั้น<br>
+              Seal ใช้ผ่าน “แผ่นตราวงจร” แล้วเสียบเข้า slot ของอุปกรณ์. Common ปกติ 0 slot, Common มีร่องวงจร/Uncommon อาจมี 1, Rare มี 1, Epic 1–2<br>
+              คุณสมบัติ Seal ปรับเองได้ในหน้า MONSTER SEAL และถูก link เข้า Combat Sim โดยตรง
             </div>
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>Tier</th><th>ศิลาอาวุธ</th><th>ศิลาเกราะ</th><th>ตรามอนสเตอร์</th></tr></thead>
               <tbody>
-                <tr><td class="t-n">Normal</td><td>0.05%</td><td>0.05%</td><td>0.05%</td></tr>
-                <tr><td class="t-e">Elite</td><td>0.3%</td><td>0.3%</td><td>0.5%</td></tr>
-                <tr><td class="t-c">Champion</td><td>2%</td><td>2%</td><td>5%</td></tr>
-                <tr><td class="t-m">Mini boss</td><td>12%</td><td>12%</td><td>25%</td></tr>
-                <tr><td class="t-b">Boss</td><td>45%</td><td>45%</td><td>85%</td></tr>
+                <tr><td class="t-n">Normal</td><td>0.05%</td><td>0.05%</td><td>0.01%</td></tr>
+                <tr><td class="t-e">Elite</td><td>0.3%</td><td>0.3%</td><td>0.01%</td></tr>
+                <tr><td class="t-c">Champion</td><td>2%</td><td>2%</td><td>0.01%</td></tr>
+                <tr><td class="t-m">Mini boss</td><td>12%</td><td>12%</td><td>0.01%</td></tr>
+                <tr><td class="t-b">Boss</td><td>45%</td><td>45%</td><td>0.01%</td></tr>
               </tbody>
             </table>
           </div>
@@ -901,6 +903,84 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
   </div>
 
 
+
+  <!-- ═══ MONSTER SEAL / CARD BUILDER ═══ -->
+  <div class="panel" id="panel-seal">
+    <div class="grid2">
+      <div class="card purple" style="grid-column:1/-1">
+        <div class="card-title purple">MONSTER SEAL / CARD BUILDER</div>
+        <div class="small-note" style="line-height:1.7">
+          Monster Seal drop rate: <b>0.01% เท่ากันทุก Tier มอนสเตอร์</b>. หน้านี้ใช้สร้าง/จำลองการ์ดเอง แล้ว link เข้า Combat Sim โดยตรง. ทุกค่ารับค่าติดลบได้ เพื่อทำการ์ดมี drawback.
+        </div>
+        <div class="grid2" style="margin-top:12px;">
+          <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
+            <div class="section-label">SEAL IDENTITY</div>
+            <div class="field"><label>ACTIVE</label><select id="seal-active" onchange="monsterSealRender();autoSave()"><option value="1">ใช้ Seal ใน Combat Sim</option><option value="0">ปิด Seal</option></select></div>
+            <div class="field"><label>NAME</label><input id="seal-name" value="การ์ดทดลอง" style="font-family:var(--thai);" oninput="monsterSealRender()"></div>
+            <div class="field"><label>TYPE</label><select id="seal-type" onchange="monsterSealRender()"><option value="weapon">อาวุธ</option><option value="armor">ชุดเกราะรวม</option></select></div>
+            <div class="field"><label>GRADE</label><select id="seal-grade" onchange="monsterSealRender()"><option value="low">ขั้นต้น Lv.10–24</option><option value="mid">ขั้นกลาง Lv.25–49</option><option value="high">ขั้นสูง Lv.50–99</option><option value="top">ขั้นยอด Lv.100–199</option><option value="king">ขั้นราชัน Lv.200–299</option><option value="legend">ขั้นตำนาน Lv.300–400</option></select></div>
+            <div class="field"><label>RARITY</label><select id="seal-rarity" onchange="monsterSealRender()"><option value="species">Species Card</option><option value="boss">Boss Card</option><option value="named">Named Boss Card</option><option value="legendary">Legendary Card</option><option value="mythic">Mythic Card</option></select></div>
+            <div class="small-note">Grade ใช้คุมสเกล/ช่วงอุปกรณ์ ไม่ใช่บอกว่าการ์ดอ่อน. Legendary ขั้นต้นยังเทพในช่วงต้นได้ แต่ถ้าเอาไปใช้ผิดช่วงควรลดผล.</div>
+          </div>
+          <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
+            <div class="section-label">STAT MODIFIER — ค่า flat ใส่ลบได้</div>
+            <div class="stat-grid">
+              <div class="stat-item"><label>STR</label><input type="number" id="seal-str" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="stat-item"><label>AGI</label><input type="number" id="seal-agi" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="stat-item"><label>VIT</label><input type="number" id="seal-vit" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="stat-item"><label>INT</label><input type="number" id="seal-int" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="stat-item"><label>DEX</label><input type="number" id="seal-dex" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="stat-item"><label>WIS</label><input type="number" id="seal-wis" value="0" step="1" oninput="monsterSealRender()"></div>
+            </div>
+            <div class="small-note">ตัวอย่าง: การ์ดสายเร็วอาจ AGI +5, VIT -3. การ์ดต้องมี drawback ถึงจะไม่พังสเกล.</div>
+          </div>
+        </div>
+
+        <div class="grid2" style="margin-top:12px;">
+          <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
+            <div class="section-label">COMBAT MODIFIER — % ใส่ลบได้</div>
+            <div class="grid2">
+              <div class="field"><label>ตีเร็ว %</label><input type="number" id="seal-aspd" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="field"><label>ตีแรง %</label><input type="number" id="seal-dmg" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="field"><label>หลบ %</label><input type="number" id="seal-dodge" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="field"><label>เจาะเกราะ %</label><input type="number" id="seal-pierce" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="field"><label>จุดอ่อน %</label><input type="number" id="seal-weak" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="field"><label>MP ใช้เพิ่ม %</label><input type="number" id="seal-mp" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="field"><label>DUR เสียเพิ่ม %</label><input type="number" id="seal-dur" value="0" step="1" oninput="monsterSealRender()"></div>
+              <div class="field"><label>CAP note</label><input id="seal-cap-note" value="เต็มประสิทธิภาพเฉพาะช่วง Grade" style="font-family:var(--thai);" oninput="monsterSealRender()"></div>
+            </div>
+            <div class="small-note">ตีเร็วใช้คำนวณ Action Count ใน Combat Sim, ตีแรงคูณดาเมจผู้เล่น, หลบเพิ่ม/ลดโอกาสหลบ, เจาะเกราะลด DEF มอน, จุดอ่อนเพิ่มเฉพาะเมื่อ hitbox เป็นจุดอ่อน.</div>
+          </div>
+          <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
+            <div class="section-label">PRESET / LINK</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;" onclick="monsterSealPreset('doppel')">PRESET: Doppel-like</button>
+              <button class="btn sm" style="width:auto;padding:7px 12px;" onclick="monsterSealPreset('wolf')">PRESET: หมาป่า</button>
+              <button class="btn sm" style="width:auto;padding:7px 12px;" onclick="monsterSealPreset('bear')">PRESET: หมี</button>
+              <button class="btn sm red-btn" style="width:auto;padding:7px 12px;" onclick="monsterSealPreset('clear')">CLEAR</button>
+            </div>
+            <div style="margin-top:10px;padding:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);">
+              <div class="section-label">CUSTOM PRESET LIBRARY — เซฟการ์ดที่คิดเองไว้ใช้ซ้ำ</div>
+              <div class="field"><label>PRESET</label><select id="seal-preset-select" onchange="monsterSealPresetPreview()"><option value="">— no custom preset —</option></select></div>
+              <div class="field"><label>SAVE AS</label><input id="seal-preset-name" value="" placeholder="ชื่อ preset เช่น การ์ดเงาคู่สังหาร v1" style="font-family:var(--thai);"></div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+                <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;" onclick="monsterSealPresetSaveCurrent()">SAVE / UPDATE</button>
+                <button class="btn sm" style="width:auto;padding:7px 12px;" onclick="monsterSealPresetLoadSelected()">LOAD</button>
+                <button class="btn sm red-btn" style="width:auto;padding:7px 12px;" onclick="monsterSealPresetDeleteSelected()">DELETE</button>
+                <button class="btn sm" style="width:auto;padding:7px 12px;" onclick="monsterSealPresetExport()">EXPORT</button>
+                <button class="btn sm" style="width:auto;padding:7px 12px;" onclick="monsterSealPresetImport()">IMPORT</button>
+              </div>
+              <textarea id="seal-preset-json" rows="4" style="width:100%;margin-top:8px;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:7px 9px;font-family:var(--mono);font-size:0.68rem;outline:none;resize:vertical;" placeholder="EXPORT จะออก JSON ตรงนี้ / IMPORT วาง JSON preset หรือ library ได้"></textarea>
+              <div id="seal-preset-status" class="small-note" style="line-height:1.6;margin-top:6px;white-space:pre-wrap;">Preset library: ยังไม่มี custom preset</div>
+            </div>
+            <button class="btn gold-btn" onclick="monsterSealApplyToCombat()">LINK → COMBAT SIM</button>
+            <div id="seal-summary" style="font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);margin-top:10px;white-space:pre-wrap;background:var(--panel);border:1px solid var(--border);padding:8px;min-height:120px;line-height:1.65;">Seal summary: —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ SKILL MANAGER ═══ -->
   <div class="panel" id="panel-skill">
     <div class="card purple">
@@ -983,6 +1063,11 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <option value="1.3">Rare</option><option value="1.5">Epic</option>
             <option value="1.7">Unique</option><option value="2.0">Legendary</option>
           </select>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--border);padding:8px;margin-bottom:10px;">
+          <div class="section-label">LINKED MONSTER SEAL</div>
+          <div id="combat-seal-summary" class="small-note" style="line-height:1.6;white-space:pre-wrap;">ไม่มี Seal active</div>
+          <button class="btn sm" style="width:auto;padding:7px 12px;margin-top:6px;" onclick="switchTab('seal')">EDIT SEAL</button>
         </div>
         <div class="divider"></div>
         <div class="field"><label>Monster LV</label><input type="number" id="b-mlv" value="4" min="1" max="400"></div>
@@ -1541,6 +1626,200 @@ function updateBehaviorTable(){
   });
 }
 
+
+// ══ MONSTER SEAL / CARD BUILDER ══
+function sealReadNum(id){
+  const el=document.getElementById(id);
+  if(!el) return 0;
+  const v=parseFloat(el.value);
+  return Number.isFinite(v) ? v : 0;
+}
+
+let sealPresetLibrary=[];
+function sealPresetStatus(msg,color){
+  const el=document.getElementById('seal-preset-status');
+  if(el){ el.textContent=msg; el.style.color=color||'var(--text-dim)'; }
+}
+function monsterSealFieldIds(){
+  return ['seal-active','seal-name','seal-type','seal-grade','seal-rarity','seal-str','seal-agi','seal-vit','seal-int','seal-dex','seal-wis','seal-aspd','seal-dmg','seal-dodge','seal-pierce','seal-weak','seal-mp','seal-dur','seal-cap-note'];
+}
+function monsterSealCaptureFields(){
+  const data={};
+  monsterSealFieldIds().forEach(id=>{ const el=document.getElementById(id); if(el) data[id]=el.value; });
+  return data;
+}
+function monsterSealApplyFields(data){
+  Object.entries(data||{}).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.value=String(val); });
+  monsterSealRender();
+}
+function monsterSealNormalizePreset(p){
+  if(!p || typeof p!=='object') return null;
+  const fields=p.fields || p.data || p;
+  if(!fields || typeof fields!=='object') return null;
+  const id=p.id || ('seal_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7));
+  const name=p.name || fields['seal-name'] || 'Unnamed Monster Seal Preset';
+  return {id, name, createdAt:p.createdAt||new Date().toISOString(), updatedAt:p.updatedAt||new Date().toISOString(), fields};
+}
+function monsterSealPresetRender(){
+  const sel=document.getElementById('seal-preset-select');
+  if(sel){
+    const prev=sel.value;
+    sel.innerHTML='<option value="">— no custom preset —</option>';
+    sealPresetLibrary.forEach(p=>{
+      const opt=document.createElement('option'); opt.value=p.id; opt.textContent=p.name; sel.appendChild(opt);
+    });
+    if(prev && sealPresetLibrary.some(p=>p.id===prev)) sel.value=prev;
+  }
+  const names=sealPresetLibrary.map((p,i)=>`${i+1}. ${p.name}`).join('\n');
+  sealPresetStatus(sealPresetLibrary.length?`Preset library: ${sealPresetLibrary.length} preset(s)\n${names}`:'Preset library: ยังไม่มี custom preset');
+}
+function monsterSealPresetPreview(){
+  const id=document.getElementById('seal-preset-select')?.value || '';
+  const p=sealPresetLibrary.find(x=>x.id===id);
+  if(p){
+    const nameInput=document.getElementById('seal-preset-name'); if(nameInput) nameInput.value=p.name;
+    sealPresetStatus(`Selected preset: ${p.name}\nกด LOAD เพื่อใช้งาน หรือ SAVE / UPDATE เพื่อเขียนทับ`,'var(--gold)');
+  }else monsterSealPresetRender();
+}
+function monsterSealPresetSaveCurrent(){
+  const nameInput=document.getElementById('seal-preset-name');
+  const currentName=(nameInput?.value||document.getElementById('seal-name')?.value||'Monster Seal Preset').trim();
+  if(!currentName){ sealPresetStatus('✘ ใส่ชื่อ preset ก่อน','var(--red)'); return; }
+  const selectedId=document.getElementById('seal-preset-select')?.value || '';
+  const fields=monsterSealCaptureFields(); fields['seal-name']=document.getElementById('seal-name')?.value || currentName;
+  let p=selectedId ? sealPresetLibrary.find(x=>x.id===selectedId) : null;
+  if(!p) p=sealPresetLibrary.find(x=>x.name===currentName);
+  if(p){ p.name=currentName; p.fields=fields; p.updatedAt=new Date().toISOString(); }
+  else { p=monsterSealNormalizePreset({name:currentName, fields}); sealPresetLibrary.push(p); }
+  monsterSealPresetRender();
+  const sel=document.getElementById('seal-preset-select'); if(sel) sel.value=p.id;
+  sealPresetStatus(`✓ Saved preset: ${currentName}`,'var(--green)');
+  if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('seal-preset-save');
+}
+function monsterSealPresetLoadSelected(){
+  const id=document.getElementById('seal-preset-select')?.value || '';
+  const p=sealPresetLibrary.find(x=>x.id===id);
+  if(!p){ sealPresetStatus('✘ ยังไม่ได้เลือก preset','var(--red)'); return; }
+  monsterSealApplyFields(p.fields);
+  const nameInput=document.getElementById('seal-preset-name'); if(nameInput) nameInput.value=p.name;
+  sealPresetStatus(`✓ Loaded preset: ${p.name}`,'var(--green)');
+  if(typeof calcAll==='function') calcAll();
+  if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('seal-preset-load');
+}
+function monsterSealPresetDeleteSelected(){
+  const id=document.getElementById('seal-preset-select')?.value || '';
+  const p=sealPresetLibrary.find(x=>x.id===id);
+  if(!p){ sealPresetStatus('✘ ยังไม่ได้เลือก preset','var(--red)'); return; }
+  sealPresetLibrary=sealPresetLibrary.filter(x=>x.id!==id);
+  monsterSealPresetRender();
+  sealPresetStatus(`✓ Deleted preset: ${p.name}`,'var(--green)');
+  if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('seal-preset-delete');
+}
+function monsterSealPresetExport(){
+  const id=document.getElementById('seal-preset-select')?.value || '';
+  const p=sealPresetLibrary.find(x=>x.id===id);
+  const payload=p ? {type:'monster-seal-preset', preset:p} : {type:'monster-seal-preset-library', presets:sealPresetLibrary};
+  const text=JSON.stringify(payload,null,2);
+  const box=document.getElementById('seal-preset-json'); if(box) box.value=text;
+  try{ navigator.clipboard?.writeText(text); }catch(e){}
+  sealPresetStatus(p?`✓ Exported preset: ${p.name}`:`✓ Exported preset library: ${sealPresetLibrary.length} preset(s)`,'var(--green)');
+}
+function monsterSealPresetImport(){
+  const raw=document.getElementById('seal-preset-json')?.value || '';
+  if(!raw.trim()){ sealPresetStatus('✘ วาง JSON ในช่องก่อน','var(--red)'); return; }
+  try{
+    const parsed=JSON.parse(raw);
+    const incoming=[];
+    if(Array.isArray(parsed)) incoming.push(...parsed);
+    else if(parsed.type==='monster-seal-preset' && parsed.preset) incoming.push(parsed.preset);
+    else if(parsed.type==='monster-seal-preset-library' && Array.isArray(parsed.presets)) incoming.push(...parsed.presets);
+    else incoming.push(parsed);
+    let count=0;
+    incoming.forEach(item=>{
+      const p=monsterSealNormalizePreset(item); if(!p) return;
+      const existing=sealPresetLibrary.find(x=>x.name===p.name || x.id===p.id);
+      if(existing){ existing.name=p.name; existing.fields=p.fields; existing.updatedAt=new Date().toISOString(); }
+      else sealPresetLibrary.push(p);
+      count++;
+    });
+    monsterSealPresetRender();
+    sealPresetStatus(`✓ Imported ${count} preset(s)`,'var(--green)');
+    if(typeof buildQueueAutoSave==='function') buildQueueAutoSave('seal-preset-import');
+  }catch(e){ sealPresetStatus('✘ Import JSON พัง: '+e.message,'var(--red)'); }
+}
+
+function getMonsterSealEffects(){
+  const active=(document.getElementById('seal-active')?.value||'0')==='1';
+  return {
+    enabled: active,
+    name: document.getElementById('seal-name')?.value || 'Monster Seal',
+    type: document.getElementById('seal-type')?.value || 'weapon',
+    grade: document.getElementById('seal-grade')?.value || 'low',
+    rarity: document.getElementById('seal-rarity')?.value || 'species',
+    str: sealReadNum('seal-str'), agi: sealReadNum('seal-agi'), vit: sealReadNum('seal-vit'),
+    int: sealReadNum('seal-int'), dex: sealReadNum('seal-dex'), wis: sealReadNum('seal-wis'),
+    aspd: sealReadNum('seal-aspd'), dmg: sealReadNum('seal-dmg'), dodge: sealReadNum('seal-dodge'),
+    pierce: sealReadNum('seal-pierce'), weak: sealReadNum('seal-weak'), mp: sealReadNum('seal-mp'), dur: sealReadNum('seal-dur'),
+    capNote: document.getElementById('seal-cap-note')?.value || ''
+  };
+}
+function monsterSealGradeLabel(g){
+  return {low:'ขั้นต้น Lv.10–24', mid:'ขั้นกลาง Lv.25–49', high:'ขั้นสูง Lv.50–99', top:'ขั้นยอด Lv.100–199', king:'ขั้นราชัน Lv.200–299', legend:'ขั้นตำนาน Lv.300–400'}[g]||g;
+}
+function monsterSealRarityLabel(r){
+  return {species:'Species Card', boss:'Boss Card', named:'Named Boss Card', legendary:'Legendary Card', mythic:'Mythic Card'}[r]||r;
+}
+function monsterSealSummaryText(e){
+  e=e||getMonsterSealEffects();
+  if(!e.enabled) return 'Seal inactive — Combat Sim ไม่ใช้ผลของการ์ด';
+  const stat=[]; ['str','agi','vit','int','dex','wis'].forEach(k=>{ if(+e[k]) stat.push(k.toUpperCase()+(' '+(+e[k]>0?'+':'')+e[k])); });
+  const mods=[];
+  [['ตีเร็ว',e.aspd],['ตีแรง',e.dmg],['หลบ',e.dodge],['เจาะเกราะ',e.pierce],['จุดอ่อน',e.weak],['MP cost',e.mp],['Durability loss',e.dur]].forEach(([name,val])=>{ if(+val) mods.push(`${name} ${+val>0?'+':''}${val}%`); });
+  return [
+    `${e.name} [${e.type==='weapon'?'อาวุธ':'ชุดเกราะรวม'}]`,
+    `Rarity: ${monsterSealRarityLabel(e.rarity)} | Grade: ${monsterSealGradeLabel(e.grade)}`,
+    `Drop rule: Monster Seal 0.01% เท่ากันทุก Tier มอนสเตอร์`,
+    `Stat: ${stat.length?stat.join(', '):'—'}`,
+    `Combat: ${mods.length?mods.join(', '):'—'}`,
+    `Scale note: ${e.capNote || '—'}`
+  ].join('\n');
+}
+function monsterSealRender(){
+  const text=monsterSealSummaryText();
+  const box=document.getElementById('seal-summary'); if(box) box.textContent=text;
+  const cbox=document.getElementById('combat-seal-summary'); if(cbox) cbox.textContent=text;
+  if(typeof autoSave==='function') buildQueueAutoSave('seal');
+  return text;
+}
+function monsterSealSetValues(vals){
+  Object.entries(vals||{}).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.value=String(val); });
+  monsterSealRender();
+}
+function monsterSealPreset(kind){
+  const base={'seal-active':1,'seal-str':0,'seal-agi':0,'seal-vit':0,'seal-int':0,'seal-dex':0,'seal-wis':0,'seal-aspd':0,'seal-dmg':0,'seal-dodge':0,'seal-pierce':0,'seal-weak':0,'seal-mp':0,'seal-dur':0};
+  if(kind==='clear') return monsterSealSetValues(Object.assign(base, {'seal-name':'การ์ดทดลอง','seal-type':'weapon','seal-rarity':'species','seal-grade':'low','seal-cap-note':'เต็มประสิทธิภาพเฉพาะช่วง Grade'}));
+  if(kind==='doppel') return monsterSealSetValues(Object.assign(base, {'seal-name':'การ์ดร่างเงาคู่สังหาร','seal-type':'weapon','seal-rarity':'legendary','seal-grade':'low','seal-aspd':80,'seal-mp':40,'seal-dur':50,'seal-vit':-2,'seal-cap-note':'ASPD มี cap ตาม Grade; เกินช่วงประสิทธิภาพลดหนัก'}));
+  if(kind==='wolf') return monsterSealSetValues(Object.assign(base, {'seal-name':'การ์ดหมาป่าไม้','seal-type':'weapon','seal-rarity':'species','seal-grade':'low','seal-agi':2,'seal-dmg':8,'seal-dodge':3,'seal-mp':8,'seal-cap-note':'ดาเมจควรใช้เมื่อโจมตีจากมุมอับ/ด้านหลังในฉากจริง'}));
+  if(kind==='bear') return monsterSealSetValues(Object.assign(base, {'seal-name':'การ์ดหมีรากเหล็ก','seal-type':'armor','seal-rarity':'boss','seal-grade':'low','seal-vit':5,'seal-agi':-3,'seal-dodge':-5,'seal-dur':-10,'seal-cap-note':'เหมาะกับ guard/stability แต่ช้าลง'}));
+}
+function monsterSealApplyToCombat(){
+  monsterSealRender();
+  const e=getMonsterSealEffects();
+  const status=document.getElementById('build-save-status');
+  if(status){ status.textContent=`✓ Linked Monster Seal to Combat Sim: ${e.enabled?e.name:'inactive'}`; status.style.color='var(--green)'; }
+  switchTab('combat');
+}
+function activeMonsterSeal(){ return combat && combat.player && combat.player.seal && combat.player.seal.enabled ? combat.player.seal : (getMonsterSealEffects().enabled ? getMonsterSealEffects() : null); }
+function sealPct(key){ const e=activeMonsterSeal(); return e ? (+e[key]||0) : 0; }
+function sealMult(key){ return Math.max(0, 1 + sealPct(key)/100); }
+function sealActionAgi(agi){ return Math.max(1, (+agi||1) * sealMult('aspd')); }
+function sealMpAmount(amount){ return Math.max(0, Math.ceil((+amount||0) * sealMult('mp'))); }
+function sealDurLoss(loss){ return Math.max(0, (+loss||0) * sealMult('dur')); }
+function sealDodgeBonus(){ return sealPct('dodge'); }
+function sealDamageMult(){ return sealMult('dmg'); }
+function sealPiercePct(){ return sealPct('pierce'); }
+function sealWeakMult(){ return sealMult('weak'); }
+
 // ══ COMBAT SIM ══
 let combat=null, selectedHitbox='normal', selectedSkill='off', selectedMpSkill=false, selectedImSkill=false, selectedCombatSkillId='';
 let compactCombatLog=[];
@@ -1932,12 +2211,12 @@ function getPreviousCombatVitalsForNewFight(newMaxHP,newMaxMP,newMaxIM){
 
 function initCombat(){
   const plv=+document.getElementById('b-plv').value||1;
-  const pstr=+document.getElementById('b-str').value||1;
-  const pagi=+document.getElementById('b-agi').value||1;
-  const pvit=+document.getElementById('b-vit').value||1;
-  const pint=+document.getElementById('b-int').value||1;
-  const pdex=+document.getElementById('b-dex').value||1;
-  const pwis=+document.getElementById('b-wis').value||1;
+  let pstr=+document.getElementById('b-str').value||1;
+  let pagi=+document.getElementById('b-agi').value||1;
+  let pvit=+document.getElementById('b-vit').value||1;
+  let pint=+document.getElementById('b-int').value||1;
+  let pdex=+document.getElementById('b-dex').value||1;
+  let pwis=+document.getElementById('b-wis').value||1;
   const prar=+document.getElementById('b-rarity').value;
   const mlv=+document.getElementById('b-mlv').value||1;
   const mstr=+document.getElementById('b-mstr').value||1;
@@ -1947,6 +2226,11 @@ function initCombat(){
   const mint=+document.getElementById('b-mint')?.value||1;
   const mtier=document.getElementById('b-mtier').value;
   const t=TIER[mtier];
+  const seal=getMonsterSealEffects();
+  if(seal.enabled){
+    pstr=Math.max(1,pstr+(+seal.str||0)); pagi=Math.max(1,pagi+(+seal.agi||0)); pvit=Math.max(1,pvit+(+seal.vit||0));
+    pint=Math.max(1,pint+(+seal.int||0)); pdex=Math.max(1,pdex+(+seal.dex||0)); pwis=Math.max(1,pwis+(+seal.wis||0));
+  }
   const abilities=getSelectedMonsterAbilities();
   const mastery=clamp(+document.getElementById('b-mastery')?.value||0,0,100);
 
@@ -1965,7 +2249,7 @@ function initCombat(){
     round:0, tier:mtier, t:t,
     player:{lv:plv,str:pstr,agi:pagi,vit:pvit,int:pint,dex:pdex,wis:pwis,coreStage:coreStage,
             dmg:pDMG,maxHP:pHP,hp:prevVitals.hp,maxMP:pMaxMP,mp:prevVitals.mp,red:pRed,im:prevVitals.im,maxIM:maxIM,
-            rar:prar, activeSkill:prevVitals.activeSkill, pulseTurnCount:prevVitals.pulseTurnCount, nextAttackMissPenalty:prevVitals.nextAttackMissPenalty},
+            rar:prar, seal:seal, activeSkill:prevVitals.activeSkill, pulseTurnCount:prevVitals.pulseTurnCount, nextAttackMissPenalty:prevVitals.nextAttackMissPenalty},
     monster:{lv:mlv,str:mStrEff,agi:mAgiEff,vit:mVitEff,dex:mDexEff,int:mint,
              dmg:mDMG,maxHP:mHP,hp:mHP,red:mRed,
              shield:mtier==='champion'||mtier==='boss',
@@ -1977,8 +2261,9 @@ function initCombat(){
   document.getElementById('m-name-label').textContent=`[${t.label}] มอนสเตอร์`;
   compactCombatLog=[];
   updateHPDisplay(); updateMPDisplay(); updateIMDisplay(); clearLog(); updateStatusRow();
-  const pActsPreview=getActionCountPreview(pagi,mAgiEff), mActsPreview=getActionCountPreview(mAgiEff,pagi);
-  const ini=pagi>=mAgiEff?'ไอเรน':'มอนสเตอร์';
+  const pActionAgi=seal.enabled?sealActionAgi(pagi):pagi;
+  const pActsPreview=getActionCountPreview(pActionAgi,mAgiEff), mActsPreview=getActionCountPreview(mAgiEff,pActionAgi);
+  const ini=pActionAgi>=mAgiEff?'ไอเรน':'มอนสเตอร์';
   addLog('system',`⟨ Turn-Based Combat — ${t.label} ⟩`);
   addLog('system',`Initiative: ${ini} | Action Count Preview: ไอเรน ${pActsPreview} / มอน ${mActsPreview}`);
   const initControl = monsterControlFactorFromList(abilities);
@@ -1986,6 +2271,7 @@ function initCombat(){
   const initFullDodge=clamp(initCombatDodge+15, 5, 90);
   addLog('system',`Dodge: Combat ${pct(initCombatDodge)} | Full ${pct(initFullDodge)} | Monster Control ×${initControl.toFixed(2)}`);
   addLog('system',`ไอเรน HP:${Math.round(prevVitals.hp)}/${Math.round(pHP)} MP:${Math.round(prevVitals.mp)}/${Math.round(pMaxMP)} DMG:${fmt(pDMG)} ขั้น:${coreStage} IM:${prevVitals.im}/${maxIM}`);
+  if(seal.enabled) addLog('skill',`Monster Seal Active: ${monsterSealSummaryText(seal).replace(/\n/g,' | ')}`);
   addLog('system',`มอนสเตอร์ HP:${Math.round(mHP)} DMG:${fmt(mDMG)} AGI_eff:${fmt(mAgiEff)}`);
   addLog('system',`Weak Point Required: ${weakPointRequired(mtier)} clean hit(s) + HP <25% → [อ่อนแอ] | Repeat weak damage +0.1/hit cap ×2.0 | Aim weak: Dodge×1.75 (Stagger opening: ×1.0)`);
   if(abilities.length) addLog('system',`Monster Abilities: ${mAbilityLabels(abilities).join(', ')}`);
@@ -2059,7 +2345,7 @@ function calcPlayerDamage(p, effStr, effDex, mult=1, options={}){
     hb=Math.min(2.0, hb + weakBonus);
     hbLbl += ` | ซ้ำจุดอ่อน +${weakBonus.toFixed(1)} → ×${hb.toFixed(1)}`;
   }
-  let raw=(getTotalDMG(effStr,p.lv,p.rar)*d6p)*mult*manaPressureDmgMult(p.lv, combat.monster.lv);
+  let raw=(getTotalDMG(effStr,p.lv,p.rar)*d6p)*mult*manaPressureDmgMult(p.lv, combat.monster.lv)*sealDamageMult();
   const wasStaggered=!!(combat.monster && combat.monster.staggered);
   const isWeakAim = (options.forceHitbox==='weak' || selectedHitbox==='weak');
   const mdodge=monsterDodgeChance(options.attackerAgi||p.agi, effDex, combat.monster.agi, isWeakAim);
@@ -2069,7 +2355,9 @@ function calcPlayerDamage(p, effStr, effDex, mult=1, options={}){
   }
   if(wasStaggered) combat.monster.staggered=false;
   let pressuredRed=Math.min(0.95, combat.monster.red + manaPressureDefBonus(p.lv, combat.monster.lv));
-  if(options.ignoreDefPct) pressuredRed *= Math.max(0, 1 - options.ignoreDefPct/100);
+  const totalIgnoreDef=(+options.ignoreDefPct||0) + sealPiercePct();
+  if(totalIgnoreDef) pressuredRed *= Math.max(0, 1 - totalIgnoreDef/100);
+  if(isWeakPointResolved(resolved)) hb = Math.max(0.1, hb * sealWeakMult());
   let real=Math.max(1,raw*(1-(pressuredRed*redScale))*hb*monsterTakenDamageMult());
   if(combat.monster.shield){ real*=0.5; combat.monster.shield=false; }
   return {real, raw, d6p, hb, hbLbl, dexUp:false, monsterDodged:false, monsterDodgeChance:mdodge, hitboxNote:resolved.note, isWeakPoint:isWeakPointResolved(resolved), weakBonus, wasStaggered};
@@ -2426,12 +2714,13 @@ function doTurn(strategy){
   const mpTurnSkill=activateMPSkill(p, lines);
   const effStr=skill.effStr, effAgi=skill.effAgi, effVit=skill.effVit, effDex=skill.effDex;
   p.tempEffAgi=effAgi;
-  const pActs=getActionCount(effAgi,m.agi);
-  const mActs=getActionCount(m.agi,effAgi);
-  const playerFirst=effAgi>=m.agi;
+  const actionAgi=sealActionAgi(effAgi);
+  const pActs=getActionCount(actionAgi,m.agi);
+  const mActs=getActionCount(m.agi,actionAgi);
+  const playerFirst=actionAgi>=m.agi;
   summary.initiative = playerFirst ? 'IREIN' : 'MONSTER';
   summary.pActions = pActs; summary.mActions = mActs;
-  lines.push('system',`Initiative: ${playerFirst?'ไอเรน':'มอนสเตอร์'} | Actions: ไอเรน ${pActs} / มอน ${mActs} | AGI ${fmt(effAgi)} vs ${fmt(m.agi)}${effAgi>=m.agi*1.5?' | AGI extra roll 50%':''}`);
+  lines.push('system',`Initiative: ${playerFirst?'ไอเรน':'มอนสเตอร์'} | Actions: ไอเรน ${pActs} / มอน ${mActs} | AGI/action ${fmt(actionAgi)} vs ${fmt(m.agi)}${actionAgi>=m.agi*1.5?' | AGI/ASPD extra roll 50%':''}`);
 
   const monsterActions=[];
   for(let i=1;i<=mActs;i++) monsterActions.push(chooseMonsterAction(combat.tier, combat.round+i));
@@ -2459,7 +2748,7 @@ function doTurn(strategy){
         const incomingRaw=monsterDamageForAction(m,action,d6());
         const red=getFinalPlayerReduction(effVit,p.lv);
         const incoming=Math.max(1,incomingRaw*(1-red));
-        const chance=clamp(getCombatDodge(effAgi,m.agi,m.dex)+masteryDodgeBonus()+imSkillDodgeBonus()+mpSkillDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
+        const chance=clamp(getCombatDodge(effAgi,m.agi,m.dex)+masteryDodgeBonus()+imSkillDodgeBonus()+mpSkillDodgeBonus()+sealDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
         const dodged=rollPct(chance);
         if(dodged){ spendMP(getDodgeMPCost(), lines, `Combat Dodge ${i+1}/${mActs}`); lines.push('dodge',`👟 Combat Dodge ${i+1}/${mActs}: ${pct(chance)} สำเร็จ — 0 DMG`); summary.dodge.push(`M${i+1}:${monsterActionName(action)}=DODGE`); pushMonsterResult(`M${i+1}: ${monsterActionName(action)}→หลบได้`); }
         else if(shouldCombatInstinctAutoDodge(p, incoming)){ const reason=combatInstinctReason(p, incoming); p.im=Math.max(0,p.im-1); p.nextAttackMissPenalty=30; lines.push('dodge',`🛡 Combat Instinct: หลบพลาดแต่แก่นบังคับหลบ (${reason}) → IM -1 = ${p.im}/${p.maxIM} | 0 DMG | การโจมตีถัดไปพลาดเพิ่ม 30%`); summary.dodge.push(`M${i+1}:${monsterActionName(action)}=INSTINCT_DODGE`); pushMonsterResult(`M${i+1}: ${monsterActionName(action)}→หลบได้ด้วย Combat Instinct, IM -1, โจมตีถัดไปพลาด +30%`); }
@@ -2475,7 +2764,7 @@ function doTurn(strategy){
   if(strategy==='dodge'){
     // หลบเต็มตัว: ถ้าหลบการโจมตีจริงได้ จะ counter การันตี 1 ครั้งต่อ action ของไอเรน
     let countersLeft=pActs;
-    const fullChance=clamp(getFullDodge(effAgi,m.agi,m.dex)+masteryDodgeBonus()+imSkillDodgeBonus()+mpSkillDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
+    const fullChance=clamp(getFullDodge(effAgi,m.agi,m.dex)+masteryDodgeBonus()+imSkillDodgeBonus()+mpSkillDodgeBonus()+sealDodgeBonus()-monsterAccuracyPenalty(), 0, 100);
     for(let i=0;i<monsterActions.length && !combat.over;i++){
       const action=monsterActions[i];
       if(action==='feint'){
@@ -2564,7 +2853,7 @@ function getDodgeMPCost(){ return Math.max(1, Math.ceil((combat?.player?.lv||1)/
 function getArmorImpactMPCost(){ return Math.max(1, Math.ceil(getArmorLvForCost()/5)); }
 function spendMP(amount, lines, label){
   if(!combat) return false;
-  const p=combat.player; amount=Math.max(0, Math.ceil(amount||0));
+  const p=combat.player; amount=sealMpAmount(amount);
   if(amount<=0) return true;
   if(p.mp < amount){
     if(lines) lines.push('dead',`MP ไม่พอสำหรับ ${label} (${p.mp}/${amount})`);
@@ -3215,7 +3504,9 @@ const UPGRADE_STONE_DROP = {
   boss:     { weapon:[0.45,1,1],   armor:[0.45,1,1] }
 };
 const MONSTER_SEAL_DROP = {
-  normal:[0.0005,1,1], elite:[0.005,1,1], champion:[0.05,1,1], miniboss:[0.25,1,1], boss:[0.85,1,1]
+  // Monster Seal / Card = server-legend jackpot. Same rate across all monster tiers by design.
+  // Stronger monsters pay out through materials/blueprints/crystals/stones, not higher card chance.
+  normal:[0.0001,1,1], elite:[0.0001,1,1], champion:[0.0001,1,1], miniboss:[0.0001,1,1], boss:[0.0001,1,1]
 };
 const UPGRADE_STONE_TYPE_MAP = {
   weapon:{type:'stone_weapon', name:'ศิลาเสริมอาวุธ'},
@@ -4024,7 +4315,7 @@ function equipmentRender(){
 function equipmentDamage(kind,loss){
   if(!document.getElementById(`eq-${kind}-dur`)) return;
   const r=getEquipmentRarity(kind);
-  const effectiveLoss=(loss||0)*(100/r.dur); // Common pool 100 => same loss; Legendary pool 800 => 1/8 loss
+  const effectiveLoss=sealDurLoss(loss||0)*(100/r.dur); // Common pool 100 => same loss; Legendary pool 800 => 1/8 loss; Monster Seal can modify wear
   eqSetDur(kind, eqDur(kind)-effectiveLoss);
 }
 function equipmentWearManual(kind){ equipmentDamage(kind,5); }
@@ -4182,6 +4473,7 @@ function buildState(){
     selectedMpSkill:!!selectedMpSkill,
     selectedCombatSkillId:selectedCombatSkillId||'',
     skillLibrary:JSON.parse(JSON.stringify(skillLibrary||[])),
+    sealPresetLibrary:JSON.parse(JSON.stringify(sealPresetLibrary||[])),
     selectedImSkill:!!selectedImSkill,
     compactCombatLog:JSON.parse(JSON.stringify(compactCombatLog||[])),
     combatVitals:(combat&&combat.player)?{hp:combat.player.hp,mp:combat.player.mp,im:combat.player.im,maxHP:combat.player.maxHP,maxMP:combat.player.maxMP,maxIM:combat.player.maxIM}:null,
@@ -4220,6 +4512,8 @@ function buildForceRender(){
   buildSafeCall('updateCombatPotionHeal');
   buildSafeCall('updateFieldEncounterSummary');
   buildSafeCall('rewardRenderTimeCounter');
+  buildSafeCall('monsterSealPresetRender');
+  buildSafeCall('monsterSealRender');
 }
 function buildScheduleForceRender(){
   buildForceRender();
@@ -4242,6 +4536,8 @@ function buildApplyState(state){
   if(state.selectedSkill) setSkill(state.selectedSkill);
   selectedMpSkill=!!state.selectedMpSkill;
   skillLibrary=Array.isArray(state.skillLibrary)?state.skillLibrary.map(normalizeSkill):(skillLibrary&&skillLibrary.length?skillLibrary:skillDefaults().map(normalizeSkill));
+  sealPresetLibrary=Array.isArray(state.sealPresetLibrary)?state.sealPresetLibrary.map(monsterSealNormalizePreset).filter(Boolean):(sealPresetLibrary||[]);
+  if(typeof monsterSealPresetRender==='function') monsterSealPresetRender();
   selectedCombatSkillId=state.selectedCombatSkillId||'';
   skillRender(); skillRefreshCombatSelect(); setMpSkill(!!state.selectedMpSkill);
   if(typeof setImSkill==='function') setImSkill(!!state.selectedImSkill);
@@ -4572,6 +4868,8 @@ function cloudBuildPayload(){
     consumables: consumablesPayload,
     emptyCrystal,
     sessionLog,
+    sealPresetLibrary: JSON.parse(JSON.stringify(sealPresetLibrary||[])),
+    monsterSeal: getMonsterSealEffects(),
     meta: {
       saveName: 'Irein Main',
       version: '2',
@@ -4588,7 +4886,7 @@ function cloudBuildPayload(){
 function cloudFingerprint(){
   try{
     const p=cloudBuildPayload();
-    return JSON.stringify({money:p.money, inventory:p.inventory, character:p.character, equipment:p.equipment, consumables:p.consumables, emptyCrystal:p.emptyCrystal});
+    return JSON.stringify({money:p.money, inventory:p.inventory, character:p.character, equipment:p.equipment, consumables:p.consumables, emptyCrystal:p.emptyCrystal, sealPresetLibrary:p.sealPresetLibrary, monsterSeal:p.monsterSeal});
   } catch(e){return String(Date.now());}
 }
 function cloudJsonpLoad(api,key){
@@ -4668,6 +4966,18 @@ async function cloudLoadFromSheet(){
     if(Array.isArray(data.consumables)) cloudApplyConsumables(data.consumables);
     if(Array.isArray(data.emptyCrystal)) cloudApplyEmptyCrystal(data.emptyCrystal);
     if(Array.isArray(data.sessionLog)) cloudApplySessionLog(data.sessionLog);
+    if(Array.isArray(data.sealPresetLibrary)){
+      sealPresetLibrary=data.sealPresetLibrary.map(monsterSealNormalizePreset).filter(Boolean);
+      monsterSealPresetRender();
+    }
+    if(data.monsterSeal && typeof data.monsterSeal==='object'){
+      const fields={};
+      Object.entries(data.monsterSeal).forEach(([k,v])=>{
+        const idMap={enabled:'seal-active',name:'seal-name',type:'seal-type',grade:'seal-grade',rarity:'seal-rarity',str:'seal-str',agi:'seal-agi',vit:'seal-vit',int:'seal-int',dex:'seal-dex',wis:'seal-wis',aspd:'seal-aspd',dmg:'seal-dmg',dodge:'seal-dodge',pierce:'seal-pierce',weak:'seal-weak',mp:'seal-mp',dur:'seal-dur',capNote:'seal-cap-note'};
+        const id=idMap[k]; if(id) fields[id]=(k==='enabled')?(v?1:0):v;
+      });
+      monsterSealApplyFields(fields);
+    }
 
     invRender();
     updateMoneyDisplay();
@@ -4777,6 +5087,7 @@ try{
   [
     'switchTab','rewardAddAll','rewardAddExp','rewardAddLoot','searchEncounterRoll','manualLootRollOnly','manualLootLoadCurrentReward',
     'cloudSaveToSheet','cloudLoadFromSheet','cloudToggleAutoSync','buildQuickSave','buildQuickLoad',
+    'monsterSealPresetSaveCurrent','monsterSealPresetLoadSelected','monsterSealPresetDeleteSelected','monsterSealPresetExport','monsterSealPresetImport','monsterSealPresetPreview',
     'invAddRow','invSellAll','invClear','equipmentRepair','equipmentWearManual','restMinutes','restFull'
   ].forEach(fn=>{
     // Avoid eval: Safari/inline handlers can fail hard if an undefined function is eval-checked.
@@ -4806,7 +5117,7 @@ function safeBoot(){
     ['cloudLoadSettings',()=>cloudLoadSettings()],
     ['initQuickSteppers',()=>initQuickSteppers()],
     ['skillInit',()=>{ skillLibrary=skillDefaults().map(normalizeSkill); skillRender(); skillRefreshCombatSelect(); updateCombatPotionHeal(); }],
-    ['calcRender',()=>{ autoFillStats(); calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender(); equipmentRecalc('weapon'); equipmentRecalc('armor'); consRender(); fatigueRender(); expectedCalc(); updateFieldEncounterSummary(); clearIMPips(15); }],
+    ['calcRender',()=>{ autoFillStats(); calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender(); equipmentRecalc('weapon'); equipmentRecalc('armor'); consRender(); fatigueRender(); expectedCalc(); updateFieldEncounterSummary(); monsterSealPresetRender(); monsterSealRender(); clearIMPips(15); }],
     ['imPips',()=>document.querySelectorAll('#im-pips .im-pip').forEach(p=>p.classList.add('filled'))],
     ['autoLoad',()=>buildTryAutoLoad()],
     ['autoSave',()=>buildEnableAutoSave()],
