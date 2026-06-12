@@ -4250,8 +4250,7 @@ function manualLootRollOnly(){
     ...out,
     `รวมมูลค่า loot: ${invFormatCopper(totalValue)}`,
     `หมายเหตุ: ไม่เพิ่ม EXP / ไม่หัก HP MP IM / ไม่คิดเวลา / ไม่ลด durability`
-  ].join('
-');
+  ].join('\n');
   if(box) box.textContent=summary;
   rewardLog(`MANUAL LOOT ONLY: ${totalKills} monsters = ${invFormatCopper(totalValue)}`,'var(--green)');
   if(sessionState.active){ sessionState.lootValue+=totalValue; sessionState.log.push(summary.replace(/\n/g,' | ')); sessionRender(); }
