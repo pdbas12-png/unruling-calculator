@@ -519,18 +519,21 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <div class="section-label">CRYSTAL / WEAPON / REPAIR RULES</div>
             <div class="small-note" style="line-height:1.7">
               <b>Crystal drop starts at monster Lv.10+</b><br>
-              Normal: เศษเสี้ยว 1%, ต่ำ 0.2%<br>
-              Elite: เศษเสี้ยว 5%, ต่ำ 1%, กลาง 0.1%<br>
-              Champion: เศษเสี้ยว 100%×1, ต่ำ 10%, กลาง 1.5%, สูง 0.1%<br>
-              Mini-boss: เศษเสี้ยว 100%×2–4, ต่ำ 50%, กลาง 5%, สูง 1%<br>
-              Boss: เศษเสี้ยว 100%×6–10, ต่ำ 100%×2–4, กลาง 40%, สูง 5%<br>
-              ผลึกไร้มานา: ต้องมีใน Inventory ก่อน จึงนับ kill; ฆ่าครบ 150 ตัวในช่วงระดับเดียวกัน → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้เศษเสี้ยว x1
+              ช่วงระดับผลึก: ระดับ 1 = มอน Lv.10–19, ระดับ 2 = Lv.20–29, ระดับ 3 = Lv.30–39, ...<br>
+              ผลึกเศษเสี้ยวมานา ระดับ X: Common → Uncommon<br>
+              ผลึกมานาเข้มข้นต่ำ ระดับ X: Uncommon → Rare<br>
+              ผลึกมานาเข้มข้นกลาง ระดับ X: Rare → Epic<br>
+              ผลึกมานาเข้มข้นสูง ระดับ X: Epic → Unique<br>
+              เศษเสี้ยวแก่นมานา ระดับ X: Unique → Legendary<br>
+              Drop rate เดิม: Normal เศษเสี้ยว 1%, ต่ำ 0.2% | Elite เศษเสี้ยว 5%, ต่ำ 1%, กลาง 0.1% | Champion เศษเสี้ยว 100%×1, ต่ำ 10%, กลาง 1.5%, สูง 0.1% | Mini-boss เศษเสี้ยว 100%×2–4, ต่ำ 50%, กลาง 5%, สูง 1% | Boss เศษเสี้ยว 100%×6–10, ต่ำ 100%×2–4, กลาง 40%, สูง 5%<br>
+              เศษเสี้ยวแก่นมานา: รองรับชื่อ/ราคา/Inventory แล้ว แต่ยังไม่ใส่เรทดรอปอัตโนมัติ จนกว่าจะกำหนดเรทดรอปแยก<br>
+              ผลึกไร้มานา: ต้องมีใน Inventory ก่อน จึงนับ kill; ฆ่าครบ 150 ตัวในช่วงระดับเดียวกัน → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานา ระดับเดียวกัน x1
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               Weapon ATK = (Lv×1.2)+5 × rarity<br>
               Weapon price = 75 + (Lv²×20); repair base: Common×1, Uncommon×2, Rare×3, Epic×4, Unique×5, Legendary×8<br>
-              Crystal price: เศษเสี้ยว = Weapon base×0.25, ต่ำ×5, กลาง×25, สูง×100<br>
-              ผลึกไร้มานา price = ผลึกเศษเสี้ยว×20% = Weapon base×0.05 (ระดับ 1–5 = อุปกรณ์ Lv.10/15/20/25/30)<br>
+              Crystal price: เศษเสี้ยว = Weapon base×0.25, เข้มข้นต่ำ = เศษเสี้ยว×5, เข้มข้นกลาง = เศษเสี้ยว×25, เข้มข้นสูง = เศษเสี้ยว×100, เศษเสี้ยวแก่นมานา = เศษเสี้ยว×500<br>
+              ผลึกไร้มานา price = ผลึกเศษเสี้ยวมานา×20% = Weapon base×0.05 (ระดับ 1–5 = มอน Lv.10–19 / 20–29 / 30–39 / 40–49 / 50–59)<br>
               Mana Pressure: มอนสูงกว่า 1 Lv = ตีเบาลง 5%, DEF มอน +5%, durability lost +10%, EXP +10%
             </div>
           </div>
@@ -555,7 +558,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               <b>ระบบ Material Drop หลายเกรด</b><br>
               ชื่อ item เป็น generic ก่อน: Common 1 / Common 2 / Uncommon 1 / Uncommon 2 / Rare 1 / Rare 2. ผู้เขียนค่อย define เป็นชื่อเฉพาะของมอนแต่ละชนิดทีหลัง<br>
-              Normal base: Common1 100% Lv×3, Common2 50% Lv×4, Uncommon1 25% Lv×6, Uncommon2 10% Lv×10, Rare1 5% Lv×15, Rare2 1% Lv×25<br>
+              Normal base: Common1 100% Lv×3, Common2 50% Lv×4, Uncommon1 25% Lv×6, Uncommon2 10% Lv×10, Rare1 3% Lv×18, Rare2 0.5% Lv×35<br>
               Tier สูงขึ้นเพิ่ม chance/จำนวน/มูลค่า material แต่ไม่เพิ่มเรท Monster Seal
             </div>
             <table class="beh-table" style="margin-top:8px">
@@ -565,8 +568,8 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
                 <tr><td>Common 2</td><td>50%</td><td>Lv×4</td></tr>
                 <tr><td>Uncommon 1</td><td>25%</td><td>Lv×6</td></tr>
                 <tr><td>Uncommon 2</td><td>10%</td><td>Lv×10</td></tr>
-                <tr><td>Rare 1</td><td>5%</td><td>Lv×15</td></tr>
-                <tr><td>Rare 2</td><td>1%</td><td>Lv×25</td></tr>
+                <tr><td>Rare 1</td><td>3%</td><td>Lv×18</td></tr>
+                <tr><td>Rare 2</td><td>0.5%</td><td>Lv×35</td></tr>
               </tbody>
             </table>
             <table class="beh-table" style="margin-top:8px">
@@ -585,11 +588,11 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <div class="section-label">BUY EMPTY MANA CRYSTAL</div>
             <div class="field"><label>LEVEL</label>
               <select id="empty-crystal-lv" onchange="emptyCrystalUpdatePrice()">
-                <option value="1">ระดับ 1 → อุปกรณ์ Lv.10</option>
-                <option value="2">ระดับ 2 → อุปกรณ์ Lv.15</option>
-                <option value="3">ระดับ 3 → อุปกรณ์ Lv.20</option>
-                <option value="4">ระดับ 4 → อุปกรณ์ Lv.25</option>
-                <option value="5">ระดับ 5 → อุปกรณ์ Lv.30</option>
+                <option value="1">ระดับ 1 → มอน Lv.10–19</option>
+                <option value="2">ระดับ 2 → มอน Lv.20–29</option>
+                <option value="3">ระดับ 3 → มอน Lv.30–39</option>
+                <option value="4">ระดับ 4 → มอน Lv.40–49</option>
+                <option value="5">ระดับ 5 → มอน Lv.50–59</option>
               </select>
             </div>
             <div class="field"><label>QTY</label><input type="number" id="empty-crystal-qty" value="1" min="1" oninput="emptyCrystalUpdatePrice()"></div>
@@ -770,7 +773,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
       <div class="card gold" style="grid-column:1/-1">
         <div class="card-title gold">EMPTY MANA CRYSTAL TRACE</div>
         <div id="empty-crystal-trace-inv" style="font-family:var(--mono);font-size:0.70rem;color:var(--text-dim);background:var(--bg);border:1px solid var(--border);padding:8px;line-height:1.7;">Empty Crystal Trace: —</div>
-        <div class="small-note">นับจาก Combat Sim และ Reward/Montage เฉพาะเมื่อมีผลึกไร้มานาระดับตรงกับช่วงมอนใน Inventory | ครบ 150 kill → ใช้ผลึกไร้มานา 1 ก้อน แล้วเพิ่มผลึกเศษเสี้ยวมานา 1 ก้อน</div>
+        <div class="small-note">นับจาก Combat Sim และ Reward/Montage เฉพาะเมื่อมีผลึกไร้มานาระดับตรงกับช่วงมอนใน Inventory (ระดับ 1 = Lv.10–19) | ครบ 150 kill → ใช้ผลึกไร้มานา 1 ก้อน แล้วเพิ่มผลึกเศษเสี้ยวมานา ระดับเดียวกัน 1 ก้อน</div>
       </div>
 
       <div class="card purple" style="grid-column:1/-1">
@@ -827,6 +830,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
                 <option value="crystal_low">ผลึกมานาเข้มข้นต่ำ</option>
                 <option value="crystal_mid">ผลึกมานาเข้มข้นกลาง</option>
                 <option value="crystal_high">ผลึกมานาเข้มข้นสูง</option>
+                <option value="crystal_core">เศษเสี้ยวแก่นมานา</option>
                 <option value="stone_weapon">ศิลาเสริมอาวุธ</option>
                 <option value="stone_armor">ศิลาเสริมเกราะ</option>
                 <option value="monster_seal_weapon">ตรามอนสเตอร์ [อาวุธ]</option>
@@ -2462,19 +2466,19 @@ function handleMonsterFeint(strategy, p, m, effVit, lines, idx, total){
 
 // ══ MULTI-GRADE MONSTER MATERIAL DROP SYSTEM ══
 // Generic material slots only. Rename/define species-specific names later in narrative or inventory.
-// Price target: Common1 Lv×3, Common2 Lv×4, Uncommon1 Lv×6, Uncommon2 Lv×10, Rare1 Lv×15, Rare2 Lv×25.
+// Price target: Common1 Lv×3, Common2 Lv×4, Uncommon1 Lv×6, Uncommon2 Lv×10, Rare1 Lv×18 @3%, Rare2 Lv×35 @0.5%.
 const MATERIAL_DROP_GRADES = [
   { key:'common1',   type:'mat_common1',   name:'Common 1 Material',   chance:1.00, base:3  },
   { key:'common2',   type:'mat_common2',   name:'Common 2 Material',   chance:0.50, base:4  },
   { key:'uncommon1', type:'mat_uncommon1', name:'Uncommon 1 Material', chance:0.25, base:6  },
   { key:'uncommon2', type:'mat_uncommon2', name:'Uncommon 2 Material', chance:0.10, base:10 },
-  { key:'rare1',     type:'mat_rare1',     name:'Rare 1 Material',     chance:0.05, base:15 },
-  { key:'rare2',     type:'mat_rare2',     name:'Rare 2 Material',     chance:0.01, base:25 },
+  { key:'rare1',     type:'mat_rare1',     name:'Rare 1 Material',     chance:0.03,  base:18 },
+  { key:'rare2',     type:'mat_rare2',     name:'Rare 2 Material',     chance:0.005, base:35 },
 ];
 const MATERIAL_TIER_RULES = {
   normal: {
     label:'Normal', valueMult:1,
-    common1:{chance:1.00, qty:[1,1]}, common2:{chance:0.50, qty:[1,1]}, uncommon1:{chance:0.25, qty:[1,1]}, uncommon2:{chance:0.10, qty:[1,1]}, rare1:{chance:0.05, qty:[1,1]}, rare2:{chance:0.01, qty:[1,1]}
+    common1:{chance:1.00, qty:[1,1]}, common2:{chance:0.50, qty:[1,1]}, uncommon1:{chance:0.25, qty:[1,1]}, uncommon2:{chance:0.10, qty:[1,1]}, rare1:{chance:0.03, qty:[1,1]}, rare2:{chance:0.005, qty:[1,1]}
   },
   elite: {
     label:'Elite', valueMult:2,
@@ -3163,8 +3167,8 @@ const INV_TYPE_BASE = {
   mat_common2: { label:'Material Common 2', base:4 },
   mat_uncommon1: { label:'Material Uncommon 1', base:6 },
   mat_uncommon2: { label:'Material Uncommon 2', base:10 },
-  mat_rare1: { label:'Material Rare 1', base:15 },
-  mat_rare2: { label:'Material Rare 2', base:25 },
+  mat_rare1: { label:'Material Rare 1', base:18 },
+  mat_rare2: { label:'Material Rare 2', base:35 },
   ore: { label:'Ore', base:10 },
   hide_bone: { label:'Hide/Bone', base:6 },
   rare_material: { label:'Rare Material', base:20 },
@@ -3173,6 +3177,7 @@ const INV_TYPE_BASE = {
   crystal_low: { label:'ผลึกมานาเข้มข้นต่ำ', base:0 },
   crystal_mid: { label:'ผลึกมานาเข้มข้นกลาง', base:0 },
   crystal_high: { label:'ผลึกมานาเข้มข้นสูง', base:0 },
+  crystal_core: { label:'เศษเสี้ยวแก่นมานา', base:0 },
   empty_crystal: { label:'ผลึกไร้มานา', base:0 },
   stone_weapon: { label:'ศิลาเสริมอาวุธ', base:0 },
   stone_armor: { label:'ศิลาเสริมเกราะ', base:0 },
@@ -3205,10 +3210,11 @@ function invTypeChanged(){
   else if(type==='hide_bone') name.value='หนัง/กระดูก';
   else if(type==='rare_material') name.value='วัตถุดิบหายาก';
   else if(type==='elite_rare_material') name.value='วัตถุดิบหายากอีลีท';
-  else if(type==='crystal_shard') name.value='ผลึกเศษเสี้ยวมานา';
-  else if(type==='crystal_low') name.value='ผลึกมานาเข้มข้นต่ำ';
-  else if(type==='crystal_mid') name.value='ผลึกมานาเข้มข้นกลาง';
-  else if(type==='crystal_high') name.value='ผลึกมานาเข้มข้นสูง';
+  else if(type==='crystal_shard') name.value='ผลึกเศษเสี้ยวมานา ระดับ 1';
+  else if(type==='crystal_low') name.value='ผลึกมานาเข้มข้นต่ำ ระดับ 1';
+  else if(type==='crystal_mid') name.value='ผลึกมานาเข้มข้นกลาง ระดับ 1';
+  else if(type==='crystal_high') name.value='ผลึกมานาเข้มข้นสูง ระดับ 1';
+  else if(type==='crystal_core') name.value='เศษเสี้ยวแก่นมานา ระดับ 1';
   else if(type==='stone_weapon') name.value='ศิลาเสริมอาวุธ';
   else if(type==='stone_armor') name.value='ศิลาเสริมเกราะ';
   else if(type==='monster_seal_weapon') name.value='ตรามอนสเตอร์ [อาวุธ]';
@@ -3220,11 +3226,12 @@ function invTypeChanged(){
 }
 function getCrystalEquipLv(monLv){
   const lv=Math.max(10,+monLv||10);
-  return Math.max(10, Math.floor(lv/5)*5);
+  // Crystal band: ระดับ 1 = monster Lv.10–19, ระดับ 2 = Lv.20–29, ...
+  return 10 + Math.floor((lv-10)/10)*10;
 }
 function emptyCrystalEquipLv(level){
   level=Math.max(1,Math.min(5,Math.round(+level||1)));
-  return 10 + ((level-1)*5);
+  return 10 + ((level-1)*10);
 }
 function emptyCrystalUnitPrice(level){
   const equipLv=emptyCrystalEquipLv(level);
@@ -3235,6 +3242,7 @@ function crystalPriceFactor(type){
   if(type==='crystal_low') return 1.25;      // shard ×5
   if(type==='crystal_mid') return 6.25;      // shard ×25
   if(type==='crystal_high') return 25;       // shard ×100
+  if(type==='crystal_core') return 125;      // shard ×500
   return null;
 }
 function getCrystalUnitPrice(type, monLv){
@@ -3242,6 +3250,14 @@ function getCrystalUnitPrice(type, monLv){
   if(factor===null) return null;
   const equipLv=getCrystalEquipLv(monLv);
   return cleanRoundCopper(getEquipmentBasePrice('weapon', equipLv)*factor);
+}
+function getCrystalBandLevel(monLv){
+  const equipLv=getCrystalEquipLv(monLv);
+  const band=Math.floor((equipLv-10)/10)+1;
+  return Math.max(1, band);
+}
+function crystalDisplayName(baseName, monLv){
+  return `${baseName} ระดับ ${getCrystalBandLevel(monLv)}`;
 }
 function invAutoUnitPrice(row){
   if(row.type==='empty_crystal') return emptyCrystalUnitPrice(row.lv);
@@ -3428,11 +3444,12 @@ const CRYSTAL_TYPE_MAP = {
   shard:{type:'crystal_shard', name:'ผลึกเศษเสี้ยวมานา'},
   low:{type:'crystal_low', name:'ผลึกมานาเข้มข้นต่ำ'},
   mid:{type:'crystal_mid', name:'ผลึกมานาเข้มข้นกลาง'},
-  high:{type:'crystal_high', name:'ผลึกมานาเข้มข้นสูง'}
+  high:{type:'crystal_high', name:'ผลึกมานาเข้มข้นสูง'},
+  core:{type:'crystal_core', name:'เศษเสี้ยวแก่นมานา'}
 };
 function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 function emptyCrystalLevelFromEquipLv(equipLv){
-  const lv=Math.floor((Math.max(10,+equipLv||10)-10)/5)+1;
+  const lv=Math.floor((Math.max(10,+equipLv||10)-10)/10)+1;
   if(lv<1 || lv>5) return null;
   return lv;
 }
@@ -3463,11 +3480,12 @@ function emptyCrystalAddShardResult(results, monLv, qty, source){
   const existing=results.find(r=>r.key==='shard' && r.type===map.type && Math.round(+r.lv||0)===Math.round(+monLv||0));
   if(existing){
     existing.qty += qty;
+    existing.name = crystalDisplayName(map.name, monLv);
     existing.guaranteed=(existing.guaranteed||0)+qty;
     existing.emptyConsumed=(existing.emptyConsumed||0)+qty;
     existing.source = existing.source==='drop' ? 'drop+pity' : (source||existing.source||'pity');
   }else{
-    results.push({key:'shard',type:map.type,name:map.name,lv:monLv,qty,guaranteed:qty,emptyConsumed:qty,source:source||'pity'});
+    results.push({key:'shard',type:map.type,name:crystalDisplayName(map.name, monLv),lv:monLv,qty,guaranteed:qty,emptyConsumed:qty,source:source||'pity'});
   }
 }
 function emptyCrystalResolvePity(equipLv, monLv, incomingKills, results){
@@ -3523,7 +3541,7 @@ function renderEmptyCrystalTrace(){
     const count=Math.max(0,Math.round(crystalPityState[key]||0));
     const stock=emptyCrystalCount(lv);
     const status=stock>0 ? `${count}/${CRYSTAL_PITY_KILLS}` : `${count}/${CRYSTAL_PITY_KILLS} paused`;
-    lines.push(`Lv.${lv} Eq.${equipLv}: ${status} | stock ${stock}`);
+    lines.push(`ระดับ ${lv} (มอน Lv.${equipLv}–${equipLv+9}): ${status} | stock ${stock}`);
   }
   const text='Empty Crystal Trace: '+lines.join('  •  ');
   ['empty-crystal-trace','empty-crystal-trace-inv'].forEach(id=>{
@@ -3544,7 +3562,7 @@ function rollCrystalDrops(tier, monLv, kills){
     }
     if(qty>0){
       const map=CRYSTAL_TYPE_MAP[key];
-      results.push({key,type:map.type,name:map.name,lv:monLv,qty,source:'drop'});
+      results.push({key,type:map.type,name:crystalDisplayName(map.name, monLv),lv:monLv,qty,source:'drop'});
     }
   });
   // ผลึกไร้มานา guarantee: ถ้ามี stock ตรงระดับ ครบ 150 kill จะใช้ผลึกไร้มานา 1 ก้อนและเพิ่มผลึกเศษเสี้ยวมานา 1 ก้อนทันที.
@@ -3565,7 +3583,7 @@ function addCrystalDropsToInventory(tier, monLv, kills){
 }
 function crystalDropSummary(drops){
   if(!drops || !drops.length) return 'Crystal MISS';
-  return drops.map(d=>`${d.name} Lv.${d.lv} ×${d.qty}${d.guaranteed?` (การันตี ${d.guaranteed}${d.emptyConsumed?`, ใช้ไร้มานา ${d.emptyConsumed}`:''})`:''}`).join(', ');
+  return drops.map(d=>`${d.name} ×${d.qty}${d.guaranteed?` (การันตี ${d.guaranteed}${d.emptyConsumed?`, ใช้ไร้มานา ${d.emptyConsumed}`:''})`:''}`).join(', ');
 }
 
 // ══ UPGRADE STONE / MONSTER SEAL DROPS ══
@@ -3677,7 +3695,7 @@ function emptyCrystalUpdatePrice(){
   const unit=emptyCrystalUnitPrice(lv);
   const equipLv=emptyCrystalEquipLv(lv);
   const el=document.getElementById('empty-crystal-price-show');
-  if(el) el.textContent=`Lv.${lv} / Eq Lv.${equipLv}: ${invFormatCopper(unit)} ×${qty} = ${invFormatCopper(unit*qty)}`;
+  if(el) el.textContent=`ระดับ ${lv} / มอน Lv.${equipLv}–${equipLv+9}: ${invFormatCopper(unit)} ×${qty} = ${invFormatCopper(unit*qty)}`;
 }
 function buyEmptyCrystal(){
   const lv=Math.max(1,Math.min(5,+document.getElementById('empty-crystal-lv')?.value||1));
