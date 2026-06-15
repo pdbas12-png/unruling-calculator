@@ -229,7 +229,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
 <div class="wrap">
   <div class="header">
     <h1>⟨ UNRULING WORLD ⟩</h1>
-    <p>GM WEBAPP — Sheet Full Sync + UI Fix</p>
+    <p>GM WEBAPP — Tier Grade Craft Ceiling</p>
     <div class="header-line"></div>
   </div>
 
@@ -556,29 +556,43 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               คุณสมบัติ Seal ปรับเองได้ในหน้า MONSTER SEAL และถูก link เข้า Combat Sim โดยตรง
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
-              <b>ระบบ Material Drop — Material Class + Quality</b><br>
-              ชิ้นส่วนมอนเป็นแกนหลักของการคราฟ. <b>Material Class</b> มาจาก Tier ของมอนและเป็นตัวกำหนดเพดานแรงดันมานา / เพดานอัปเกรด ส่วน <b>Quality</b> คือสภาพและความสำคัญของชิ้นส่วนนั้น ใช้เพิ่มมูลค่า เสริม trait เพิ่มความเสถียร และลดโอกาสคราฟพัง<br>
-              Class: Normal → Common-class (อัปสูงสุด Uncommon), Elite → Elite-class (อัปสูงสุด Rare), Champion → Champion-class (อัปสูงสุด Epic), Mini Boss → Lord-class (อัปสูงสุด Unique), Boss → Boss-class (เริ่มคราฟ Uncommon / อัปสูงสุด Legendary)<br>
-              Quality: Damaged / Standard / Fine / Pristine / Core. ของระดับ Core คือชิ้นส่วนสำคัญของ Tier นั้น ไม่ได้แปลว่าทะลุเพดาน Class อัตโนมัติ แต่ช่วยให้ของในเพดานนั้นแรงและเสถียรกว่า
+              <b>ระบบ Material Drop — Tier Grade / Craft Ceiling</b><br>
+              ใช้ชื่อเรียบง่าย: Normal Grade 1–5, Elite Grade 1–6, Champion Grade 1–7, Mini Boss Grade 1–8, Boss Grade 1–9. <b>Tier ของชิ้นส่วนแกนหลัก</b> เป็นตัวกำหนดเพดานแรงดันมานาและเพดานอัปเกรด ส่วน <b>Grade</b> เป็นคุณภาพภายใน Tier นั้น ใช้เพิ่มมูลค่า เสริม trait เพิ่มความเสถียร และลดโอกาสคราฟพัง<br>
+              เกณฑ์แกนหลัก: Normal ต้อง Grade 4–5 จึงคราฟ Common ได้และตัน Uncommon | Elite Grade 3–6 คราฟ Common ได้และตัน Rare | Champion Grade 2–7 คราฟ Common ได้และตัน Epic | Mini Boss Grade 1–8 คราฟ Common ได้และตัน Unique | Boss Grade 1–9 เริ่มคราฟ Uncommon และตัน Legendary<br>
+              ชิ้นส่วน Grade ต่ำกว่าขั้นแกนหลักยังมีค่า: ใช้ขาย ส่งเควส ทำยา บดเป็นวัตถุดิบเสริม หรือเสริมความเสถียร แต่ไม่ใช้เป็นแกนหลักอุปกรณ์ได้โดยตรง
             </div>
             <table class="beh-table" style="margin-top:8px">
-              <thead><tr><th>Quality</th><th>ความหมาย</th><th>Base price</th></tr></thead>
+              <thead><tr><th>Grade</th><th>ความหมาย</th><th>Base price</th></tr></thead>
               <tbody>
-                <tr><td>Damaged</td><td>เสียหาย / ส่งเควส / บดเป็นวัตถุดิบพื้นฐาน</td><td>Lv×3</td></tr>
-                <tr><td>Standard</td><td>ใช้คราฟพื้นฐานได้ / คุณภาพปกติของ Class</td><td>Lv×6</td></tr>
-                <tr><td>Fine</td><td>trait ชัดขึ้น / ใช้เป็นแกนหรือเสริมอุปกรณ์ได้ดี</td><td>Lv×12</td></tr>
-                <tr><td>Pristine</td><td>สภาพสมบูรณ์ / เพิ่มความเสถียรและโอกาสอัปเกรด</td><td>Lv×25</td></tr>
-                <tr><td>Core</td><td>ชิ้นส่วนสำคัญของ Tier / trait แรง / ใช้เสริมวงจรหลัก</td><td>Lv×60</td></tr>
+                <tr><td>Grade 1</td><td>พื้นฐาน / ส่งเควส / บดเป็นวัตถุดิบเสริม</td><td>Lv×3</td></tr>
+                <tr><td>Grade 2</td><td>วัตถุดิบทั่วไป / ยา / เลือด / หนังดีขึ้น</td><td>Lv×5</td></tr>
+                <tr><td>Grade 3</td><td>ชิ้นส่วนเฉพาะทาง / เขี้ยว / เอ็น / เล็บ</td><td>Lv×8</td></tr>
+                <tr><td>Grade 4</td><td>ชิ้นส่วนคุณภาพสูง / เริ่มเป็นแกน Normal ได้</td><td>Lv×14</td></tr>
+                <tr><td>Grade 5</td><td>แกนย่อย / trait ชัด / Rare-grade support</td><td>Lv×25</td></tr>
+                <tr><td>Grade 6</td><td>แกนมานาเข้ม / Epic-grade support</td><td>Lv×42</td></tr>
+                <tr><td>Grade 7</td><td>แกนหลักระดับสูง / Unique-grade support</td><td>Lv×70</td></tr>
+                <tr><td>Grade 8</td><td>ชิ้นส่วนตำนานของ Mini Boss / Legendary support</td><td>Lv×115</td></tr>
+                <tr><td>Grade 9</td><td>ไม่มีข้อมูล / ประเมินไม่ได้ / Boss-only</td><td>Lv×180*</td></tr>
               </tbody>
             </table>
             <table class="beh-table" style="margin-top:8px">
-              <thead><tr><th>Material Class</th><th>แหล่งที่มา</th><th>เริ่มคราฟ</th><th>อัปเกรดสูงสุด</th></tr></thead>
+              <thead><tr><th>Tier ของชิ้นส่วนแกนหลัก</th><th>Core grade</th><th>เริ่มคราฟ</th><th>อัปเกรดสูงสุด</th><th>ตัวคูณราคาขาย</th></tr></thead>
               <tbody>
-                <tr><td class="t-n">Common-class</td><td>Normal</td><td>Common</td><td>Uncommon</td></tr>
-                <tr><td class="t-e">Elite-class</td><td>Elite</td><td>Common</td><td>Rare</td></tr>
-                <tr><td class="t-c">Champion-class</td><td>Champion</td><td>Common</td><td>Epic</td></tr>
-                <tr><td class="t-m">Lord-class</td><td>Mini Boss</td><td>Common</td><td>Unique</td></tr>
-                <tr><td class="t-b">Boss-class</td><td>Boss</td><td>Uncommon</td><td>Legendary</td></tr>
+                <tr><td class="t-n">Normal Grade</td><td>4–5</td><td>Common</td><td>Uncommon</td><td>×1</td></tr>
+                <tr><td class="t-e">Elite Grade</td><td>3–6</td><td>Common</td><td>Rare</td><td>×2.2</td></tr>
+                <tr><td class="t-c">Champion Grade</td><td>2–7</td><td>Common</td><td>Epic</td><td>×4.5</td></tr>
+                <tr><td class="t-m">Mini Boss Grade</td><td>1–8</td><td>Common</td><td>Unique</td><td>×9</td></tr>
+                <tr><td class="t-b">Boss Grade</td><td>1–9</td><td>Uncommon</td><td>Legendary</td><td>×16</td></tr>
+              </tbody>
+            </table>
+            <table class="beh-table" style="margin-top:8px">
+              <thead><tr><th>Tier</th><th>G1</th><th>G2</th><th>G3</th><th>G4</th><th>G5</th><th>G6</th><th>G7</th><th>G8</th><th>G9</th></tr></thead>
+              <tbody>
+                <tr><td class="t-n">Normal</td><td>100%</td><td>30%</td><td>8%</td><td>2%</td><td>0.3%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+                <tr><td class="t-e">Elite</td><td>100%</td><td>40%</td><td>18%</td><td>7%</td><td>1.5%</td><td>0.3%</td><td>—</td><td>—</td><td>—</td></tr>
+                <tr><td class="t-c">Champion</td><td>100%</td><td>65%</td><td>40%</td><td>18%</td><td>6%</td><td>1.5%</td><td>0.3%</td><td>—</td><td>—</td></tr>
+                <tr><td class="t-m">Mini Boss</td><td>100%×1–2</td><td>75%</td><td>50%</td><td>25%</td><td>10%</td><td>3%</td><td>0.8%</td><td>0.2%</td><td>—</td></tr>
+                <tr><td class="t-b">Boss</td><td>100%×3–5</td><td>100%×1–3</td><td>70%</td><td>40%</td><td>15%</td><td>5%</td><td>1.2%</td><td>0.3%</td><td>0.05%</td></tr>
               </tbody>
             </table>
             <table class="beh-table" style="margin-top:8px">
@@ -831,11 +845,6 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               <select id="inv-add-type" onchange="invTypeChanged()" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
                 <option value="monster_part">Monster Part Lv×5</option>
                 <option value="elite_monster_part">Elite Part Lv×10</option>
-                <option value="mat_damaged">Material Damaged Lv×3</option>
-                <option value="mat_standard">Material Standard Lv×6</option>
-                <option value="mat_fine">Material Fine Lv×12</option>
-                <option value="mat_pristine">Material Pristine Lv×25</option>
-                <option value="mat_core">Material Core Lv×60</option>
                 <option value="ore">Ore Lv×10</option>
                 <option value="hide_bone">Hide/Bone Lv×6</option>
                 <option value="rare_material">Rare Material Lv×20</option>
@@ -2478,50 +2487,62 @@ function handleMonsterFeint(strategy, p, m, effVit, lines, idx, total){
 }
 
 
-// ══ MONSTER MATERIAL DROP SYSTEM: MATERIAL CLASS + QUALITY ══
+// ══ MONSTER MATERIAL DROP SYSTEM: TIER GRADE / CRAFT CEILING ══
 // Canon logic:
-// - Material Class comes from monster tier and sets mana-pressure ceiling / upgrade ceiling.
-// - Part Quality is the condition/importance of the part. It improves value, trait, stability, and crafting success.
-// - A Core-quality part does NOT automatically break the Class ceiling; it makes gear within that ceiling better.
+// - Tier of the main material sets mana-pressure ceiling / upgrade ceiling.
+// - Grade is quality inside that tier; higher Grade improves value, trait, stability, and crafting success.
+// - Core material thresholds:
+//   Normal G4–G5 → craft Common, max Uncommon
+//   Elite G3–G6 → craft Common, max Rare
+//   Champion G2–G7 → craft Common, max Epic
+//   Mini Boss G1–G8 → craft Common, max Unique
+//   Boss G1–G9 → craft Uncommon, max Legendary; G9 is unknown / unassessable in-world.
 const MATERIAL_DROP_GRADES = [
-  { key:'damaged',  type:'mat_damaged',  name:'Damaged Material',  quality:'Damaged',  chance:1.00, base:3  },
-  { key:'standard', type:'mat_standard', name:'Standard Material', quality:'Standard', chance:0.45, base:6  },
-  { key:'fine',     type:'mat_fine',     name:'Fine Material',     quality:'Fine',     chance:0.12, base:12 },
-  { key:'pristine', type:'mat_pristine', name:'Pristine Material', quality:'Pristine', chance:0.03, base:25 },
-  { key:'core',     type:'mat_core',     name:'Core Material',     quality:'Core',     chance:0.005, base:60 },
+  { key:'g1', type:'mat_g1', name:'Grade 1 Material', grade:'Grade 1', base:3 },
+  { key:'g2', type:'mat_g2', name:'Grade 2 Material', grade:'Grade 2', base:5 },
+  { key:'g3', type:'mat_g3', name:'Grade 3 Material', grade:'Grade 3', base:8 },
+  { key:'g4', type:'mat_g4', name:'Grade 4 Material', grade:'Grade 4', base:14 },
+  { key:'g5', type:'mat_g5', name:'Grade 5 Material', grade:'Grade 5', base:25 },
+  { key:'g6', type:'mat_g6', name:'Grade 6 Material', grade:'Grade 6', base:42 },
+  { key:'g7', type:'mat_g7', name:'Grade 7 Material', grade:'Grade 7', base:70 },
+  { key:'g8', type:'mat_g8', name:'Grade 8 Material', grade:'Grade 8', base:115 },
+  { key:'g9', type:'mat_g9', name:'Grade 9 Material', grade:'Grade 9', base:180 },
 ];
 const MATERIAL_TIER_RULES = {
   normal: {
-    label:'Normal', materialClass:'Common-class', startRarity:'Common', maxUpgrade:'Uncommon', valueMult:1,
-    damaged:{chance:1.00, qty:[1,1]}, standard:{chance:0.45, qty:[1,1]}, fine:{chance:0.12, qty:[1,1]}, pristine:{chance:0.03, qty:[1,1]}, core:{chance:0.005, qty:[1,1]}
+    label:'Normal', gradePrefix:'Normal Grade', startRarity:'Common', maxUpgrade:'Uncommon', coreMin:4, coreMax:5, valueMult:1,
+    g1:{chance:1.00, qty:[1,1]}, g2:{chance:0.30, qty:[1,1]}, g3:{chance:0.08, qty:[1,1]}, g4:{chance:0.02, qty:[1,1]}, g5:{chance:0.003, qty:[1,1]}
   },
   elite: {
-    label:'Elite', materialClass:'Elite-class', startRarity:'Common', maxUpgrade:'Rare', valueMult:3,
-    damaged:{chance:0.35, qty:[1,1]}, standard:{chance:1.00, qty:[1,1]}, fine:{chance:0.45, qty:[1,1]}, pristine:{chance:0.15, qty:[1,1]}, core:{chance:0.03, qty:[1,1]}
+    label:'Elite', gradePrefix:'Elite Grade', startRarity:'Common', maxUpgrade:'Rare', coreMin:3, coreMax:6, valueMult:2.2,
+    g1:{chance:1.00, qty:[1,1]}, g2:{chance:0.40, qty:[1,1]}, g3:{chance:0.18, qty:[1,1]}, g4:{chance:0.07, qty:[1,1]}, g5:{chance:0.015, qty:[1,1]}, g6:{chance:0.003, qty:[1,1]}
   },
   champion: {
-    label:'Champion', materialClass:'Champion-class', startRarity:'Common', maxUpgrade:'Epic', valueMult:8,
-    damaged:{chance:0.25, qty:[1,2]}, standard:{chance:1.00, qty:[1,1]}, fine:{chance:0.70, qty:[1,1]}, pristine:{chance:0.30, qty:[1,1]}, core:{chance:0.08, qty:[1,1]}
+    label:'Champion', gradePrefix:'Champion Grade', startRarity:'Common', maxUpgrade:'Epic', coreMin:2, coreMax:7, valueMult:4.5,
+    g1:{chance:1.00, qty:[1,1]}, g2:{chance:0.65, qty:[1,1]}, g3:{chance:0.40, qty:[1,1]}, g4:{chance:0.18, qty:[1,1]}, g5:{chance:0.06, qty:[1,1]}, g6:{chance:0.015, qty:[1,1]}, g7:{chance:0.003, qty:[1,1]}
   },
   miniboss: {
-    label:'Mini boss', materialClass:'Lord-class', startRarity:'Common', maxUpgrade:'Unique', valueMult:18,
-    damaged:{chance:0.15, qty:[1,2]}, standard:{chance:1.00, qty:[2,3]}, fine:{chance:1.00, qty:[1,2]}, pristine:{chance:0.55, qty:[1,1]}, core:{chance:0.18, qty:[1,1]}
+    label:'Mini boss', gradePrefix:'Mini Boss Grade', startRarity:'Common', maxUpgrade:'Unique', coreMin:1, coreMax:8, valueMult:9,
+    g1:{chance:1.00, qty:[1,2]}, g2:{chance:0.75, qty:[1,1]}, g3:{chance:0.50, qty:[1,1]}, g4:{chance:0.25, qty:[1,1]}, g5:{chance:0.10, qty:[1,1]}, g6:{chance:0.03, qty:[1,1]}, g7:{chance:0.008, qty:[1,1]}, g8:{chance:0.002, qty:[1,1]}
   },
   boss: {
-    label:'Boss', materialClass:'Boss-class', startRarity:'Uncommon', maxUpgrade:'Legendary', valueMult:45,
-    damaged:{chance:0.05, qty:[1,2]}, standard:{chance:1.00, qty:[4,6]}, fine:{chance:1.00, qty:[2,4]}, pristine:{chance:0.80, qty:[1,2]}, core:{chance:0.35, qty:[1,1]}
+    label:'Boss', gradePrefix:'Boss Grade', startRarity:'Uncommon', maxUpgrade:'Legendary', coreMin:1, coreMax:9, valueMult:16,
+    g1:{chance:1.00, qty:[3,5]}, g2:{chance:1.00, qty:[1,3]}, g3:{chance:0.70, qty:[1,2]}, g4:{chance:0.40, qty:[1,1]}, g5:{chance:0.15, qty:[1,1]}, g6:{chance:0.05, qty:[1,1]}, g7:{chance:0.012, qty:[1,1]}, g8:{chance:0.003, qty:[1,1]}, g9:{chance:0.0005, qty:[1,1]}
   }
 };
+
 function materialTierRule(tier){ return MATERIAL_TIER_RULES[tier] || MATERIAL_TIER_RULES.normal; }
 function materialDropDisplayName(grade, tier){
   const rule=materialTierRule(tier);
-  return `${rule.materialClass} ${grade.quality} Part`;
+  const n=(grade.key||'g1').replace('g','');
+  return `${rule.gradePrefix} ${n} Part`;
 }
 function materialRollOneKill(tier, lv){
   const rule=materialTierRule(tier);
   const out=[];
   for(const grade of MATERIAL_DROP_GRADES){
-    const gRule=rule[grade.key] || {chance:grade.chance, qty:[1,1]};
+    const gRule=rule[grade.key];
+    if(!gRule) continue;
     if(Math.random() < (+gRule.chance||0)){
       const qMin=Math.max(1,Math.round((gRule.qty&&gRule.qty[0])||1));
       const qMax=Math.max(qMin,Math.round((gRule.qty&&gRule.qty[1])||qMin));
@@ -2534,10 +2555,12 @@ function materialRollOneKill(tier, lv){
         lv:lv,
         qty:qty,
         base:(+grade.base||0)*(+rule.valueMult||1),
-        materialClass:rule.materialClass,
-        quality:grade.quality,
+        materialTier:rule.label,
+        grade:grade.grade,
         startRarity:rule.startRarity,
         maxUpgrade:rule.maxUpgrade,
+        coreMin:rule.coreMin,
+        coreMax:rule.coreMax,
         tier:rule.label
       });
     }
@@ -2547,7 +2570,7 @@ function materialRollOneKill(tier, lv){
 function aggregateMaterialDrops(drops){
   const map=new Map();
   for(const d of drops){
-    const key=[d.type,d.lv,d.base,d.name,d.materialClass,d.quality].join('|');
+    const key=[d.type,d.lv,d.base,d.name,d.materialTier,d.grade].join('|');
     if(!map.has(key)) map.set(key,{...d});
     else map.get(key).qty += d.qty;
   }
@@ -2572,15 +2595,16 @@ function materialDropSummary(drops){
 }
 function getKillTrashReport(tier, lv){
   const rule=materialTierRule(tier);
-  const parts=MATERIAL_DROP_GRADES.map(g=>{
-    const gr=rule[g.key]||{chance:g.chance,qty:[1,1]};
-    const ch=Math.round((+gr.chance||0)*1000)/10;
+  const parts=MATERIAL_DROP_GRADES.filter(g=>!!rule[g.key]).map(g=>{
+    const gr=rule[g.key];
+    const ch=Math.round((+gr.chance||0)*10000)/100;
     const qty=(gr.qty&&gr.qty[0]!==gr.qty[1])?`×${gr.qty[0]}–${gr.qty[1]}`:`×${(gr.qty&&gr.qty[0])||1}`;
-    return `${g.quality} ${ch}% ${qty} (~Lv×${g.base*rule.valueMult})`;
+    const n=(g.key||'g1').replace('g','');
+    return `G${n} ${ch}% ${qty} (~Lv×${Math.round(g.base*rule.valueMult)})`;
   });
   return {
-    commonName:`${rule.materialClass} Standard Part`, commonValue:lv*6*rule.valueMult,
-    text:`Loot report: ${rule.label} → ${rule.materialClass} | craft ${rule.startRarity} → ${rule.maxUpgrade} | Quality table → ${parts.join(' | ')}`
+    commonName:`${rule.gradePrefix} 1 Part`, commonValue:lv*3*rule.valueMult,
+    text:`Loot report: ${rule.label} → ${rule.gradePrefix} | core G${rule.coreMin}–G${rule.coreMax} | craft ${rule.startRarity} → ${rule.maxUpgrade} | Drop table → ${parts.join(' | ')}`
   };
 }
 
@@ -3183,11 +3207,15 @@ let inventoryRows = [];
 const INV_TYPE_BASE = {
   monster_part: { label:'Monster Part', base:5 },
   elite_monster_part: { label:'Elite Part', base:10 },
-  mat_damaged: { label:'Material Damaged', base:3 },
-  mat_standard: { label:'Material Standard', base:6 },
-  mat_fine: { label:'Material Fine', base:12 },
-  mat_pristine: { label:'Material Pristine', base:25 },
-  mat_core: { label:'Material Core', base:60 },
+  mat_g1: { label:'Material Grade 1', base:3 },
+  mat_g2: { label:'Material Grade 2', base:5 },
+  mat_g3: { label:'Material Grade 3', base:8 },
+  mat_g4: { label:'Material Grade 4', base:14 },
+  mat_g5: { label:'Material Grade 5', base:25 },
+  mat_g6: { label:'Material Grade 6', base:42 },
+  mat_g7: { label:'Material Grade 7', base:70 },
+  mat_g8: { label:'Material Grade 8', base:115 },
+  mat_g9: { label:'Material Grade 9', base:180 },
   ore: { label:'Ore', base:10 },
   hide_bone: { label:'Hide/Bone', base:6 },
   rare_material: { label:'Rare Material', base:20 },
@@ -3219,11 +3247,15 @@ function invTypeChanged(){
   const name=document.getElementById('inv-add-name');
   if(type==='monster_part') name.value='ชิ้นส่วนมอนสเตอร์';
   else if(type==='elite_monster_part') name.value='ชิ้นส่วนมอนสเตอร์อีลีท';
-  else if(type==='mat_damaged') name.value='Common-class Damaged Part';
-  else if(type==='mat_standard') name.value='Common-class Standard Part';
-  else if(type==='mat_fine') name.value='Common-class Fine Part';
-  else if(type==='mat_pristine') name.value='Common-class Pristine Part';
-  else if(type==='mat_core') name.value='Common-class Core Part';
+  else if(type==='mat_g1') name.value='Grade 1 Material';
+  else if(type==='mat_g2') name.value='Grade 2 Material';
+  else if(type==='mat_g3') name.value='Grade 3 Material';
+  else if(type==='mat_g4') name.value='Grade 4 Material';
+  else if(type==='mat_g5') name.value='Grade 5 Material';
+  else if(type==='mat_g6') name.value='Grade 6 Material';
+  else if(type==='mat_g7') name.value='Grade 7 Material';
+  else if(type==='mat_g8') name.value='Grade 8 Material';
+  else if(type==='mat_g9') name.value='Grade 9 Material';
   else if(type==='ore') name.value='แร่';
   else if(type==='hide_bone') name.value='หนัง/กระดูก';
   else if(type==='rare_material') name.value='วัตถุดิบหายาก';
