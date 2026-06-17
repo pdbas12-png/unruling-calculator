@@ -530,21 +530,21 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <div class="section-label">CRYSTAL / WEAPON / REPAIR RULES</div>
             <div class="small-note" style="line-height:1.7">
               <b>Crystal drop starts at monster Lv.10+</b><br>
-              Crystal Tier ใช้ช่วงเดียวกับ Monster Part: Lv.10–14 = T3, Lv.15–19 = T4, Lv.20–24 = T5, Lv.25–29 = T6, ...<br>
-              ผลึกเศษเสี้ยวมานา T{Tier}: Common → Uncommon<br>
-              ผลึกมานาเข้มข้นต่ำ T{Tier}: Uncommon → Rare<br>
-              ผลึกมานาเข้มข้นกลาง T{Tier}: Rare → Epic<br>
-              ผลึกมานาเข้มข้นสูง T{Tier}: Epic → Unique<br>
-              เศษเสี้ยวแก่นมานา T{Tier}: Unique → Legendary<br>
+              ผลึกไม่มีในมอน Lv.1–9 และเริ่มดรอปตั้งแต่ Lv.10 ขึ้นไป<br>              ระดับผลึกใช้ช่วงละ 10 เลเวล: Lv.10–19 = ระดับ 1, Lv.20–29 = ระดับ 2, Lv.30–39 = ระดับ 3, ...<br>
+              ผลึกเศษเสี้ยวมานา ระดับ {Level}: Common → Uncommon<br>
+              ผลึกมานาเข้มข้นต่ำ ระดับ {Level}: Uncommon → Rare<br>
+              ผลึกมานาเข้มข้นกลาง ระดับ {Level}: Rare → Epic<br>
+              ผลึกมานาเข้มข้นสูง ระดับ {Level}: Epic → Unique<br>
+              เศษเสี้ยวแก่นมานา ระดับ {Level}: Unique → Legendary<br>
               Drop rate เดิม: Normal เศษเสี้ยว 1%, ต่ำ 0.2% | Elite เศษเสี้ยว 5%, ต่ำ 1%, กลาง 0.1% | Champion เศษเสี้ยว 100%×1, ต่ำ 10%, กลาง 1.5%, สูง 0.1% | Mini-boss เศษเสี้ยว 100%×2–4, ต่ำ 50%, กลาง 5%, สูง 1% | Boss เศษเสี้ยว 100%×6–10, ต่ำ 100%×2–4, กลาง 40%, สูง 5%<br>
               เศษเสี้ยวแก่นมานา: รองรับชื่อ/ราคา/Inventory แล้ว แต่ยังไม่ใส่เรทดรอปอัตโนมัติ จนกว่าจะกำหนดเรทดรอปแยก<br>
-              ผลึกไร้มานา T{Tier}: ต้องมีใน Inventory ก่อนจึงนับ kill; ฆ่าครบ 150 ตัวใน Tier เดียวกัน → ใช้ผลึกไร้มานา Tier เดียวกัน 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานา Tier เดียวกัน ×1
+              ผลึกไร้มานา ระดับ {Level}: ต้องมีใน Inventory ก่อนจึงนับ kill; ฆ่าครบ 150 ตัวในระดับเดียวกัน → ใช้ผลึกไร้มานาระดับเดียวกัน 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานาระดับเดียวกัน ×1
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               Weapon ATK = (Lv×1.2)+5 × rarity<br>
               Weapon price = 75 + (Lv²×20); repair base: Common×1, Uncommon×2, Rare×3, Epic×4, Unique×5, Legendary×8<br>
               Crystal price: เศษเสี้ยว = Weapon base×0.25, เข้มข้นต่ำ = เศษเสี้ยว×5, เข้มข้นกลาง = เศษเสี้ยว×25, เข้มข้นสูง = เศษเสี้ยว×100, เศษเสี้ยวแก่นมานา = เศษเสี้ยว×500<br>
-              ผลึกไร้มานา price = ผลึกเศษเสี้ยวมานา×20% = B×0.05 โดย B ใช้เลเวลต้นช่วงของ Crystal Tier<br>
+              ผลึกไร้มานา price = ผลึกเศษเสี้ยวมานา×20% = B×0.05 โดย B ใช้เลเวลต้นช่วงของระดับผลึก<br>
               Mana Pressure: มอนสูงกว่า 1 Lv = ตีเบาลง 5%, DEF มอน +5%, durability lost +10%, EXP +10%
             </div>
           </div>
@@ -621,24 +621,22 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
 
           <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
             <div class="section-label">BUY EMPTY MANA CRYSTAL</div>
-            <div class="field"><label>TIER</label>
+            <div class="field"><label>ระดับ</label>
               <select id="empty-crystal-lv" onchange="emptyCrystalUpdatePrice()">
-                <option value="3">T3 → มอน Lv.10–14</option>
-                <option value="4">T4 → มอน Lv.15–19</option>
-                <option value="5">T5 → มอน Lv.20–24</option>
-                <option value="6">T6 → มอน Lv.25–29</option>
-                <option value="7">T7 → มอน Lv.30–34</option>
-                <option value="8">T8 → มอน Lv.35–39</option>
-                <option value="9">T9 → มอน Lv.40–44</option>
-                <option value="10">T10 → มอน Lv.45–49</option>
-                <option value="11">T11 → มอน Lv.50–54</option>
-                <option value="12">T12 → มอน Lv.55–59</option>
+                <option value="1">ระดับ 1 → มอน Lv.10–19</option>
+                <option value="2">ระดับ 2 → มอน Lv.20–29</option>
+                <option value="3">ระดับ 3 → มอน Lv.30–39</option>
+                <option value="4">ระดับ 4 → มอน Lv.40–49</option>
+                <option value="5">ระดับ 5 → มอน Lv.50–59</option>
+                <option value="6">ระดับ 6 → มอน Lv.60–69</option>
+                <option value="7">ระดับ 7 → มอน Lv.70–79</option>
+                <option value="8">ระดับ 8 → มอน Lv.80–89</option>
               </select>
             </div>
             <div class="field"><label>QTY</label><input type="number" id="empty-crystal-qty" value="1" min="1" oninput="emptyCrystalUpdatePrice()"></div>
             <div class="result-item" style="margin-top:6px;"><span class="r-label">UNIT / TOTAL</span><span class="r-val gold" id="empty-crystal-price-show">—</span></div>
             <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;margin-top:8px;" onclick="buyEmptyCrystal()">BUY → INVENTORY</button>
-            <div class="small-note">ราคา = B ของ Crystal Tier ×0.05. ต้องมีผลึกไร้มานา Tier ตรงกันก่อนจึงนับ kill; ครบ 150 ตัว → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานา Tier เดียวกัน ×1</div>
+            <div class="small-note">ราคา = B ของระดับผลึก ×0.05. ต้องมีผลึกไร้มานาระดับตรงกันก่อนจึงนับ kill; ครบ 150 ตัว → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานาระดับเดียวกัน ×1</div>
             <div id="empty-crystal-trace" style="font-family:var(--mono);font-size:0.66rem;color:var(--text-dim);margin-top:8px;background:var(--panel);border:1px solid var(--border);padding:6px;line-height:1.6;">Empty Crystal Trace: —</div>
           </div>
 
@@ -813,7 +811,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
       <div class="card gold" style="grid-column:1/-1">
         <div class="card-title gold">EMPTY MANA CRYSTAL TRACE</div>
         <div id="empty-crystal-trace-inv" style="font-family:var(--mono);font-size:0.70rem;color:var(--text-dim);background:var(--bg);border:1px solid var(--border);padding:8px;line-height:1.7;">Empty Crystal Trace: —</div>
-        <div class="small-note">นับจาก Combat Sim และ Reward/Montage เฉพาะเมื่อมีผลึกไร้มานา Tier ตรงกับมอนใน Inventory | ครบ 150 kill ใน Tier เดียวกัน → ใช้ผลึกไร้มานา 1 ก้อน แล้วเพิ่มผลึกเศษเสี้ยวมานา Tier เดียวกัน 1 ก้อน</div>
+        <div class="small-note">นับจาก Combat Sim และ Reward/Montage เฉพาะเมื่อมีผลึกไร้มานาระดับตรงกับช่วงมอนใน Inventory | Lv.10–19 = ระดับ 1, Lv.20–29 = ระดับ 2 | ครบ 150 kill ในระดับเดียวกัน → ใช้ผลึกไร้มานา 1 ก้อน แล้วเพิ่มผลึกเศษเสี้ยวมานาระดับเดียวกัน 1 ก้อน</div>
       </div>
 
       <div class="card purple" style="grid-column:1/-1">
@@ -3323,36 +3321,40 @@ function invTypeChanged(){
 }
 
 function crystalTierFromMonsterLevel(monLv){
-  return materialTierFromMonsterLevel(Math.max(10,normalizeMonsterLevel(monLv)));
+  const lv=normalizeMonsterLevel(monLv);
+  if(lv<10) return 0;
+  return Math.floor((lv-10)/10)+1;
 }
-function crystalTierStartLevel(tier){ return materialTierStartLevel(Math.max(3,Math.round(+tier||3))); }
-function crystalTierEndLevel(tier){ return materialTierEndLevel(Math.max(3,Math.round(+tier||3))); }
-function crystalTierRangeText(tier){ return `Lv.${crystalTierStartLevel(tier)}–${crystalTierEndLevel(tier)}`; }
-function isTieredCrystalType(type){
-  return ['crystal_shard','crystal_low','crystal_mid','crystal_high','crystal_core','empty_crystal'].includes(String(type||''));
+function crystalTierStartLevel(level){
+  level=Math.max(1,Math.round(+level||1));
+  return 10+((level-1)*10);
 }
+function crystalTierEndLevel(level){ return crystalTierStartLevel(level)+9; }
+function crystalTierRangeText(level){ return `Lv.${crystalTierStartLevel(level)}–${crystalTierEndLevel(level)}`; }
 function crystalBaseName(type){
-  return ({crystal_shard:'ผลึกเศษเสี้ยวมานา',crystal_low:'ผลึกมานาเข้มข้นต่ำ',crystal_mid:'ผลึกมานาเข้มข้นกลาง',crystal_high:'ผลึกมานาเข้มข้นสูง',crystal_core:'เศษเสี้ยวแก่นมานา',empty_crystal:'ผลึกไร้มานา'})[type]||'ผลึกมานา';
+  const map={crystal_shard:'ผลึกเศษเสี้ยวมานา',crystal_low:'ผลึกมานาเข้มข้นต่ำ',crystal_mid:'ผลึกมานาเข้มข้นกลาง',crystal_high:'ผลึกมานาเข้มข้นสูง',crystal_core:'เศษเสี้ยวแก่นมานา',empty_crystal:'ผลึกไร้มานา'};
+  return map[type]||'ผลึก';
 }
+function isTieredCrystalType(type){ return ['crystal_shard','crystal_low','crystal_mid','crystal_high','crystal_core','empty_crystal'].includes(String(type||'')); }
 function crystalPriceFactor(type){
-  if(type==='empty_crystal') return 0.05;
   if(type==='crystal_shard') return 0.25;
   if(type==='crystal_low') return 1.25;
   if(type==='crystal_mid') return 6.25;
   if(type==='crystal_high') return 25;
   if(type==='crystal_core') return 125;
+  if(type==='empty_crystal') return 0.05;
   return null;
 }
-function getCrystalUnitPrice(type, crystalTier){
+function getCrystalUnitPrice(type, crystalLevel){
   const factor=crystalPriceFactor(type);
   if(factor===null) return null;
-  const tier=Math.max(3,Math.round(+crystalTier||3));
-  return cleanRoundCopper(materialBasePrice(tier)*factor);
+  const level=Math.max(1,Math.round(+crystalLevel||1));
+  return cleanRoundCopper(getEquipmentBasePrice('weapon',crystalTierStartLevel(level))*factor);
 }
-function emptyCrystalUnitPrice(crystalTier){ return getCrystalUnitPrice('empty_crystal',crystalTier); }
-function crystalDisplayName(baseName, crystalTier, tierIsDirect){
-  const tier=tierIsDirect ? Math.max(3,Math.round(+crystalTier||3)) : crystalTierFromMonsterLevel(crystalTier);
-  return `${baseName} T${tier}`;
+function emptyCrystalUnitPrice(crystalLevel){ return getCrystalUnitPrice('empty_crystal',crystalLevel); }
+function crystalDisplayName(baseName, crystalLevel, levelIsDirect){
+  const level=levelIsDirect?Math.max(1,Math.round(+crystalLevel||1)):crystalTierFromMonsterLevel(crystalLevel);
+  return `${baseName} ระดับ ${Math.max(1,level)}`;
 }
 function invAutoUnitPrice(row){
   if(isMonsterPartQualityType(row.type)){
@@ -3492,7 +3494,7 @@ function invCopy(){
   inventoryRows.forEach((r,idx)=>{
     const rar=INV_RARITY[r.rarity]||INV_RARITY.common;
     const type=INV_TYPE_BASE[r.type]||INV_TYPE_BASE.custom;
-    lines.push(`${idx+1}. ${r.name} | ${type.label}${isMonsterPartQualityType(r.type)?` | T${r.materialTier} Q${r.quality}`:(isTieredCrystalType(r.type)?` | T${r.crystalTier}`:'')}${r.legacy?' | LEGACY':''} | ${rar.label} | Lv.${r.lv} | Qty ${r.qty} | Auto ${invAutoUnitPrice(r)}C | Market ${(+r.market||100)}% | Unit ${invUnitPrice(r)}C | Total ${invTotalRow(r)}C`);
+    lines.push(`${idx+1}. ${r.name} | ${type.label}${isMonsterPartQualityType(r.type)?` | T${r.materialTier} Q${r.quality}`:(isTieredCrystalType(r.type)?` | ระดับ ${r.crystalTier}`:'')}${r.legacy?' | LEGACY':''} | ${rar.label} | Lv.${r.lv} | Qty ${r.qty} | Auto ${invAutoUnitPrice(r)}C | Market ${(+r.market||100)}% | Unit ${invUnitPrice(r)}C | Total ${invTotalRow(r)}C`);
   });
   lines.push(`TOTAL = ${invFormatCopper(invTotal())}`);
   navigator.clipboard?.writeText(lines.join('\n'));
@@ -3522,8 +3524,8 @@ function invRender(){
     const nameCell=isSystem?`<span class="inv-readonly" style="width:100%;text-align:left;color:var(--text)">${safeName}</span>`:`<input value="${safeName}" onchange="invUpdate(${i},'name',this.value)" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--thai);font-size:.75rem;outline:none;">`;
     const typeCell=isMat?`<span class="inv-readonly">Material Q${r.quality}</span>`:(isCrystal?`<span class="inv-readonly">Crystal</span>`:`<select onchange="invUpdate(${i},'type',this.value)" style="background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--mono);font-size:.7rem;outline:none;">${Object.entries(INV_TYPE_BASE).map(([k,v])=>`<option value="${k}" ${r.type===k?'selected':''}>${v.label}</option>`).join('')}</select>`);
     const rarityCell=isSystem?`<span class="inv-readonly">${isMat?'Material':'Crystal'}</span>`:`<select onchange="invUpdate(${i},'rarity',this.value)" style="background:var(--bg);border:1px solid var(--border);color:${rar.color};padding:4px;font-family:var(--mono);font-size:.7rem;outline:none;">${Object.entries(INV_RARITY).map(([k,v])=>`<option value="${k}" ${r.rarity===k?'selected':''}>${v.label}×${v.mult}</option>`).join('')}</select>`;
-    const levelCell=isMat?`<span class="inv-readonly">T${r.materialTier}<br>${materialTierRangeText(r.materialTier)}</span>`:(isCrystal?`<span class="inv-readonly">T${r.crystalTier}<br>${crystalTierRangeText(r.crystalTier)}</span>`:`<input type="number" min="1" value="${r.lv}" onchange="invUpdate(${i},'lv',this.value)" style="width:62px;background:transparent;border:1px solid var(--border);color:var(--cyan);padding:4px;font-family:var(--mono);font-size:.75rem;text-align:center;outline:none;">`);
-    const note=r.legacy?'LEGACY ITEM':(isMat?`T${r.materialTier} / Q${r.quality} / ${materialTierRangeText(r.materialTier)}`:(isCrystal?`T${r.crystalTier} / ${crystalTierRangeText(r.crystalTier)}`:(Math.round(+r.unitOverride||0)>0?'FIXED PRICE':'AUTO PRICE')));
+    const levelCell=isMat?`<span class="inv-readonly">T${r.materialTier}<br>${materialTierRangeText(r.materialTier)}</span>`:(isCrystal?`<span class="inv-readonly">ระดับ ${r.crystalTier}<br>${crystalTierRangeText(r.crystalTier)}</span>`:`<input type="number" min="1" value="${r.lv}" onchange="invUpdate(${i},'lv',this.value)" style="width:62px;background:transparent;border:1px solid var(--border);color:var(--cyan);padding:4px;font-family:var(--mono);font-size:.75rem;text-align:center;outline:none;">`);
+    const note=r.legacy?'LEGACY ITEM':(isMat?`T${r.materialTier} / Q${r.quality} / ${materialTierRangeText(r.materialTier)}`:(isCrystal?`ระดับ ${r.crystalTier} / ${crystalTierRangeText(r.crystalTier)}`:(Math.round(+r.unitOverride||0)>0?'FIXED PRICE':'AUTO PRICE')));
     const tr=document.createElement('tr');
     tr.innerHTML=`<td><div class="inv-name-cell"><span class="inv-icon" style="color:${rar.color}">${invIconForType(r.type)}</span><div style="flex:1;min-width:0">${nameCell}<span class="inv-lock-note">${note}</span></div></div></td>
     <td>${typeCell}</td><td>${rarityCell}</td><td>${levelCell}</td>
@@ -3566,11 +3568,11 @@ const CRYSTAL_TYPE_MAP = {
 function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 function emptyCrystalLevelFromEquipLv(equipLv){ return crystalTierFromMonsterLevel(equipLv); }
 function emptyCrystalCount(crystalTier){
-  const tier=Math.max(3,Math.round(+crystalTier||3));
+  const tier=Math.max(1,Math.round(+crystalTier||1));
   return inventoryRows.reduce((sum,r)=>sum + (r.type==='empty_crystal' && Math.round(+r.crystalTier||0)===tier ? Math.max(0,+r.qty||0) : 0),0);
 }
 function consumeEmptyCrystal(crystalTier, qty){
-  const tier=Math.max(3,Math.round(+crystalTier||3)); qty=Math.max(0,Math.round(+qty||0)); let left=qty;
+  const tier=Math.max(1,Math.round(+crystalTier||1)); qty=Math.max(0,Math.round(+qty||0)); let left=qty;
   for(let i=inventoryRows.length-1;i>=0 && left>0;i--){ const r=inventoryRows[i]; if(r.type==='empty_crystal' && Math.round(+r.crystalTier||0)===tier){ const take=Math.min(left,Math.max(0,+r.qty||0)); r.qty=(+r.qty||0)-take; left-=take; if(r.qty<=0) inventoryRows.splice(i,1); } }
   if(qty-left>0) invRender(); return qty-left;
 }
@@ -3582,7 +3584,7 @@ function emptyCrystalAddShardResult(results, monLv, qty, source){
   else results.push({key:'shard',type:map.type,name:crystalDisplayName(map.name,crystalTier,true),lv:crystalTierStartLevel(crystalTier),monsterLv:normalizeMonsterLevel(monLv),crystalTier,qty,guaranteed:qty,emptyConsumed:qty,source:source||'pity'});
 }
 function emptyCrystalResolvePity(crystalTier, monLv, incomingKills, results){
-  const tier=Math.max(3,Math.round(+crystalTier||3)); const pityKey=`T${tier}`;
+  const tier=Math.max(1,Math.round(+crystalTier||1)); const pityKey=`L${tier}`;
   let count=Math.max(0,Math.round(crystalPityState[pityKey]||0)); const kills=Math.max(0,Math.round(+incomingKills||0)); const stock=emptyCrystalCount(tier);
   if(stock<=0){ crystalPityState[pityKey]=Math.min(count,CRYSTAL_PITY_KILLS); return 0; }
   const total=count+kills, shouldConvert=Math.floor(total/CRYSTAL_PITY_KILLS), convert=Math.min(stock,shouldConvert), consumed=convert>0?consumeEmptyCrystal(tier,convert):0;
@@ -3592,24 +3594,36 @@ function emptyCrystalResolvePity(crystalTier, monLv, incomingKills, results){
 }
 function emptyCrystalNormalizePity(){
   const results=[];
-  for(let tier=3;tier<=30;tier++){ const key=`T${tier}`; const count=Math.max(0,Math.round(crystalPityState[key]||0)); if(count>=CRYSTAL_PITY_KILLS && emptyCrystalCount(tier)>0) emptyCrystalResolvePity(tier,crystalTierStartLevel(tier),0,results); }
+  for(let tier=1;tier<=30;tier++){ const key=`L${tier}`; const count=Math.max(0,Math.round(crystalPityState[key]||0)); if(count>=CRYSTAL_PITY_KILLS && emptyCrystalCount(tier)>0) emptyCrystalResolvePity(tier,crystalTierStartLevel(tier),0,results); }
   if(results.length) results.forEach(d=>invPush({name:d.name,type:d.type,rarity:'common',lv:d.lv,monsterLv:d.monsterLv,crystalTier:d.crystalTier,qty:d.qty,base:0}));
 }
 function migrateLegacyCrystalPityState(){
-  const legacyMap={L10:3,L20:5,L30:7,L40:9,L50:11};
-  Object.entries(legacyMap).forEach(([oldKey,tier])=>{
-    if(crystalPityState[oldKey]!==undefined && crystalPityState[`T${tier}`]===undefined){
-      crystalPityState[`T${tier}`]=Math.max(0,Math.round(+crystalPityState[oldKey]||0));
+  const copy={...crystalPityState};
+  Object.entries(copy).forEach(([key,val])=>{
+    if(/^L[1-9]\d*$/.test(key) && !/^L(10|20|30|40|50|60|70|80|90)$/.test(key)) return;
+    let level=0;
+    let m=key.match(/^T(\d+)$/);
+    if(m) level=Math.floor((Number(m[1])-3)/2)+1;
+    else { m=key.match(/^L(10|20|30|40|50|60|70|80|90)$/); if(m) level=Number(m[1])/10; }
+    if(level>=1){
+      crystalPityState[`L${level}`]=Math.max(Number(crystalPityState[`L${level}`]||0),Math.max(0,Math.round(+val||0)));
+      delete crystalPityState[key];
     }
   });
 }
 function renderEmptyCrystalTrace(){
   migrateLegacyCrystalPityState();
-  const tiers=new Set([3,4,5,6,7,8,9,10,11,12]);
-  inventoryRows.forEach(r=>{ if(r.type==='empty_crystal' && r.crystalTier) tiers.add(Math.round(r.crystalTier)); });
-  Object.keys(crystalPityState||{}).forEach(k=>{ const m=k.match(/^T(\d+)$/); if(m) tiers.add(+m[1]); });
-  const lines=[...tiers].sort((a,b)=>a-b).map(tier=>{ const count=Math.max(0,Math.round(crystalPityState[`T${tier}`]||0)), stock=emptyCrystalCount(tier), status=stock>0?`${count}/${CRYSTAL_PITY_KILLS}`:`${count}/${CRYSTAL_PITY_KILLS} paused`; return `T${tier} (${crystalTierRangeText(tier)}): ${status} | stock ${stock}`; });
-  const text='Empty Crystal Trace: '+lines.join('  •  '); ['empty-crystal-trace','empty-crystal-trace-inv'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=text; });
+  const levels=new Set([1,2,3,4,5,6,7,8]);
+  inventoryRows.forEach(r=>{ if(r.type==='empty_crystal'&&r.crystalTier) levels.add(Math.round(r.crystalTier)); });
+  Object.keys(crystalPityState||{}).forEach(k=>{ const m=k.match(/^L(\d+)$/); if(m) levels.add(+m[1]); });
+  const lines=[...levels].sort((a,b)=>a-b).map(level=>{
+    const count=Math.max(0,Math.round(crystalPityState[`L${level}`]||0));
+    const stock=emptyCrystalCount(level);
+    const status=stock>0?`${count}/${CRYSTAL_PITY_KILLS}`:`${count}/${CRYSTAL_PITY_KILLS} paused`;
+    return `ระดับ ${level} (${crystalTierRangeText(level)}): ${status} | stock ${stock}`;
+  });
+  const text='Empty Crystal Trace: '+lines.join('  •  ');
+  ['empty-crystal-trace','empty-crystal-trace-inv'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=text; });
 }
 function rollCrystalDrops(tier, monLv, kills){
   const results=[]; monLv=+monLv||0; kills=Math.max(0,Math.round(+kills||0));
@@ -3658,17 +3672,17 @@ function upgradeStoneTierName(monLv){
   return 'สูง';
 }
 function getUpgradeStoneUnitPrice(kind, monLv){
-  const base=getEquipmentBasePrice('weapon', crystalTierStartLevel(crystalTierFromMonsterLevel(monLv)));
+  const base=getEquipmentBasePrice('weapon', getCrystalEquipLv(monLv));
   const factor = kind==='armor' ? 0.20 : 0.25;
   return cleanRoundCopper(base*factor);
 }
 function getMonsterSealUnitPrice(type, monLv){
-  const base=getEquipmentBasePrice('weapon', crystalTierStartLevel(crystalTierFromMonsterLevel(monLv)));
+  const base=getEquipmentBasePrice('weapon', getCrystalEquipLv(monLv));
   const factor = type==='monster_seal_armor' ? 1.8 : 2.0;
   return cleanRoundCopper(base*factor);
 }
 function getSealPlateUnitPrice(type, monLv){
-  const base=getEquipmentBasePrice('weapon', crystalTierStartLevel(crystalTierFromMonsterLevel(monLv)));
+  const base=getEquipmentBasePrice('weapon', getCrystalEquipLv(monLv));
   return cleanRoundCopper(base*0.15);
 }
 function rollUpgradeStoneDrops(tier, monLv, kills){
@@ -3733,7 +3747,7 @@ function upgradeSealDropSummary(result){
 }
 function emptyCrystalUpdatePrice(){
   const tier=Math.max(3,+document.getElementById('empty-crystal-lv')?.value||3), qty=Math.max(1,+document.getElementById('empty-crystal-qty')?.value||1), unit=emptyCrystalUnitPrice(tier);
-  const el=document.getElementById('empty-crystal-price-show'); if(el) el.textContent=`T${tier} / ${crystalTierRangeText(tier)}: ${invFormatCopper(unit)} ×${qty} = ${invFormatCopper(unit*qty)}`;
+  const el=document.getElementById('empty-crystal-price-show'); if(el) el.textContent=`ระดับ ${tier} / ${crystalTierRangeText(tier)}: ${invFormatCopper(unit)} ×${qty} = ${invFormatCopper(unit*qty)}`;
 }
 function buyEmptyCrystal(){
   const tier=Math.max(3,+document.getElementById('empty-crystal-lv')?.value||3), qty=Math.max(1,+document.getElementById('empty-crystal-qty')?.value||1), unit=emptyCrystalUnitPrice(tier), cost=unit*qty;
@@ -4237,12 +4251,15 @@ function invNormalizeLoadedRow(source){
     r.base=0;
     r.legacy=false;
   }else if(isTieredCrystalType(r.type)){
-    let savedTier=Math.max(0,Math.round(+r.crystalTier||0));
-    if(!savedTier && r.type==='empty_crystal' && r.lv>=1 && r.lv<=5) savedTier=3+((Math.round(r.lv)-1)*2); // migrate old ระดับ 1–5 to T3/T5/T7/T9/T11
-    const sourceMonsterLv=normalizeMonsterLevel(r.monsterLv || (savedTier?crystalTierStartLevel(savedTier):r.lv));
-    const tierFromLevel=crystalTierFromMonsterLevel(sourceMonsterLv);
-    r.crystalTier=savedTier>0?savedTier:tierFromLevel;
-    r.monsterLv=sourceMonsterLv;
+    let savedLevel=Math.max(0,Math.round(+r.crystalTier||0));
+    const rawLv=Math.max(0,Math.round(+r.lv||0));
+    const sourceLv=Math.max(0,Math.round(+r.monsterLv||0));
+    if(savedLevel>=3 && (sourceLv>=10 || rawLv>=10)) savedLevel=Math.floor((savedLevel-3)/2)+1;
+    if(!savedLevel && rawLv>=1 && rawLv<=20 && sourceLv<10) savedLevel=rawLv;
+    const inferredSourceLv=sourceLv>=10?sourceLv:(savedLevel?crystalTierStartLevel(savedLevel):Math.max(10,rawLv));
+    const levelFromMonster=crystalTierFromMonsterLevel(inferredSourceLv);
+    r.crystalTier=savedLevel>0?savedLevel:Math.max(1,levelFromMonster);
+    r.monsterLv=inferredSourceLv;
     r.lv=crystalTierStartLevel(r.crystalTier);
     r.name=crystalDisplayName(crystalBaseName(r.type),r.crystalTier,true);
     r.rarity='common'; r.base=0; r.legacy=false;
@@ -4984,12 +5001,18 @@ function cloudApplyConsumables(rows){
   }));
 }
 function cloudCollectEmptyCrystal(){
-  const tiers=new Set([3,4,5,6,7,8,9,10,11,12]); inventoryRows.forEach(r=>{ if(r.type==='empty_crystal'&&r.crystalTier) tiers.add(Math.round(r.crystalTier)); }); Object.keys(crystalPityState||{}).forEach(k=>{ const m=k.match(/^T(\d+)$/); if(m) tiers.add(+m[1]); });
-  return [...tiers].sort((a,b)=>a-b).map(tier=>({tier,progress:Number(crystalPityState[`T${tier}`]||0),required:CRYSTAL_PITY_KILLS,stock:emptyCrystalCount(tier)}));
+  const levels=new Set([1,2,3,4,5,6,7,8]);
+  inventoryRows.forEach(r=>{ if(r.type==='empty_crystal'&&r.crystalTier) levels.add(Math.round(r.crystalTier)); });
+  Object.keys(crystalPityState||{}).forEach(k=>{ const m=k.match(/^L(\d+)$/); if(m) levels.add(+m[1]); });
+  return [...levels].sort((a,b)=>a-b).map(level=>({level,progress:Number(crystalPityState[`L${level}`]||0),required:CRYSTAL_PITY_KILLS,stock:emptyCrystalCount(level)}));
 }
 function cloudApplyEmptyCrystal(rows){
   if(!Array.isArray(rows)) return;
-  rows.forEach(r=>{ let tier=Number(r.tier||0); if(!tier && r.level>=1 && r.level<=5) tier=3+((Number(r.level)-1)*2); if(tier>=3) crystalPityState[`T${tier}`]=Math.max(0,Math.round(Number(r.progress||0))); });
+  rows.forEach(r=>{
+    let level=Math.max(0,Math.round(Number(r.level||0)));
+    if(!level&&r.tier){ const t=Math.round(Number(r.tier||0)); level=t>=3?Math.floor((t-3)/2)+1:t; }
+    if(level>=1) crystalPityState[`L${level}`]=Math.max(0,Math.round(Number(r.progress||0)));
+  });
 }
 function cloudCollectSessionLog(){
   const ss=sessionState||{};
