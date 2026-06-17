@@ -128,6 +128,16 @@
   .stat-item .num-stepper{margin-top:2px;width:100%;}
 
 
+
+  .inv-filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin-top:8px;}
+  .inv-filter-row>div{min-width:150px;flex:1;}
+  .inv-lock-btn{border:1px solid var(--border-bright);background:transparent;color:var(--text-dim);padding:4px 7px;cursor:pointer;font-family:var(--mono);font-size:.68rem;}
+  .inv-lock-btn.locked{border-color:var(--gold);color:var(--gold);background:rgba(200,150,10,.08);}
+  .inv-readonly{display:inline-block;min-width:64px;padding:4px 6px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--text-dim);font-family:var(--mono);font-size:.68rem;text-align:center;}
+  .inv-consume-row{display:flex;gap:3px;align-items:center;justify-content:center;}
+  .inv-consume-btn{border:1px solid var(--border);background:transparent;color:var(--cyan);padding:3px 6px;cursor:pointer;font-family:var(--mono);font-size:.62rem;}
+  .inv-consume-btn:hover{border-color:var(--cyan);}
+
   /* skill manager */
   .skill-manager-grid{display:grid;grid-template-columns:1.2fr .7fr .9fr .7fr .65fr .75fr .75fr .75fr auto;gap:6px;align-items:end;}
   .skill-list{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.68rem;margin-top:10px;}
@@ -229,7 +239,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
 <div class="wrap">
   <div class="header">
     <h1>⟨ UNRULING WORLD ⟩</h1>
-    <p>GM WEBAPP — Tier Grade Craft Ceiling</p>
+    <p>GM WEBAPP — Material Tier / Quality System</p>
     <div class="header-line"></div>
   </div>
 
@@ -419,7 +429,8 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
         <div class="grid3">
           <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
             <div class="section-label">ADD EXP + LOOT FROM KILL</div>
-            <div class="field"><label>MON LV</label><input type="number" id="reward-mlv" value="1" min="1"></div>
+            <div class="field"><label>MON LV</label><input type="number" id="reward-mlv" value="1" min="1" oninput="updateRewardMaterialTierPreview()"></div>
+            <div id="reward-material-tier-preview" class="small-note" style="margin:-4px 0 8px 84px;color:var(--cyan);">Material: Lv.1 → T1 (Lv.1–4)</div>
             <div class="field"><label>TIER</label>
               <select id="reward-tier">
                 <option value="normal">Normal</option>
@@ -519,21 +530,21 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <div class="section-label">CRYSTAL / WEAPON / REPAIR RULES</div>
             <div class="small-note" style="line-height:1.7">
               <b>Crystal drop starts at monster Lv.10+</b><br>
-              ช่วงระดับผลึก: ระดับ 1 = มอน Lv.10–19, ระดับ 2 = Lv.20–29, ระดับ 3 = Lv.30–39, ...<br>
-              ผลึกเศษเสี้ยวมานา ระดับ X: Common → Uncommon<br>
-              ผลึกมานาเข้มข้นต่ำ ระดับ X: Uncommon → Rare<br>
-              ผลึกมานาเข้มข้นกลาง ระดับ X: Rare → Epic<br>
-              ผลึกมานาเข้มข้นสูง ระดับ X: Epic → Unique<br>
-              เศษเสี้ยวแก่นมานา ระดับ X: Unique → Legendary<br>
+              Crystal Tier ใช้ช่วงเดียวกับ Monster Part: Lv.10–14 = T3, Lv.15–19 = T4, Lv.20–24 = T5, Lv.25–29 = T6, ...<br>
+              ผลึกเศษเสี้ยวมานา T{Tier}: Common → Uncommon<br>
+              ผลึกมานาเข้มข้นต่ำ T{Tier}: Uncommon → Rare<br>
+              ผลึกมานาเข้มข้นกลาง T{Tier}: Rare → Epic<br>
+              ผลึกมานาเข้มข้นสูง T{Tier}: Epic → Unique<br>
+              เศษเสี้ยวแก่นมานา T{Tier}: Unique → Legendary<br>
               Drop rate เดิม: Normal เศษเสี้ยว 1%, ต่ำ 0.2% | Elite เศษเสี้ยว 5%, ต่ำ 1%, กลาง 0.1% | Champion เศษเสี้ยว 100%×1, ต่ำ 10%, กลาง 1.5%, สูง 0.1% | Mini-boss เศษเสี้ยว 100%×2–4, ต่ำ 50%, กลาง 5%, สูง 1% | Boss เศษเสี้ยว 100%×6–10, ต่ำ 100%×2–4, กลาง 40%, สูง 5%<br>
               เศษเสี้ยวแก่นมานา: รองรับชื่อ/ราคา/Inventory แล้ว แต่ยังไม่ใส่เรทดรอปอัตโนมัติ จนกว่าจะกำหนดเรทดรอปแยก<br>
-              ผลึกไร้มานา: ต้องมีใน Inventory ก่อน จึงนับ kill; ฆ่าครบ 150 ตัวในช่วงระดับเดียวกัน → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานา ระดับเดียวกัน x1
+              ผลึกไร้มานา T{Tier}: ต้องมีใน Inventory ก่อนจึงนับ kill; ฆ่าครบ 150 ตัวใน Tier เดียวกัน → ใช้ผลึกไร้มานา Tier เดียวกัน 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานา Tier เดียวกัน ×1
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               Weapon ATK = (Lv×1.2)+5 × rarity<br>
               Weapon price = 75 + (Lv²×20); repair base: Common×1, Uncommon×2, Rare×3, Epic×4, Unique×5, Legendary×8<br>
               Crystal price: เศษเสี้ยว = Weapon base×0.25, เข้มข้นต่ำ = เศษเสี้ยว×5, เข้มข้นกลาง = เศษเสี้ยว×25, เข้มข้นสูง = เศษเสี้ยว×100, เศษเสี้ยวแก่นมานา = เศษเสี้ยว×500<br>
-              ผลึกไร้มานา price = ผลึกเศษเสี้ยวมานา×20% = Weapon base×0.05 (ระดับ 1–5 = มอน Lv.10–19 / 20–29 / 30–39 / 40–49 / 50–59)<br>
+              ผลึกไร้มานา price = ผลึกเศษเสี้ยวมานา×20% = B×0.05 โดย B ใช้เลเวลต้นช่วงของ Crystal Tier<br>
               Mana Pressure: มอนสูงกว่า 1 Lv = ตีเบาลง 5%, DEF มอน +5%, durability lost +10%, EXP +10%
             </div>
           </div>
@@ -556,45 +567,46 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               คุณสมบัติ Seal ปรับเองได้ในหน้า MONSTER SEAL และถูก link เข้า Combat Sim โดยตรง
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
-              <b>ระบบ Material Drop — Tier Grade / Craft Ceiling</b><br>
-              ใช้ชื่อเรียบง่าย: Normal Grade 1–5, Elite Grade 1–6, Champion Grade 1–7, Mini Boss Grade 1–8, Boss Grade 1–9. <b>Tier ของชิ้นส่วนแกนหลัก</b> เป็นตัวกำหนดเพดานแรงดันมานาและเพดานอัปเกรด ส่วน <b>Grade</b> เป็นคุณภาพภายใน Tier นั้น ใช้เพิ่มมูลค่า เสริม trait เพิ่มความเสถียร และลดโอกาสคราฟพัง<br>
-              เกณฑ์แกนหลัก: Normal ต้อง Grade 4–5 จึงคราฟ Common ได้และตัน Uncommon | Elite Grade 3–6 คราฟ Common ได้และตัน Rare | Champion Grade 2–7 คราฟ Common ได้และตัน Epic | Mini Boss Grade 1–8 คราฟ Common ได้และตัน Unique | Boss Grade 1–9 เริ่มคราฟ Uncommon และตัน Legendary<br>
-              ชิ้นส่วน Grade ต่ำกว่าขั้นแกนหลักยังมีค่า: ใช้ขาย ส่งเควส ทำยา บดเป็นวัตถุดิบเสริม หรือเสริมความเสถียร แต่ไม่ใช้เป็นแกนหลักอุปกรณ์ได้โดยตรง
+              <b>ระบบ Material Drop — Material Tier / Quality</b><br>
+              มอนสเตอร์ 1 ตัวดรอป Monster Part พื้นฐาน 1 ชิ้นเสมอ แล้วสุ่ม Quality 1–5 เพียงครั้งเดียว<br>
+              Material Tier = floor(Monster Lv ÷ 5) + 1. มอนต่างเลเวลที่อยู่ Tier และ Quality เดียวกันจะรวมเป็นกองเดียวกันใน Inventory<br>
+              ชื่อไอเทมมาตรฐาน: <b>Monster Part T{Tier} Quality {1–5}</b>. Monster Rank ไม่ติดในชื่อ แต่ใช้กำหนดโอกาสสุ่ม Quality หลังบ้าน
             </div>
             <table class="beh-table" style="margin-top:8px">
-              <thead><tr><th>Grade</th><th>ความหมาย</th><th>Base price</th></tr></thead>
+              <thead><tr><th>ช่วงเลเวลมอนสเตอร์</th><th>Material Tier</th><th>ตัวอย่างชื่อไอเทม</th></tr></thead>
               <tbody>
-                <tr><td>Grade 1</td><td>พื้นฐาน / ส่งเควส / บดเป็นวัตถุดิบเสริม</td><td>Lv×3</td></tr>
-                <tr><td>Grade 2</td><td>วัตถุดิบทั่วไป / ยา / เลือด / หนังดีขึ้น</td><td>Lv×5</td></tr>
-                <tr><td>Grade 3</td><td>ชิ้นส่วนเฉพาะทาง / เขี้ยว / เอ็น / เล็บ</td><td>Lv×8</td></tr>
-                <tr><td>Grade 4</td><td>ชิ้นส่วนคุณภาพสูง / เริ่มเป็นแกน Normal ได้</td><td>Lv×14</td></tr>
-                <tr><td>Grade 5</td><td>แกนย่อย / trait ชัด / Rare-grade support</td><td>Lv×25</td></tr>
-                <tr><td>Grade 6</td><td>แกนมานาเข้ม / Epic-grade support</td><td>Lv×42</td></tr>
-                <tr><td>Grade 7</td><td>แกนหลักระดับสูง / Unique-grade support</td><td>Lv×70</td></tr>
-                <tr><td>Grade 8</td><td>ชิ้นส่วนตำนานของ Mini Boss / Legendary support</td><td>Lv×115</td></tr>
-                <tr><td>Grade 9</td><td>ไม่มีข้อมูล / ประเมินไม่ได้ / Boss-only</td><td>Lv×180*</td></tr>
+                <tr><td>Lv.20–24</td><td>T5</td><td>Monster Part T5 Quality 1–5</td></tr>
+                <tr><td>Lv.25–29</td><td>T6</td><td>Monster Part T6 Quality 1–5</td></tr>
+                <tr><td>Lv.30–34</td><td>T7</td><td>Monster Part T7 Quality 1–5</td></tr>
+                <tr><td>Lv.35–39</td><td>T8</td><td>Monster Part T8 Quality 1–5</td></tr>
+                <tr><td>Lv.40–44</td><td>T9</td><td>Monster Part T9 Quality 1–5</td></tr>
               </tbody>
             </table>
             <table class="beh-table" style="margin-top:8px">
-              <thead><tr><th>Tier ของชิ้นส่วนแกนหลัก</th><th>Core grade</th><th>เริ่มคราฟ</th><th>อัปเกรดสูงสุด</th><th>ตัวคูณราคาขาย</th></tr></thead>
+              <thead><tr><th>Quality</th><th>ความหมาย</th><th>ราคาจาก B</th></tr></thead>
               <tbody>
-                <tr><td class="t-n">Normal Grade</td><td>4–5</td><td>Common</td><td>Uncommon</td><td>×1</td></tr>
-                <tr><td class="t-e">Elite Grade</td><td>3–6</td><td>Common</td><td>Rare</td><td>×2.2</td></tr>
-                <tr><td class="t-c">Champion Grade</td><td>2–7</td><td>Common</td><td>Epic</td><td>×4.5</td></tr>
-                <tr><td class="t-m">Mini Boss Grade</td><td>1–8</td><td>Common</td><td>Unique</td><td>×9</td></tr>
-                <tr><td class="t-b">Boss Grade</td><td>1–9</td><td>Uncommon</td><td>Legendary</td><td>×16</td></tr>
+                <tr><td>Quality 1</td><td>คุณภาพพื้นฐาน พบได้บ่อยที่สุด</td><td>B ÷ 100</td></tr>
+                <tr><td>Quality 2</td><td>คุณภาพดี วัตถุดิบใช้งานทั่วไป</td><td>B ÷ 50</td></tr>
+                <tr><td>Quality 3</td><td>คุณภาพสูง เริ่มมีมูลค่าชัดเจน</td><td>B ÷ 8</td></tr>
+                <tr><td>Quality 4</td><td>คุณภาพหายาก มูลค่าสูง</td><td>B ÷ 2</td></tr>
+                <tr><td>Quality 5</td><td>คุณภาพยอดเยี่ยมระดับสูงสุด</td><td>B × 2</td></tr>
               </tbody>
             </table>
             <table class="beh-table" style="margin-top:8px">
-              <thead><tr><th>Tier</th><th>G1</th><th>G2</th><th>G3</th><th>G4</th><th>G5</th><th>G6</th><th>G7</th><th>G8</th><th>G9</th></tr></thead>
+              <thead><tr><th>Monster Rank</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th></tr></thead>
               <tbody>
-                <tr><td class="t-n">Normal</td><td>100%</td><td>30%</td><td>8%</td><td>2%</td><td>0.3%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-                <tr><td class="t-e">Elite</td><td>100%</td><td>40%</td><td>18%</td><td>7%</td><td>1.5%</td><td>0.3%</td><td>—</td><td>—</td><td>—</td></tr>
-                <tr><td class="t-c">Champion</td><td>100%</td><td>65%</td><td>40%</td><td>18%</td><td>6%</td><td>1.5%</td><td>0.3%</td><td>—</td><td>—</td></tr>
-                <tr><td class="t-m">Mini Boss</td><td>100%×1–2</td><td>75%</td><td>50%</td><td>25%</td><td>10%</td><td>3%</td><td>0.8%</td><td>0.2%</td><td>—</td></tr>
-                <tr><td class="t-b">Boss</td><td>100%×3–5</td><td>100%×1–3</td><td>70%</td><td>40%</td><td>15%</td><td>5%</td><td>1.2%</td><td>0.3%</td><td>0.05%</td></tr>
+                <tr><td class="t-n">Normal</td><td>75%</td><td>23%</td><td>2%</td><td>0%</td><td>0%</td></tr>
+                <tr><td class="t-e">Elite</td><td>60%</td><td>30%</td><td>9%</td><td>1%</td><td>0%</td></tr>
+                <tr><td class="t-c">Champion</td><td>45%</td><td>33%</td><td>16%</td><td>5.5%</td><td>0.5%</td></tr>
+                <tr><td class="t-m">Mini Boss</td><td>10%</td><td>35%</td><td>35%</td><td>17%</td><td>3%</td></tr>
+                <tr><td class="t-b">Boss</td><td>5%</td><td>25%</td><td>35%</td><td>25%</td><td>10%</td></tr>
               </tbody>
             </table>
+            <div class="small-note" style="line-height:1.7;margin-top:8px">
+              <b>สูตรราคา</b><br>
+              L = เลเวลต้นช่วงของ Tier | B = 75 + 20 × L² | ปัดเป็นหลัก 10 copper<br>
+              ตัวอย่าง T5: L = 20 → B = 8,075 C → Q1 80 C | Q2 160 C | Q3 1,010 C | Q4 4,040 C | Q5 16,150 C
+            </div>
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>Tier</th><th>ศิลาอาวุธ</th><th>ศิลาเกราะ</th><th>ตรามอนสเตอร์</th></tr></thead>
               <tbody>
@@ -609,19 +621,24 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
 
           <div style="background:var(--bg);border:1px solid var(--border);padding:10px;">
             <div class="section-label">BUY EMPTY MANA CRYSTAL</div>
-            <div class="field"><label>LEVEL</label>
+            <div class="field"><label>TIER</label>
               <select id="empty-crystal-lv" onchange="emptyCrystalUpdatePrice()">
-                <option value="1">ระดับ 1 → มอน Lv.10–19</option>
-                <option value="2">ระดับ 2 → มอน Lv.20–29</option>
-                <option value="3">ระดับ 3 → มอน Lv.30–39</option>
-                <option value="4">ระดับ 4 → มอน Lv.40–49</option>
-                <option value="5">ระดับ 5 → มอน Lv.50–59</option>
+                <option value="3">T3 → มอน Lv.10–14</option>
+                <option value="4">T4 → มอน Lv.15–19</option>
+                <option value="5">T5 → มอน Lv.20–24</option>
+                <option value="6">T6 → มอน Lv.25–29</option>
+                <option value="7">T7 → มอน Lv.30–34</option>
+                <option value="8">T8 → มอน Lv.35–39</option>
+                <option value="9">T9 → มอน Lv.40–44</option>
+                <option value="10">T10 → มอน Lv.45–49</option>
+                <option value="11">T11 → มอน Lv.50–54</option>
+                <option value="12">T12 → มอน Lv.55–59</option>
               </select>
             </div>
             <div class="field"><label>QTY</label><input type="number" id="empty-crystal-qty" value="1" min="1" oninput="emptyCrystalUpdatePrice()"></div>
             <div class="result-item" style="margin-top:6px;"><span class="r-label">UNIT / TOTAL</span><span class="r-val gold" id="empty-crystal-price-show">—</span></div>
             <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;margin-top:8px;" onclick="buyEmptyCrystal()">BUY → INVENTORY</button>
-            <div class="small-note">ราคา = ผลึกเศษเสี้ยวมานา ×20% = Weapon base ×0.05. ต้องมีผลึกไร้มานาใน Inventory ก่อนจึงนับ kill; ครบ 150 ตัว → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานา x1</div>
+            <div class="small-note">ราคา = B ของ Crystal Tier ×0.05. ต้องมีผลึกไร้มานา Tier ตรงกันก่อนจึงนับ kill; ครบ 150 ตัว → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานา Tier เดียวกัน ×1</div>
             <div id="empty-crystal-trace" style="font-family:var(--mono);font-size:0.66rem;color:var(--text-dim);margin-top:8px;background:var(--panel);border:1px solid var(--border);padding:6px;line-height:1.6;">Empty Crystal Trace: —</div>
           </div>
 
@@ -796,7 +813,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
       <div class="card gold" style="grid-column:1/-1">
         <div class="card-title gold">EMPTY MANA CRYSTAL TRACE</div>
         <div id="empty-crystal-trace-inv" style="font-family:var(--mono);font-size:0.70rem;color:var(--text-dim);background:var(--bg);border:1px solid var(--border);padding:8px;line-height:1.7;">Empty Crystal Trace: —</div>
-        <div class="small-note">นับจาก Combat Sim และ Reward/Montage เฉพาะเมื่อมีผลึกไร้มานาระดับตรงกับช่วงมอนใน Inventory (ระดับ 1 = Lv.10–19) | ครบ 150 kill → ใช้ผลึกไร้มานา 1 ก้อน แล้วเพิ่มผลึกเศษเสี้ยวมานา ระดับเดียวกัน 1 ก้อน</div>
+        <div class="small-note">นับจาก Combat Sim และ Reward/Montage เฉพาะเมื่อมีผลึกไร้มานา Tier ตรงกับมอนใน Inventory | ครบ 150 kill ใน Tier เดียวกัน → ใช้ผลึกไร้มานา 1 ก้อน แล้วเพิ่มผลึกเศษเสี้ยวมานา Tier เดียวกัน 1 ก้อน</div>
       </div>
 
       <div class="card purple" style="grid-column:1/-1">
@@ -838,13 +855,18 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
           <div class="inv-add-grid">
             <div>
               <div class="section-label" style="margin-bottom:4px">ITEM NAME</div>
-              <input id="inv-add-name" value="ชิ้นส่วนมอนสเตอร์" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--thai);font-size:0.82rem;outline:none;">
+              <input id="inv-add-name" value="Monster Part T1 Quality 1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--thai);font-size:0.82rem;outline:none;">
             </div>
             <div>
               <div class="section-label" style="margin-bottom:4px">TYPE</div>
               <select id="inv-add-type" onchange="invTypeChanged()" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
-                <option value="monster_part">Monster Part Lv×5</option>
-                <option value="elite_monster_part">Elite Part Lv×10</option>
+                <option value="monster_part_q1">Monster Part Quality 1</option>
+                <option value="monster_part_q2">Monster Part Quality 2</option>
+                <option value="monster_part_q3">Monster Part Quality 3</option>
+                <option value="monster_part_q4">Monster Part Quality 4</option>
+                <option value="monster_part_q5">Monster Part Quality 5</option>
+                <option value="monster_part">Legacy Monster Part</option>
+                <option value="elite_monster_part">Legacy Elite Part</option>
                 <option value="ore">Ore Lv×10</option>
                 <option value="hide_bone">Hide/Bone Lv×6</option>
                 <option value="rare_material">Rare Material Lv×20</option>
@@ -876,8 +898,8 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               </select>
             </div>
             <div>
-              <div class="section-label" style="margin-bottom:4px">LV</div>
-              <input id="inv-add-lv" type="number" value="1" min="1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
+              <div class="section-label" style="margin-bottom:4px">MON LV</div>
+              <input id="inv-add-lv" type="number" value="1" min="1" oninput="invTypeChanged()" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
             </div>
             <div>
               <div class="section-label" style="margin-bottom:4px">QTY</div>
@@ -888,12 +910,12 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               <input id="inv-add-market" type="number" value="100" min="0" step="5" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
             </div>
             <div>
-              <div class="section-label" style="margin-bottom:4px">UNIT FIX</div>
+              <div class="section-label" style="margin-bottom:4px">กำหนดราคาขาย/ชิ้น</div>
               <input id="inv-add-unit-override" type="number" value="0" min="0" placeholder="0=Auto" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--gold);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
             </div>
             <button class="btn sm gold-btn" style="margin-top:0;height:32px;" onclick="invAddRow()">+ ADD</button>
           </div>
-          <div class="small-note">Unit Fix = ตั้งราคาขายต่อชิ้นเอง | Market % = ตัวคูณตลาดเฉพาะ item ถ้า Unit Fix เป็น 0 จะคำนวณจากสูตร auto × market%</div>
+          <div class="small-note">Monster Part Quality 1–5 ใช้ช่อง LV เป็นเลเวลมอนเพื่อหา Material Tier อัตโนมัติ และตั้งชื่อ/ราคาให้เอง | กำหนดราคาขาย/ชิ้น = ใส่ 0 เพื่อใช้ราคาอัตโนมัติ | Market % = ตัวคูณตลาด</div>
         </div>
 
         <div class="inv-panel-box">
@@ -905,11 +927,17 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             </div>
             <div class="small-note">ใช้ปรับราคาของทั้งหมดที่ไม่ได้ล็อก Unit Fix เช่น demand วันนี้ +20% หรือของตลาดล้น -30%</div>
             <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;margin-top:0" onclick="invApplyGlobalMarket()">APPLY TO AUTO ITEMS</button>
-            <button class="btn sm" style="width:auto;padding:7px 12px;margin-top:0" onclick="invClearUnitOverrides()">CLEAR UNIT FIX</button>
+            <button class="btn sm" style="width:auto;padding:7px 12px;margin-top:0" onclick="invClearUnitOverrides()">ล้างราคาที่กำหนดเอง</button>
           </div>
         </div>
 
-        <div class="small-note">ราคาอัตโนมัติ: Unit Price = Item Lv × Base/Lv × Rarity Multiplier × Market% | กดแก้ Unit Sell หรือ Market% รายแถวได้ทันที</div>
+        <div class="small-note">ราคา Monster Part: คำนวณจาก Material Tier + Quality โดยตรงตาม B = 75 + 20×L² แล้วคูณ Market% | ของระบบเก่าแสดงเป็น Legacy และยังขาย/โหลดเซฟได้</div>
+        <div class="inv-panel-box"><div class="section-label">FILTER</div><div class="inv-filter-row">
+          <div><div class="section-label" style="margin-bottom:4px">CATEGORY</div><select id="inv-filter-category" onchange="invRender()" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:.75rem"><option value="all">All</option><option value="material">Monster Parts</option><option value="crystal">Crystals</option><option value="stone">Stones</option><option value="seal">Seals / Plates</option><option value="custom">Other / Custom</option></select></div>
+          <div><div class="section-label" style="margin-bottom:4px">TIER</div><input id="inv-filter-tier" type="number" min="0" value="0" onchange="invRender()" placeholder="0 = All" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:.75rem"></div>
+          <div><div class="section-label" style="margin-bottom:4px">LOCK</div><select id="inv-filter-lock" onchange="invRender()" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:.75rem"><option value="all">All</option><option value="locked">Locked</option><option value="unlocked">Unlocked</option></select></div>
+        </div></div>
+        <div class="small-note" style="margin-bottom:6px">ราคาขาย/ชิ้น = ราคาสุทธิของของ 1 ชิ้นหลังคูณ Market% แล้ว | Total = ราคาขาย/ชิ้น × จำนวน</div>
         <div class="inv-table-wrap">
           <table class="beh-table" id="inv-table">
             <thead>
@@ -917,13 +945,12 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
                 <th style="min-width:190px">Item</th>
                 <th>Type</th>
                 <th>Rarity</th>
-                <th>Lv</th>
+                <th>Tier / Lv</th>
                 <th>Qty</th>
-                <th>Base/Lv</th>
                 <th>Market%</th>
-                <th>Auto</th>
-                <th>Unit Sell</th>
+                <th>ราคาขาย/ชิ้น</th>
                 <th>Total</th>
+                <th>Lock</th>
                 <th></th>
               </tr>
             </thead>
@@ -936,7 +963,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;">
             <button class="btn sm" style="width:auto;padding:7px 12px;" onclick="invCopy()">COPY LIST</button>
-            <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;" onclick="invSellAll()">SELL ALL → MONEY</button>
+            <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;" onclick="invSellAll()">SELL UNLOCKED → MONEY</button>
             <button class="btn sm red-btn" style="width:auto;padding:7px 12px;" onclick="invClear()">CLEAR</button>
           </div>
         </div>
@@ -2487,104 +2514,115 @@ function handleMonsterFeint(strategy, p, m, effVit, lines, idx, total){
 }
 
 
-// ══ MONSTER MATERIAL DROP SYSTEM: TIER GRADE / CRAFT CEILING ══
-// Canon logic:
-// - Tier of the main material sets mana-pressure ceiling / upgrade ceiling.
-// - Grade is quality inside that tier; higher Grade improves value, trait, stability, and crafting success.
-// - Core material thresholds:
-//   Normal G4–G5 → craft Common, max Uncommon
-//   Elite G3–G6 → craft Common, max Rare
-//   Champion G2–G7 → craft Common, max Epic
-//   Mini Boss G1–G8 → craft Common, max Unique
-//   Boss G1–G9 → craft Uncommon, max Legendary; G9 is unknown / unassessable in-world.
-const MATERIAL_DROP_GRADES = [
-  { key:'g1', type:'mat_g1', name:'Grade 1 Material', grade:'Grade 1', base:3 },
-  { key:'g2', type:'mat_g2', name:'Grade 2 Material', grade:'Grade 2', base:5 },
-  { key:'g3', type:'mat_g3', name:'Grade 3 Material', grade:'Grade 3', base:8 },
-  { key:'g4', type:'mat_g4', name:'Grade 4 Material', grade:'Grade 4', base:14 },
-  { key:'g5', type:'mat_g5', name:'Grade 5 Material', grade:'Grade 5', base:25 },
-  { key:'g6', type:'mat_g6', name:'Grade 6 Material', grade:'Grade 6', base:42 },
-  { key:'g7', type:'mat_g7', name:'Grade 7 Material', grade:'Grade 7', base:70 },
-  { key:'g8', type:'mat_g8', name:'Grade 8 Material', grade:'Grade 8', base:115 },
-  { key:'g9', type:'mat_g9', name:'Grade 9 Material', grade:'Grade 9', base:180 },
-];
-const MATERIAL_TIER_RULES = {
-  normal: {
-    label:'Normal', gradePrefix:'Normal Grade', startRarity:'Common', maxUpgrade:'Uncommon', coreMin:4, coreMax:5, valueMult:1,
-    g1:{chance:1.00, qty:[1,1]}, g2:{chance:0.30, qty:[1,1]}, g3:{chance:0.08, qty:[1,1]}, g4:{chance:0.02, qty:[1,1]}, g5:{chance:0.003, qty:[1,1]}
-  },
-  elite: {
-    label:'Elite', gradePrefix:'Elite Grade', startRarity:'Common', maxUpgrade:'Rare', coreMin:3, coreMax:6, valueMult:2.2,
-    g1:{chance:1.00, qty:[1,1]}, g2:{chance:0.40, qty:[1,1]}, g3:{chance:0.18, qty:[1,1]}, g4:{chance:0.07, qty:[1,1]}, g5:{chance:0.015, qty:[1,1]}, g6:{chance:0.003, qty:[1,1]}
-  },
-  champion: {
-    label:'Champion', gradePrefix:'Champion Grade', startRarity:'Common', maxUpgrade:'Epic', coreMin:2, coreMax:7, valueMult:4.5,
-    g1:{chance:1.00, qty:[1,1]}, g2:{chance:0.65, qty:[1,1]}, g3:{chance:0.40, qty:[1,1]}, g4:{chance:0.18, qty:[1,1]}, g5:{chance:0.06, qty:[1,1]}, g6:{chance:0.015, qty:[1,1]}, g7:{chance:0.003, qty:[1,1]}
-  },
-  miniboss: {
-    label:'Mini boss', gradePrefix:'Mini Boss Grade', startRarity:'Common', maxUpgrade:'Unique', coreMin:1, coreMax:8, valueMult:9,
-    g1:{chance:1.00, qty:[1,2]}, g2:{chance:0.75, qty:[1,1]}, g3:{chance:0.50, qty:[1,1]}, g4:{chance:0.25, qty:[1,1]}, g5:{chance:0.10, qty:[1,1]}, g6:{chance:0.03, qty:[1,1]}, g7:{chance:0.008, qty:[1,1]}, g8:{chance:0.002, qty:[1,1]}
-  },
-  boss: {
-    label:'Boss', gradePrefix:'Boss Grade', startRarity:'Uncommon', maxUpgrade:'Legendary', coreMin:1, coreMax:9, valueMult:16,
-    g1:{chance:1.00, qty:[3,5]}, g2:{chance:1.00, qty:[1,3]}, g3:{chance:0.70, qty:[1,2]}, g4:{chance:0.40, qty:[1,1]}, g5:{chance:0.15, qty:[1,1]}, g6:{chance:0.05, qty:[1,1]}, g7:{chance:0.012, qty:[1,1]}, g8:{chance:0.003, qty:[1,1]}, g9:{chance:0.0005, qty:[1,1]}
-  }
+// ══ MONSTER MATERIAL DROP SYSTEM: 5-LEVEL TIER / SINGLE QUALITY ROLL ══
+// One kill always creates exactly one Monster Part. Monster Rank only changes the Quality roll.
+const MATERIAL_QUALITY_RATES = {
+  normal:   [75, 23, 2, 0, 0],
+  elite:    [60, 30, 9, 1, 0],
+  champion: [45, 33, 16, 5.5, 0.5],
+  miniboss: [10, 35, 35, 17, 3],
+  boss:     [5, 25, 35, 25, 10]
 };
+const MATERIAL_QUALITY_PRICE_FACTORS = {1:1/100, 2:1/50, 3:1/8, 4:1/2, 5:2};
 
-function materialTierRule(tier){ return MATERIAL_TIER_RULES[tier] || MATERIAL_TIER_RULES.normal; }
-function materialDropDisplayName(grade, tier){
-  const rule=materialTierRule(tier);
-  const n=(grade.key||'g1').replace('g','');
-  return `${rule.gradePrefix} ${n} Part`;
+function normalizeMonsterLevel(monsterLv){
+  const numeric=Number(monsterLv);
+  return Math.max(1, Math.floor(Number.isFinite(numeric) ? numeric : 1));
 }
-function materialRollOneKill(tier, lv){
-  const rule=materialTierRule(tier);
-  const out=[];
-  for(const grade of MATERIAL_DROP_GRADES){
-    const gRule=rule[grade.key];
-    if(!gRule) continue;
-    if(Math.random() < (+gRule.chance||0)){
-      const qMin=Math.max(1,Math.round((gRule.qty&&gRule.qty[0])||1));
-      const qMax=Math.max(qMin,Math.round((gRule.qty&&gRule.qty[1])||qMin));
-      const qty=randInt(qMin,qMax);
-      out.push({
-        key:grade.key,
-        name:materialDropDisplayName(grade,tier),
-        type:grade.type,
-        rarity:'common',
-        lv:lv,
-        qty:qty,
-        base:(+grade.base||0)*(+rule.valueMult||1),
-        materialTier:rule.label,
-        grade:grade.grade,
-        startRarity:rule.startRarity,
-        maxUpgrade:rule.maxUpgrade,
-        coreMin:rule.coreMin,
-        coreMax:rule.coreMax,
-        tier:rule.label
-      });
-    }
+function materialTierFromMonsterLevel(monsterLv){
+  const lv=normalizeMonsterLevel(monsterLv);
+  // Canon bands: Lv.1–4=T1, Lv.5–9=T2, Lv.10–14=T3, Lv.15–19=T4, Lv.20–24=T5.
+  return Math.floor(lv/5)+1;
+}
+function materialTierStartLevel(materialTier){
+  const tier=Math.max(1,Math.floor(+materialTier||1));
+  return tier===1 ? 1 : (tier-1)*5;
+}
+function materialTierEndLevel(materialTier){
+  const tier=Math.max(1,Math.floor(+materialTier||1));
+  return tier*5-1;
+}
+function materialTierRangeText(materialTier){
+  return `Lv.${materialTierStartLevel(materialTier)}–${materialTierEndLevel(materialTier)}`;
+}
+function updateRewardMaterialTierPreview(){
+  const input=document.getElementById('reward-mlv');
+  const box=document.getElementById('reward-material-tier-preview');
+  if(!input || !box) return;
+  const lv=normalizeMonsterLevel(input.value);
+  const tier=materialTierFromMonsterLevel(lv);
+  box.textContent=`Material: Lv.${lv} → T${tier} (${materialTierRangeText(tier)})`;
+}
+function materialBasePrice(materialTier){
+  const L=materialTierStartLevel(materialTier);
+  return 75 + (20*L*L);
+}
+function materialQualityFromType(type){
+  const m=String(type||'').match(/^monster_part_q([1-5])$/);
+  return m ? Number(m[1]) : 0;
+}
+function materialTypeFromQuality(quality){
+  const q=Math.max(1,Math.min(5,Math.round(+quality||1)));
+  return `monster_part_q${q}`;
+}
+function isMonsterPartQualityType(type){ return materialQualityFromType(type)>0; }
+function materialDropDisplayName(materialTier, quality){
+  const tier=Math.max(1,Math.floor(+materialTier||1));
+  const q=Math.max(1,Math.min(5,Math.round(+quality||1)));
+  return `Monster Part T${tier} Quality ${q}`;
+}
+function getMonsterPartUnitPrice(materialTier, quality){
+  const q=Math.max(1,Math.min(5,Math.round(+quality||1)));
+  const raw=materialBasePrice(materialTier)*(MATERIAL_QUALITY_PRICE_FACTORS[q]||0);
+  return cleanRoundCopper(raw);
+}
+function materialRollQuality(monsterRank){
+  const rates=MATERIAL_QUALITY_RATES[monsterRank]||MATERIAL_QUALITY_RATES.normal;
+  const roll=Math.random()*100;
+  let cumulative=0;
+  for(let i=0;i<rates.length;i++){
+    cumulative += Number(rates[i]||0);
+    if(roll < cumulative) return i+1;
   }
-  return out;
+  return 1;
+}
+function materialRollOneKill(monsterRank, monsterLv){
+  const normalizedMonsterLv=normalizeMonsterLevel(monsterLv);
+  const materialTier=materialTierFromMonsterLevel(normalizedMonsterLv);
+  const quality=materialRollQuality(monsterRank);
+  return [{
+    key:`t${materialTier}q${quality}`,
+    name:materialDropDisplayName(materialTier,quality),
+    type:materialTypeFromQuality(quality),
+    rarity:'common',
+    lv:materialTierStartLevel(materialTier),
+    monsterLv:normalizedMonsterLv,
+    qty:1,
+    base:0,
+    materialTier,
+    quality,
+    monsterRank:String(monsterRank||'normal'),
+    legacy:false
+  }];
 }
 function aggregateMaterialDrops(drops){
   const map=new Map();
   for(const d of drops){
-    const key=[d.type,d.lv,d.base,d.name,d.materialTier,d.grade].join('|');
+    const key=[d.materialTier,d.quality].join('|');
     if(!map.has(key)) map.set(key,{...d});
     else map.get(key).qty += d.qty;
   }
   return [...map.values()];
 }
-function rollMaterialDrops(tier, lv, kills){
+function rollMaterialDrops(monsterRank, monsterLv, kills){
   let drops=[];
   kills=Math.max(1,Math.round(+kills||1));
-  lv=Math.max(1,Math.round(+lv||1));
-  for(let i=0;i<kills;i++) drops.push(...materialRollOneKill(tier, lv));
+  monsterLv=Math.max(1,Math.round(+monsterLv||1));
+  for(let i=0;i<kills;i++) drops.push(...materialRollOneKill(monsterRank, monsterLv));
   return aggregateMaterialDrops(drops);
 }
-function addMaterialDropsToInventory(tier, lv, kills){
-  const drops=rollMaterialDrops(tier, lv, kills);
+function addMaterialDropsToInventory(monsterRank, monsterLv, kills){
+  const drops=rollMaterialDrops(monsterRank, monsterLv, kills);
   let total=0;
   for(const d of drops) total += invPush(d);
   return {drops,total};
@@ -2593,18 +2631,14 @@ function materialDropSummary(drops){
   if(!drops || !drops.length) return 'Material: none';
   return 'Material: ' + drops.map(d=>`${d.name} ×${d.qty}`).join(', ');
 }
-function getKillTrashReport(tier, lv){
-  const rule=materialTierRule(tier);
-  const parts=MATERIAL_DROP_GRADES.filter(g=>!!rule[g.key]).map(g=>{
-    const gr=rule[g.key];
-    const ch=Math.round((+gr.chance||0)*10000)/100;
-    const qty=(gr.qty&&gr.qty[0]!==gr.qty[1])?`×${gr.qty[0]}–${gr.qty[1]}`:`×${(gr.qty&&gr.qty[0])||1}`;
-    const n=(g.key||'g1').replace('g','');
-    return `G${n} ${ch}% ${qty} (~Lv×${Math.round(g.base*rule.valueMult)})`;
-  });
+function getKillTrashReport(monsterRank, monsterLv){
+  const materialTier=materialTierFromMonsterLevel(monsterLv);
+  const rates=MATERIAL_QUALITY_RATES[monsterRank]||MATERIAL_QUALITY_RATES.normal;
+  const rateText=rates.map((rate,i)=>`Q${i+1} ${rate}% (${getMonsterPartUnitPrice(materialTier,i+1)}C)`).join(' | ');
   return {
-    commonName:`${rule.gradePrefix} 1 Part`, commonValue:lv*3*rule.valueMult,
-    text:`Loot report: ${rule.label} → ${rule.gradePrefix} | core G${rule.coreMin}–G${rule.coreMax} | craft ${rule.startRarity} → ${rule.maxUpgrade} | Drop table → ${parts.join(' | ')}`
+    commonName:materialDropDisplayName(materialTier,1),
+    commonValue:getMonsterPartUnitPrice(materialTier,1),
+    text:`Loot report: ${String(monsterRank||'normal')} | T${materialTier} ${materialTierRangeText(materialTier)} | 1 part/kill | ${rateText}`
   };
 }
 
@@ -3205,17 +3239,22 @@ function moneySubSimple(){
 // ══ INVENTORY SYSTEM ══
 let inventoryRows = [];
 const INV_TYPE_BASE = {
-  monster_part: { label:'Monster Part', base:5 },
-  elite_monster_part: { label:'Elite Part', base:10 },
-  mat_g1: { label:'Material Grade 1', base:3 },
-  mat_g2: { label:'Material Grade 2', base:5 },
-  mat_g3: { label:'Material Grade 3', base:8 },
-  mat_g4: { label:'Material Grade 4', base:14 },
-  mat_g5: { label:'Material Grade 5', base:25 },
-  mat_g6: { label:'Material Grade 6', base:42 },
-  mat_g7: { label:'Material Grade 7', base:70 },
-  mat_g8: { label:'Material Grade 8', base:115 },
-  mat_g9: { label:'Material Grade 9', base:180 },
+  monster_part_q1: { label:'Monster Part Quality 1', base:0 },
+  monster_part_q2: { label:'Monster Part Quality 2', base:0 },
+  monster_part_q3: { label:'Monster Part Quality 3', base:0 },
+  monster_part_q4: { label:'Monster Part Quality 4', base:0 },
+  monster_part_q5: { label:'Monster Part Quality 5', base:0 },
+  monster_part: { label:'Legacy: Monster Part', base:5, legacy:true },
+  elite_monster_part: { label:'Legacy: Elite Part', base:10, legacy:true },
+  mat_g1: { label:'Legacy: Material Grade 1', base:3, legacy:true },
+  mat_g2: { label:'Legacy: Material Grade 2', base:5, legacy:true },
+  mat_g3: { label:'Legacy: Material Grade 3', base:8, legacy:true },
+  mat_g4: { label:'Legacy: Material Grade 4', base:14, legacy:true },
+  mat_g5: { label:'Legacy: Material Grade 5', base:25, legacy:true },
+  mat_g6: { label:'Legacy: Material Grade 6', base:42, legacy:true },
+  mat_g7: { label:'Legacy: Material Grade 7', base:70, legacy:true },
+  mat_g8: { label:'Legacy: Material Grade 8', base:115, legacy:true },
+  mat_g9: { label:'Legacy: Material Grade 9', base:180, legacy:true },
   ore: { label:'Ore', base:10 },
   hide_bone: { label:'Hide/Bone', base:6 },
   rare_material: { label:'Rare Material', base:20 },
@@ -3245,78 +3284,90 @@ const INV_RARITY = {
 function invTypeChanged(){
   const type=document.getElementById('inv-add-type').value;
   const name=document.getElementById('inv-add-name');
-  if(type==='monster_part') name.value='ชิ้นส่วนมอนสเตอร์';
-  else if(type==='elite_monster_part') name.value='ชิ้นส่วนมอนสเตอร์อีลีท';
-  else if(type==='mat_g1') name.value='Grade 1 Material';
-  else if(type==='mat_g2') name.value='Grade 2 Material';
-  else if(type==='mat_g3') name.value='Grade 3 Material';
-  else if(type==='mat_g4') name.value='Grade 4 Material';
-  else if(type==='mat_g5') name.value='Grade 5 Material';
-  else if(type==='mat_g6') name.value='Grade 6 Material';
-  else if(type==='mat_g7') name.value='Grade 7 Material';
-  else if(type==='mat_g8') name.value='Grade 8 Material';
-  else if(type==='mat_g9') name.value='Grade 9 Material';
+  const rarity=document.getElementById('inv-add-rarity');
+  const q=materialQualityFromType(type);
+  if(q){
+    const monLv=Math.max(1,Math.round(+document.getElementById('inv-add-lv')?.value||1));
+    const tier=materialTierFromMonsterLevel(monLv);
+    name.value=materialDropDisplayName(tier,q);
+    if(rarity) rarity.value='common';
+  }
+  else if(type==='monster_part') name.value='Legacy Monster Part';
+  else if(type==='elite_monster_part') name.value='Legacy Elite Part';
+  else if(type==='mat_g1') name.value='Legacy Grade 1 Material';
+  else if(type==='mat_g2') name.value='Legacy Grade 2 Material';
+  else if(type==='mat_g3') name.value='Legacy Grade 3 Material';
+  else if(type==='mat_g4') name.value='Legacy Grade 4 Material';
+  else if(type==='mat_g5') name.value='Legacy Grade 5 Material';
+  else if(type==='mat_g6') name.value='Legacy Grade 6 Material';
+  else if(type==='mat_g7') name.value='Legacy Grade 7 Material';
+  else if(type==='mat_g8') name.value='Legacy Grade 8 Material';
+  else if(type==='mat_g9') name.value='Legacy Grade 9 Material';
   else if(type==='ore') name.value='แร่';
   else if(type==='hide_bone') name.value='หนัง/กระดูก';
   else if(type==='rare_material') name.value='วัตถุดิบหายาก';
   else if(type==='elite_rare_material') name.value='วัตถุดิบหายากอีลีท';
-  else if(type==='crystal_shard') name.value='ผลึกเศษเสี้ยวมานา ระดับ 1';
-  else if(type==='crystal_low') name.value='ผลึกมานาเข้มข้นต่ำ ระดับ 1';
-  else if(type==='crystal_mid') name.value='ผลึกมานาเข้มข้นกลาง ระดับ 1';
-  else if(type==='crystal_high') name.value='ผลึกมานาเข้มข้นสูง ระดับ 1';
-  else if(type==='crystal_core') name.value='เศษเสี้ยวแก่นมานา ระดับ 1';
+  else if(type==='crystal_shard') { const lv=Math.max(10,Math.round(+document.getElementById('inv-add-lv')?.value||10)); name.value=crystalDisplayName('ผลึกเศษเสี้ยวมานา', crystalTierFromMonsterLevel(lv), true); if(rarity) rarity.value='common'; }
+  else if(type==='crystal_low') { const lv=Math.max(10,Math.round(+document.getElementById('inv-add-lv')?.value||10)); name.value=crystalDisplayName('ผลึกมานาเข้มข้นต่ำ', crystalTierFromMonsterLevel(lv), true); if(rarity) rarity.value='common'; }
+  else if(type==='crystal_mid') { const lv=Math.max(10,Math.round(+document.getElementById('inv-add-lv')?.value||10)); name.value=crystalDisplayName('ผลึกมานาเข้มข้นกลาง', crystalTierFromMonsterLevel(lv), true); if(rarity) rarity.value='common'; }
+  else if(type==='crystal_high') { const lv=Math.max(10,Math.round(+document.getElementById('inv-add-lv')?.value||10)); name.value=crystalDisplayName('ผลึกมานาเข้มข้นสูง', crystalTierFromMonsterLevel(lv), true); if(rarity) rarity.value='common'; }
+  else if(type==='crystal_core') { const lv=Math.max(10,Math.round(+document.getElementById('inv-add-lv')?.value||10)); name.value=crystalDisplayName('เศษเสี้ยวแก่นมานา', crystalTierFromMonsterLevel(lv), true); if(rarity) rarity.value='common'; }
   else if(type==='stone_weapon') name.value='ศิลาเสริมอาวุธ';
   else if(type==='stone_armor') name.value='ศิลาเสริมเกราะ';
   else if(type==='monster_seal_weapon') name.value='ตรามอนสเตอร์ [อาวุธ]';
   else if(type==='monster_seal_armor') name.value='ตรามอนสเตอร์ [เกราะ]';
   else if(type==='seal_plate_weapon') name.value='แผ่นตราวงจร [อาวุธ]';
   else if(type==='seal_plate_armor') name.value='แผ่นตราวงจร [เกราะ]';
-  else if(type==='empty_crystal') name.value='ผลึกไร้มานา';
+  else if(type==='empty_crystal') { const lv=Math.max(10,Math.round(+document.getElementById('inv-add-lv')?.value||10)); name.value=crystalDisplayName('ผลึกไร้มานา', crystalTierFromMonsterLevel(lv), true); if(rarity) rarity.value='common'; }
   else name.value='Custom Item';
 }
-function getCrystalEquipLv(monLv){
-  const lv=Math.max(10,+monLv||10);
-  // Crystal band: ระดับ 1 = monster Lv.10–19, ระดับ 2 = Lv.20–29, ...
-  return 10 + Math.floor((lv-10)/10)*10;
+
+function crystalTierFromMonsterLevel(monLv){
+  return materialTierFromMonsterLevel(Math.max(10,normalizeMonsterLevel(monLv)));
 }
-function emptyCrystalEquipLv(level){
-  level=Math.max(1,Math.min(5,Math.round(+level||1)));
-  return 10 + ((level-1)*10);
+function crystalTierStartLevel(tier){ return materialTierStartLevel(Math.max(3,Math.round(+tier||3))); }
+function crystalTierEndLevel(tier){ return materialTierEndLevel(Math.max(3,Math.round(+tier||3))); }
+function crystalTierRangeText(tier){ return `Lv.${crystalTierStartLevel(tier)}–${crystalTierEndLevel(tier)}`; }
+function isTieredCrystalType(type){
+  return ['crystal_shard','crystal_low','crystal_mid','crystal_high','crystal_core','empty_crystal'].includes(String(type||''));
 }
-function emptyCrystalUnitPrice(level){
-  const equipLv=emptyCrystalEquipLv(level);
-  return cleanRoundCopper(getEquipmentBasePrice('weapon', equipLv)*0.05);
+function crystalBaseName(type){
+  return ({crystal_shard:'ผลึกเศษเสี้ยวมานา',crystal_low:'ผลึกมานาเข้มข้นต่ำ',crystal_mid:'ผลึกมานาเข้มข้นกลาง',crystal_high:'ผลึกมานาเข้มข้นสูง',crystal_core:'เศษเสี้ยวแก่นมานา',empty_crystal:'ผลึกไร้มานา'})[type]||'ผลึกมานา';
 }
 function crystalPriceFactor(type){
+  if(type==='empty_crystal') return 0.05;
   if(type==='crystal_shard') return 0.25;
-  if(type==='crystal_low') return 1.25;      // shard ×5
-  if(type==='crystal_mid') return 6.25;      // shard ×25
-  if(type==='crystal_high') return 25;       // shard ×100
-  if(type==='crystal_core') return 125;      // shard ×500
+  if(type==='crystal_low') return 1.25;
+  if(type==='crystal_mid') return 6.25;
+  if(type==='crystal_high') return 25;
+  if(type==='crystal_core') return 125;
   return null;
 }
-function getCrystalUnitPrice(type, monLv){
+function getCrystalUnitPrice(type, crystalTier){
   const factor=crystalPriceFactor(type);
   if(factor===null) return null;
-  const equipLv=getCrystalEquipLv(monLv);
-  return cleanRoundCopper(getEquipmentBasePrice('weapon', equipLv)*factor);
+  const tier=Math.max(3,Math.round(+crystalTier||3));
+  return cleanRoundCopper(materialBasePrice(tier)*factor);
 }
-function getCrystalBandLevel(monLv){
-  const equipLv=getCrystalEquipLv(monLv);
-  const band=Math.floor((equipLv-10)/10)+1;
-  return Math.max(1, band);
-}
-function crystalDisplayName(baseName, monLv){
-  return `${baseName} ระดับ ${getCrystalBandLevel(monLv)}`;
+function emptyCrystalUnitPrice(crystalTier){ return getCrystalUnitPrice('empty_crystal',crystalTier); }
+function crystalDisplayName(baseName, crystalTier, tierIsDirect){
+  const tier=tierIsDirect ? Math.max(3,Math.round(+crystalTier||3)) : crystalTierFromMonsterLevel(crystalTier);
+  return `${baseName} T${tier}`;
 }
 function invAutoUnitPrice(row){
-  if(row.type==='empty_crystal') return emptyCrystalUnitPrice(row.lv);
+  if(isMonsterPartQualityType(row.type)){
+    const q=Math.max(1,Math.min(5,Math.round(+row.quality||materialQualityFromType(row.type)||1)));
+    const tier=Math.max(1,Math.round(+row.materialTier||materialTierFromMonsterLevel(row.lv)));
+    return getMonsterPartUnitPrice(tier,q);
+  }
+  if(isTieredCrystalType(row.type)){
+    const tier=Math.max(3,Math.round(+row.crystalTier||crystalTierFromMonsterLevel(row.monsterLv||row.lv)));
+    return getCrystalUnitPrice(row.type,tier);
+  }
   if(row.type==='stone_weapon') return getUpgradeStoneUnitPrice('weapon', row.lv);
   if(row.type==='stone_armor') return getUpgradeStoneUnitPrice('armor', row.lv);
   if(row.type==='monster_seal_weapon' || row.type==='monster_seal_armor') return getMonsterSealUnitPrice(row.type, row.lv);
   if(row.type==='seal_plate_weapon' || row.type==='seal_plate_armor') return getSealPlateUnitPrice(row.type, row.lv);
-  const crystalPrice=getCrystalUnitPrice(row.type,row.lv);
-  if(crystalPrice!==null) return crystalPrice;
   const rar=INV_RARITY[row.rarity]||INV_RARITY.common;
   return Math.round((+row.lv||1) * (+row.base||0) * rar.mult);
 }
@@ -3349,46 +3400,90 @@ function invFormatCopper(total){
 }
 function invAddRow(){
   const type=document.getElementById('inv-add-type').value;
-  const base=(INV_TYPE_BASE[type]||INV_TYPE_BASE.monster_part).base;
+  const def=INV_TYPE_BASE[type]||INV_TYPE_BASE.custom;
+  const inputLv=Math.max(1,+document.getElementById('inv-add-lv').value||1);
+  const quality=materialQualityFromType(type);
+  const materialTier=quality ? materialTierFromMonsterLevel(inputLv) : 0;
+  const isCrystal=isTieredCrystalType(type);
+  const crystalTier=isCrystal ? crystalTierFromMonsterLevel(Math.max(10,inputLv)) : 0;
   const row={
-    name:document.getElementById('inv-add-name').value||'Item',
+    name:quality ? materialDropDisplayName(materialTier,quality) : (isCrystal ? crystalDisplayName(crystalBaseName(type),crystalTier,true) : (document.getElementById('inv-add-name').value||'Item')),
     type,
-    rarity:document.getElementById('inv-add-rarity').value,
-    lv:+document.getElementById('inv-add-lv').value||1,
+    rarity:(quality||isCrystal) ? 'common' : document.getElementById('inv-add-rarity').value,
+    lv:quality ? materialTierStartLevel(materialTier) : (isCrystal ? crystalTierStartLevel(crystalTier) : inputLv),
+    monsterLv:(quality||isCrystal) ? normalizeMonsterLevel(inputLv) : inputLv,
     qty:+document.getElementById('inv-add-qty').value||1,
-    base,
+    base:(quality||isCrystal) ? 0 : def.base,
     market:Math.max(0,+document.getElementById('inv-add-market')?.value||100),
-    unitOverride:Math.max(0,+document.getElementById('inv-add-unit-override')?.value||0)
+    unitOverride:Math.max(0,+document.getElementById('inv-add-unit-override')?.value||0),
+    materialTier:quality ? materialTier : 0,
+    quality:quality || 0,
+    crystalTier:isCrystal ? crystalTier : 0,
+    locked:false,
+    legacy:!!def.legacy
   };
   invPush(row);
 }
+
 function invUpdate(i,key,val){
   if(!inventoryRows[i]) return;
-  if(key==='lv'||key==='qty'||key==='base'||key==='market'||key==='unitOverride') inventoryRows[i][key]=Math.max(0,+val||0);
+  if(key==='lv'||key==='qty'||key==='base'||key==='market'||key==='unitOverride'||key==='materialTier'||key==='quality') inventoryRows[i][key]=Math.max(0,+val||0);
   else inventoryRows[i][key]=val;
   if(key==='type' && val!=='custom') inventoryRows[i].base=(INV_TYPE_BASE[val]||INV_TYPE_BASE.monster_part).base;
+  inventoryRows[i]=invNormalizeLoadedRow(inventoryRows[i]);
   invRender();
 }
+
 function invRemove(i){ inventoryRows.splice(i,1); invRender(); }
+
+function invCategory(row){
+  const t=String(row?.type||'');
+  if(isMonsterPartQualityType(t) || LEGACY_MATERIAL_TYPES.has(t) || ['monster_part','elite_monster_part','ore','hide_bone','rare_material','elite_rare_material'].includes(t)) return 'material';
+  if(t.startsWith('crystal_') || t==='empty_crystal') return 'crystal';
+  if(t.startsWith('stone_')) return 'stone';
+  if(t.includes('seal') || t.startsWith('monster_seal_')) return 'seal';
+  return 'custom';
+}
+function invMatchesFilter(row){
+  const category=document.getElementById('inv-filter-category')?.value||'all';
+  const tier=Math.max(0,Math.round(+document.getElementById('inv-filter-tier')?.value||0));
+  const lock=document.getElementById('inv-filter-lock')?.value||'all';
+  if(category!=='all' && invCategory(row)!==category) return false;
+  if(tier>0 && Math.round(+(row.materialTier||row.crystalTier)||0)!==tier) return false;
+  if(lock==='locked' && !row.locked) return false;
+  if(lock==='unlocked' && row.locked) return false;
+  return true;
+}
+function invToggleLock(i){ if(!inventoryRows[i]) return; inventoryRows[i].locked=!inventoryRows[i].locked; invRender(); if(typeof autoSave==='function') autoSave(); }
+function invConsume(i,amount){
+  if(!inventoryRows[i]) return;
+  amount=Math.max(1,Math.round(+amount||1));
+  const row=inventoryRows[i];
+  const used=Math.min(amount,Math.max(0,Math.round(+row.qty||0)));
+  if(used<=0) return;
+  row.qty-=used;
+  moneyLog(`ใช้ ${row.name} ×${used}`,'var(--cyan)');
+  if(row.qty<=0) inventoryRows.splice(i,1);
+  invRender();
+  if(typeof autoSave==='function') autoSave();
+}
+
 function invSellRow(i){
   if(!inventoryRows[i]) return;
+  if(inventoryRows[i].locked){ moneyLog(`ขายไม่ได้: ${inventoryRows[i].name} ถูกล็อกไว้`,'var(--red)'); return; }
   const total=invTotalRow(inventoryRows[i]);
-  if(total>0){
-    moneyCopper += total;
-    moneyLog(`ขาย ${inventoryRows[i].name} ×${inventoryRows[i].qty} = ${invFormatCopper(total)}`,'var(--gold)');
-    updateMoneyDisplay();
-  }
-  inventoryRows.splice(i,1);
-  invRender();
+  if(total>0){ moneyCopper+=total; moneyLog(`ขาย ${inventoryRows[i].name} ×${inventoryRows[i].qty} = ${invFormatCopper(total)}`,'var(--gold)'); updateMoneyDisplay(); }
+  inventoryRows.splice(i,1); invRender(); if(typeof autoSave==='function') autoSave();
 }
 function invSellAll(){
-  const total=invTotal();
-  if(total<=0) return;
-  moneyCopper += total;
-  moneyLog(`ขายของทั้งหมดใน Inventory = ${invFormatCopper(total)}`,'var(--gold)');
-  inventoryRows=[];
-  updateMoneyDisplay();
-  invRender();
+  const sellRows=inventoryRows.filter(r=>!r.locked);
+  const total=sellRows.reduce((sum,r)=>sum+invTotalRow(r),0);
+  if(total<=0){ moneyLog('ไม่มีของที่ปลดล็อกให้ขาย','var(--text-dim)'); return; }
+  moneyCopper+=total;
+  const soldQty=sellRows.reduce((sum,r)=>sum+(+r.qty||0),0);
+  moneyLog(`ขายของที่ไม่ล็อก ${soldQty} ชิ้น = ${invFormatCopper(total)}`,'var(--gold)');
+  inventoryRows=inventoryRows.filter(r=>r.locked);
+  updateMoneyDisplay(); invRender(); if(typeof autoSave==='function') autoSave();
 }
 function invClear(){ inventoryRows=[]; invRender(); }
 function invCopy(){
@@ -3397,7 +3492,7 @@ function invCopy(){
   inventoryRows.forEach((r,idx)=>{
     const rar=INV_RARITY[r.rarity]||INV_RARITY.common;
     const type=INV_TYPE_BASE[r.type]||INV_TYPE_BASE.custom;
-    lines.push(`${idx+1}. ${r.name} | ${type.label} | ${rar.label} | Lv.${r.lv} | Qty ${r.qty} | Auto ${invAutoUnitPrice(r)}C | Market ${(+r.market||100)}% | Unit ${invUnitPrice(r)}C | Total ${invTotalRow(r)}C`);
+    lines.push(`${idx+1}. ${r.name} | ${type.label}${isMonsterPartQualityType(r.type)?` | T${r.materialTier} Q${r.quality}`:(isTieredCrystalType(r.type)?` | T${r.crystalTier}`:'')}${r.legacy?' | LEGACY':''} | ${rar.label} | Lv.${r.lv} | Qty ${r.qty} | Auto ${invAutoUnitPrice(r)}C | Market ${(+r.market||100)}% | Unit ${invUnitPrice(r)}C | Total ${invTotalRow(r)}C`);
   });
   lines.push(`TOTAL = ${invFormatCopper(invTotal())}`);
   navigator.clipboard?.writeText(lines.join('\n'));
@@ -3416,71 +3511,42 @@ function invClearUnitOverrides(){
   if(typeof autoSave==='function') autoSave();
 }
 function invRender(){
-  const body=document.getElementById('inv-body');
-  if(!body) return;
-  body.innerHTML='';
-  if(inventoryRows.length===0){
+  const body=document.getElementById('inv-body'); if(!body) return; body.innerHTML='';
+  const visible=[];
+  inventoryRows.forEach((row,i)=>{ const r=inventoryRows[i]=invNormalizeLoadedRow(row); if(r.market==null) r.market=100; if(r.unitOverride==null) r.unitOverride=0; if(invMatchesFilter(r)) visible.push({r,i}); });
+  if(!visible.length){ const tr=document.createElement('tr'); tr.innerHTML='<td colspan="10" style="color:var(--text-dim);text-align:center;padding:16px;">ไม่มีของที่ตรงกับตัวกรอง</td>'; body.appendChild(tr); }
+  else visible.forEach(({r,i})=>{
+    const isMat=isMonsterPartQualityType(r.type), isCrystal=isTieredCrystalType(r.type), isSystem=isMat||isCrystal;
+    const unit=invUnitPrice(r), total=invTotalRow(r), rar=INV_RARITY[r.rarity]||INV_RARITY.common;
+    const safeName=String(r.name).replace(/"/g,'&quot;');
+    const nameCell=isSystem?`<span class="inv-readonly" style="width:100%;text-align:left;color:var(--text)">${safeName}</span>`:`<input value="${safeName}" onchange="invUpdate(${i},'name',this.value)" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--thai);font-size:.75rem;outline:none;">`;
+    const typeCell=isMat?`<span class="inv-readonly">Material Q${r.quality}</span>`:(isCrystal?`<span class="inv-readonly">Crystal</span>`:`<select onchange="invUpdate(${i},'type',this.value)" style="background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--mono);font-size:.7rem;outline:none;">${Object.entries(INV_TYPE_BASE).map(([k,v])=>`<option value="${k}" ${r.type===k?'selected':''}>${v.label}</option>`).join('')}</select>`);
+    const rarityCell=isSystem?`<span class="inv-readonly">${isMat?'Material':'Crystal'}</span>`:`<select onchange="invUpdate(${i},'rarity',this.value)" style="background:var(--bg);border:1px solid var(--border);color:${rar.color};padding:4px;font-family:var(--mono);font-size:.7rem;outline:none;">${Object.entries(INV_RARITY).map(([k,v])=>`<option value="${k}" ${r.rarity===k?'selected':''}>${v.label}×${v.mult}</option>`).join('')}</select>`;
+    const levelCell=isMat?`<span class="inv-readonly">T${r.materialTier}<br>${materialTierRangeText(r.materialTier)}</span>`:(isCrystal?`<span class="inv-readonly">T${r.crystalTier}<br>${crystalTierRangeText(r.crystalTier)}</span>`:`<input type="number" min="1" value="${r.lv}" onchange="invUpdate(${i},'lv',this.value)" style="width:62px;background:transparent;border:1px solid var(--border);color:var(--cyan);padding:4px;font-family:var(--mono);font-size:.75rem;text-align:center;outline:none;">`);
+    const note=r.legacy?'LEGACY ITEM':(isMat?`T${r.materialTier} / Q${r.quality} / ${materialTierRangeText(r.materialTier)}`:(isCrystal?`T${r.crystalTier} / ${crystalTierRangeText(r.crystalTier)}`:(Math.round(+r.unitOverride||0)>0?'FIXED PRICE':'AUTO PRICE')));
     const tr=document.createElement('tr');
-    tr.innerHTML='<td colspan="11" style="color:var(--text-dim);text-align:center;padding:16px;">ยังไม่มีของใน Inventory</td>';
+    tr.innerHTML=`<td><div class="inv-name-cell"><span class="inv-icon" style="color:${rar.color}">${invIconForType(r.type)}</span><div style="flex:1;min-width:0">${nameCell}<span class="inv-lock-note">${note}</span></div></div></td>
+    <td>${typeCell}</td><td>${rarityCell}</td><td>${levelCell}</td>
+    <td><input type="number" min="0" value="${r.qty}" onchange="invUpdate(${i},'qty',this.value)" style="width:58px;background:transparent;border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--mono);font-size:.75rem;text-align:center;outline:none"></td>
+    <td><input type="number" min="0" step="5" value="${r.market}" onchange="invUpdate(${i},'market',this.value)" style="width:66px;background:transparent;border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--mono);font-size:.75rem;text-align:center;outline:none"></td>
+    <td style="color:var(--gold);font-family:var(--mono);white-space:nowrap">${invFormatCopper(unit)}${Math.round(+r.unitOverride||0)>0?'<br><span style="color:var(--text-dim);font-size:.58rem">กำหนดเอง</span>':''}</td>
+    <td style="color:var(--gold);font-family:var(--mono);white-space:nowrap">${invFormatCopper(total)}</td>
+    <td><button class="inv-lock-btn ${r.locked?'locked':''}" onclick="invToggleLock(${i})">${r.locked?'🔒':'🔓'}</button></td>
+    <td><div style="display:flex;gap:4px;flex-direction:column"><button class="btn sm gold-btn" style="width:auto;padding:4px 7px;margin:0;${r.locked?'opacity:.4;cursor:not-allowed':''}" onclick="invSellRow(${i})" ${r.locked?'disabled':''}>SELL</button><button class="btn sm red-btn" style="width:auto;padding:4px 7px;margin:0" onclick="invRemove(${i})">DEL</button></div></td>`;
     body.appendChild(tr);
-  } else {
-    inventoryRows.forEach((r,i)=>{
-      if(r.market===undefined || r.market===null) r.market=100;
-      if(r.unitOverride===undefined || r.unitOverride===null) r.unitOverride=0;
-      const autoUnit=invAutoUnitPrice(r);
-      const unit=invUnitPrice(r); const total=invTotalRow(r);
-      const rar=INV_RARITY[r.rarity]||INV_RARITY.common;
-      const tr=document.createElement('tr');
-      tr.innerHTML=`
-        <td>
-          <div class="inv-name-cell">
-            <span class="inv-icon" style="color:${rar.color}">${invIconForType(r.type)}</span>
-            <div style="flex:1;min-width:0;">
-              <input value="${String(r.name).replace(/"/g,'&quot;')}" onchange="invUpdate(${i},'name',this.value)" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--thai);font-size:0.75rem;outline:none;">
-              <span class="inv-lock-note">${Math.round(+r.unitOverride||0)>0?'FIXED PRICE':'AUTO PRICE'}</span>
-            </div>
-          </div>
-        </td>
-        <td><select onchange="invUpdate(${i},'type',this.value)" style="background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px;font-family:var(--mono);font-size:0.7rem;outline:none;">${Object.entries(INV_TYPE_BASE).map(([k,v])=>`<option value="${k}" ${r.type===k?'selected':''}>${v.label}</option>`).join('')}</select></td>
-        <td><select onchange="invUpdate(${i},'rarity',this.value)" style="background:var(--bg);border:1px solid var(--border);color:${rar.color};padding:4px;font-family:var(--mono);font-size:0.7rem;outline:none;">${Object.entries(INV_RARITY).map(([k,v])=>`<option value="${k}" ${r.rarity===k?'selected':''}>${v.label}×${v.mult}</option>`).join('')}</select><br><span class="inv-rarity-badge" style="color:${rar.color};margin-top:3px;">${rar.label}</span></td>
-        <td><input type="number" min="1" value="${r.lv}" onchange="invUpdate(${i},'lv',this.value)" style="width:54px;background:transparent;border:1px solid var(--border);color:var(--cyan);padding:4px;font-family:var(--mono);font-size:0.75rem;text-align:center;outline:none;"></td>
-        <td><input type="number" min="0" value="${r.qty}" onchange="invUpdate(${i},'qty',this.value)" style="width:58px;background:transparent;border:1px solid var(--border);color:var(--cyan);padding:4px;font-family:var(--mono);font-size:0.75rem;text-align:center;outline:none;"></td>
-        <td><input type="number" min="0" value="${r.base}" onchange="invUpdate(${i},'base',this.value)" style="width:62px;background:transparent;border:1px solid var(--border);color:var(--gold);padding:4px;font-family:var(--mono);font-size:0.75rem;text-align:center;outline:none;"></td>
-        <td><input type="number" min="0" step="5" value="${Math.round(+r.market||100)}" onchange="invUpdate(${i},'market',this.value)" class="inv-price-input" style="color:var(--cyan);">%</td>
-        <td style="color:var(--text-dim)">${autoUnit.toLocaleString()} C</td>
-        <td><input type="number" min="0" value="${Math.round(+r.unitOverride||0)}" onchange="invUpdate(${i},'unitOverride',this.value)" class="inv-price-input"><span class="inv-lock-note">0 = Auto</span></td>
-        <td style="color:var(--green);font-weight:600;">${total.toLocaleString()} C</td>
-        <td><div class="inv-row-actions"><button onclick="invSellRow(${i})" style="background:transparent;border:1px solid var(--gold-dim);color:var(--gold);font-family:var(--mono);font-size:0.62rem;padding:3px 7px;cursor:pointer;">SELL</button><button onclick="invRemove(${i})" style="background:transparent;border:1px solid var(--red-dim);color:var(--red);font-family:var(--mono);font-size:0.62rem;padding:3px 7px;cursor:pointer;">×</button></div></td>
-      `;
-      body.appendChild(tr);
-    });
-  }
-  const totalVal=invTotal();
-  const totalEl=document.getElementById('inv-total');
-  if(totalEl) totalEl.textContent=invFormatCopper(totalVal);
-  const slotsEl=document.getElementById('inv-slots'); if(slotsEl) slotsEl.textContent=String(inventoryRows.length);
-  const qtyEl=document.getElementById('inv-total-qty'); if(qtyEl) qtyEl.textContent=String(invTotalQty());
-  const valEl=document.getElementById('inv-total-value'); if(valEl) valEl.textContent=invFormatCopper(totalVal);
-  const marketShow=document.getElementById('inv-market-show');
-  if(marketShow){
-    const autoRows=inventoryRows.filter(r=>!(Math.round(+r.unitOverride||0)>0));
-    const avg=autoRows.length?Math.round(autoRows.reduce((s,r)=>s+(+r.market||100),0)/autoRows.length):100;
-    marketShow.textContent=avg+'%';
-  }
-  if(typeof renderEmptyCrystalTrace==='function') renderEmptyCrystalTrace();
+  });
+  const total=invTotal(), qty=invTotalQty();
+  document.getElementById('inv-slots').textContent=inventoryRows.length;
+  document.getElementById('inv-total-qty').textContent=qty;
+  document.getElementById('inv-total-value').textContent=invFormatCopper(total);
+  document.getElementById('inv-total').textContent=invFormatCopper(total);
+  const globalMarket=document.getElementById('inv-global-market'); if(globalMarket) document.getElementById('inv-market-show').textContent=`${Math.max(0,+globalMarket.value||100)}%`;
 }
 
 
 
 // ══ REWARD / LOOT / REPAIR / SESSION SYSTEM ══
 const EXP_TIER_MULT = { normal:1, elite:3, champion:10, miniboss:20, boss:50 };
-const LOOT_TIER_PRICE = {
-  normal:   { commonType:'monster_part',       commonName:'ชิ้นส่วนมอนสเตอร์',        commonBase:5,  rareType:'rare_material',       rareName:'วัตถุดิบหายาก',        rareBase:20 },
-  elite:    { commonType:'elite_monster_part', commonName:'ชิ้นส่วนมอนสเตอร์อีลีท',    commonBase:10, rareType:'elite_rare_material', rareName:'วัตถุดิบหายากอีลีท',    rareBase:30 },
-  champion: { commonType:'elite_monster_part', commonName:'ชิ้นส่วนแชมเปี้ยน',          commonBase:20, rareType:'elite_rare_material', rareName:'วัตถุดิบหายากแชมเปี้ยน', rareBase:60 },
-  miniboss: { commonType:'elite_monster_part', commonName:'ชิ้นส่วนมินิบอส',            commonBase:40, rareType:'elite_rare_material', rareName:'วัตถุดิบหายากมินิบอส',   rareBase:120 },
-  boss:     { commonType:'elite_monster_part', commonName:'ชิ้นส่วนบอส',                commonBase:100,rareType:'elite_rare_material', rareName:'วัตถุดิบหายากบอส',       rareBase:300 },
-};
 const CRYSTAL_DROP = {
   normal:   { shard:[0.01,1,1],  low:[0.002,1,1] },
   elite:    { shard:[0.05,1,1],  low:[0.01,1,1],    mid:[0.001,1,1] },
@@ -3498,138 +3564,64 @@ const CRYSTAL_TYPE_MAP = {
   core:{type:'crystal_core', name:'เศษเสี้ยวแก่นมานา'}
 };
 function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
-function emptyCrystalLevelFromEquipLv(equipLv){
-  const lv=Math.floor((Math.max(10,+equipLv||10)-10)/10)+1;
-  if(lv<1 || lv>5) return null;
-  return lv;
+function emptyCrystalLevelFromEquipLv(equipLv){ return crystalTierFromMonsterLevel(equipLv); }
+function emptyCrystalCount(crystalTier){
+  const tier=Math.max(3,Math.round(+crystalTier||3));
+  return inventoryRows.reduce((sum,r)=>sum + (r.type==='empty_crystal' && Math.round(+r.crystalTier||0)===tier ? Math.max(0,+r.qty||0) : 0),0);
 }
-function emptyCrystalCount(level){
-  level=Math.max(1,Math.min(5,Math.round(+level||1)));
-  return inventoryRows.reduce((sum,r)=>sum + (r.type==='empty_crystal' && Math.round(+r.lv||0)===level ? Math.max(0,+r.qty||0) : 0),0);
-}
-function consumeEmptyCrystal(level, qty){
-  level=Math.max(1,Math.min(5,Math.round(+level||1)));
-  qty=Math.max(0,Math.round(+qty||0));
-  let left=qty;
-  for(let i=inventoryRows.length-1;i>=0 && left>0;i--){
-    const r=inventoryRows[i];
-    if(r.type==='empty_crystal' && Math.round(+r.lv||0)===level){
-      const take=Math.min(left,Math.max(0,+r.qty||0));
-      r.qty=(+r.qty||0)-take;
-      left-=take;
-      if(r.qty<=0) inventoryRows.splice(i,1);
-    }
-  }
-  if(qty-left>0) invRender();
-  return qty-left;
+function consumeEmptyCrystal(crystalTier, qty){
+  const tier=Math.max(3,Math.round(+crystalTier||3)); qty=Math.max(0,Math.round(+qty||0)); let left=qty;
+  for(let i=inventoryRows.length-1;i>=0 && left>0;i--){ const r=inventoryRows[i]; if(r.type==='empty_crystal' && Math.round(+r.crystalTier||0)===tier){ const take=Math.min(left,Math.max(0,+r.qty||0)); r.qty=(+r.qty||0)-take; left-=take; if(r.qty<=0) inventoryRows.splice(i,1); } }
+  if(qty-left>0) invRender(); return qty-left;
 }
 function emptyCrystalAddShardResult(results, monLv, qty, source){
-  qty=Math.max(0,Math.round(+qty||0));
-  if(qty<=0) return;
-  const map=CRYSTAL_TYPE_MAP.shard;
-  const existing=results.find(r=>r.key==='shard' && r.type===map.type && Math.round(+r.lv||0)===Math.round(+monLv||0));
-  if(existing){
-    existing.qty += qty;
-    existing.name = crystalDisplayName(map.name, monLv);
-    existing.guaranteed=(existing.guaranteed||0)+qty;
-    existing.emptyConsumed=(existing.emptyConsumed||0)+qty;
-    existing.source = existing.source==='drop' ? 'drop+pity' : (source||existing.source||'pity');
-  }else{
-    results.push({key:'shard',type:map.type,name:crystalDisplayName(map.name, monLv),lv:monLv,qty,guaranteed:qty,emptyConsumed:qty,source:source||'pity'});
-  }
+  qty=Math.max(0,Math.round(+qty||0)); if(qty<=0) return;
+  const map=CRYSTAL_TYPE_MAP.shard, crystalTier=crystalTierFromMonsterLevel(monLv);
+  const existing=results.find(r=>r.key==='shard' && r.type===map.type && Math.round(+r.crystalTier||0)===crystalTier);
+  if(existing){ existing.qty+=qty; existing.name=crystalDisplayName(map.name,crystalTier,true); existing.guaranteed=(existing.guaranteed||0)+qty; existing.emptyConsumed=(existing.emptyConsumed||0)+qty; existing.source=existing.source==='drop'?'drop+pity':(source||existing.source||'pity'); }
+  else results.push({key:'shard',type:map.type,name:crystalDisplayName(map.name,crystalTier,true),lv:crystalTierStartLevel(crystalTier),monsterLv:normalizeMonsterLevel(monLv),crystalTier,qty,guaranteed:qty,emptyConsumed:qty,source:source||'pity'});
 }
-function emptyCrystalResolvePity(equipLv, monLv, incomingKills, results){
-  const emptyLv=emptyCrystalLevelFromEquipLv(equipLv);
-  if(!emptyLv) return 0;
-  const pityKey=`L${equipLv}`;
-  let count=Math.max(0,Math.round(crystalPityState[pityKey]||0));
-  const kills=Math.max(0,Math.round(+incomingKills||0));
-  const stock=emptyCrystalCount(emptyLv);
-
-  // ถ้าไม่มีผลึกไร้มานาใน inventory จะไม่เดิน pity ต่อ แต่เก็บ progress เก่าไว้เป็น paused.
-  if(stock<=0){
-    crystalPityState[pityKey]=Math.min(count, CRYSTAL_PITY_KILLS);
-    return 0;
-  }
-
-  const total=count+kills;
-  const shouldConvert=Math.floor(total/CRYSTAL_PITY_KILLS);
-  const convert=Math.min(stock, shouldConvert);
-  const consumed=convert>0 ? consumeEmptyCrystal(emptyLv, convert) : 0;
-
-  if(consumed>0){
-    emptyCrystalAddShardResult(results, monLv, consumed, 'pity');
-  }
-
-  // ถ้า stock หมดก่อน convert ครบ ให้ค้าง progress ไว้ที่ 150/150 paused เพื่อบอกว่าต้องซื้อผลึกไร้มานาเพิ่ม.
-  if(shouldConvert>consumed && emptyCrystalCount(emptyLv)<=0){
-    crystalPityState[pityKey]=CRYSTAL_PITY_KILLS;
-  }else{
-    crystalPityState[pityKey]=total % CRYSTAL_PITY_KILLS;
-  }
+function emptyCrystalResolvePity(crystalTier, monLv, incomingKills, results){
+  const tier=Math.max(3,Math.round(+crystalTier||3)); const pityKey=`T${tier}`;
+  let count=Math.max(0,Math.round(crystalPityState[pityKey]||0)); const kills=Math.max(0,Math.round(+incomingKills||0)); const stock=emptyCrystalCount(tier);
+  if(stock<=0){ crystalPityState[pityKey]=Math.min(count,CRYSTAL_PITY_KILLS); return 0; }
+  const total=count+kills, shouldConvert=Math.floor(total/CRYSTAL_PITY_KILLS), convert=Math.min(stock,shouldConvert), consumed=convert>0?consumeEmptyCrystal(tier,convert):0;
+  if(consumed>0) emptyCrystalAddShardResult(results,monLv,consumed,'pity');
+  crystalPityState[pityKey]=(shouldConvert>consumed && emptyCrystalCount(tier)<=0)?CRYSTAL_PITY_KILLS:(total%CRYSTAL_PITY_KILLS);
   return consumed;
 }
 function emptyCrystalNormalizePity(){
   const results=[];
-  for(let lv=1;lv<=5;lv++){
-    const equipLv=emptyCrystalEquipLv(lv);
-    const key=`L${equipLv}`;
-    const count=Math.max(0,Math.round(crystalPityState[key]||0));
-    if(count>=CRYSTAL_PITY_KILLS && emptyCrystalCount(lv)>0){
-      emptyCrystalResolvePity(equipLv, equipLv, 0, results);
+  for(let tier=3;tier<=30;tier++){ const key=`T${tier}`; const count=Math.max(0,Math.round(crystalPityState[key]||0)); if(count>=CRYSTAL_PITY_KILLS && emptyCrystalCount(tier)>0) emptyCrystalResolvePity(tier,crystalTierStartLevel(tier),0,results); }
+  if(results.length) results.forEach(d=>invPush({name:d.name,type:d.type,rarity:'common',lv:d.lv,monsterLv:d.monsterLv,crystalTier:d.crystalTier,qty:d.qty,base:0}));
+}
+function migrateLegacyCrystalPityState(){
+  const legacyMap={L10:3,L20:5,L30:7,L40:9,L50:11};
+  Object.entries(legacyMap).forEach(([oldKey,tier])=>{
+    if(crystalPityState[oldKey]!==undefined && crystalPityState[`T${tier}`]===undefined){
+      crystalPityState[`T${tier}`]=Math.max(0,Math.round(+crystalPityState[oldKey]||0));
     }
-  }
-  if(results.length){
-    results.forEach(d=>invPush({name:d.name,type:d.type,rarity:'common',lv:d.lv,qty:d.qty,base:0}));
-  }
+  });
 }
 function renderEmptyCrystalTrace(){
-  const lines=[];
-  for(let lv=1;lv<=5;lv++){
-    const equipLv=emptyCrystalEquipLv(lv);
-    const key=`L${equipLv}`;
-    const count=Math.max(0,Math.round(crystalPityState[key]||0));
-    const stock=emptyCrystalCount(lv);
-    const status=stock>0 ? `${count}/${CRYSTAL_PITY_KILLS}` : `${count}/${CRYSTAL_PITY_KILLS} paused`;
-    lines.push(`ระดับ ${lv} (มอน Lv.${equipLv}–${equipLv+9}): ${status} | stock ${stock}`);
-  }
-  const text='Empty Crystal Trace: '+lines.join('  •  ');
-  ['empty-crystal-trace','empty-crystal-trace-inv'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el) el.textContent=text;
-  });
+  migrateLegacyCrystalPityState();
+  const tiers=new Set([3,4,5,6,7,8,9,10,11,12]);
+  inventoryRows.forEach(r=>{ if(r.type==='empty_crystal' && r.crystalTier) tiers.add(Math.round(r.crystalTier)); });
+  Object.keys(crystalPityState||{}).forEach(k=>{ const m=k.match(/^T(\d+)$/); if(m) tiers.add(+m[1]); });
+  const lines=[...tiers].sort((a,b)=>a-b).map(tier=>{ const count=Math.max(0,Math.round(crystalPityState[`T${tier}`]||0)), stock=emptyCrystalCount(tier), status=stock>0?`${count}/${CRYSTAL_PITY_KILLS}`:`${count}/${CRYSTAL_PITY_KILLS} paused`; return `T${tier} (${crystalTierRangeText(tier)}): ${status} | stock ${stock}`; });
+  const text='Empty Crystal Trace: '+lines.join('  •  '); ['empty-crystal-trace','empty-crystal-trace-inv'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=text; });
 }
 function rollCrystalDrops(tier, monLv, kills){
-  const results=[];
-  monLv=+monLv||0; kills=Math.max(0,Math.round(+kills||0));
+  const results=[]; monLv=+monLv||0; kills=Math.max(0,Math.round(+kills||0));
   if(monLv<10 || kills<=0){ renderEmptyCrystalTrace(); return results; }
-  const cfg=CRYSTAL_DROP[tier]||CRYSTAL_DROP.normal;
-  Object.keys(cfg).forEach(key=>{
-    const [chance,min,max]=cfg[key];
-    let qty=0;
-    for(let i=0;i<kills;i++){
-      if(Math.random()<chance) qty += randInt(min,max);
-    }
-    if(qty>0){
-      const map=CRYSTAL_TYPE_MAP[key];
-      results.push({key,type:map.type,name:crystalDisplayName(map.name, monLv),lv:monLv,qty,source:'drop'});
-    }
-  });
-  // ผลึกไร้มานา guarantee: ถ้ามี stock ตรงระดับ ครบ 150 kill จะใช้ผลึกไร้มานา 1 ก้อนและเพิ่มผลึกเศษเสี้ยวมานา 1 ก้อนทันที.
-  const equipLv=getCrystalEquipLv(monLv);
-  emptyCrystalResolvePity(equipLv, monLv, kills, results);
-  renderEmptyCrystalTrace();
-  return results;
+  const cfg=CRYSTAL_DROP[tier]||CRYSTAL_DROP.normal, crystalTier=crystalTierFromMonsterLevel(monLv);
+  Object.keys(cfg).forEach(key=>{ const [chance,min,max]=cfg[key]; let qty=0; for(let i=0;i<kills;i++) if(Math.random()<chance) qty+=randInt(min,max); if(qty>0){ const map=CRYSTAL_TYPE_MAP[key]; results.push({key,type:map.type,name:crystalDisplayName(map.name,crystalTier,true),lv:crystalTierStartLevel(crystalTier),monsterLv:normalizeMonsterLevel(monLv),crystalTier,qty,source:'drop'}); } });
+  emptyCrystalResolvePity(crystalTier,monLv,kills,results); renderEmptyCrystalTrace(); return results;
 }
 function addCrystalDropsToInventory(tier, monLv, kills){
-  const drops=rollCrystalDrops(tier, monLv, kills);
-  let total=0;
-  drops.forEach(d=>{
-    if((+d.qty||0)>0) total += invPush({name:d.name,type:d.type,rarity:'common',lv:d.lv,qty:d.qty,base:0});
-  });
-  renderEmptyCrystalTrace();
-  if(typeof autoSave==='function') autoSave();
-  return {drops,total};
+  const drops=rollCrystalDrops(tier,monLv,kills); let total=0;
+  drops.forEach(d=>{ if((+d.qty||0)>0) total+=invPush({name:d.name,type:d.type,rarity:'common',lv:d.lv,monsterLv:d.monsterLv,crystalTier:d.crystalTier,qty:d.qty,base:0}); });
+  renderEmptyCrystalTrace(); if(typeof autoSave==='function') autoSave(); return {drops,total};
 }
 function crystalDropSummary(drops){
   if(!drops || !drops.length) return 'Crystal MISS';
@@ -3666,17 +3658,17 @@ function upgradeStoneTierName(monLv){
   return 'สูง';
 }
 function getUpgradeStoneUnitPrice(kind, monLv){
-  const base=getEquipmentBasePrice('weapon', getCrystalEquipLv(monLv));
+  const base=getEquipmentBasePrice('weapon', crystalTierStartLevel(crystalTierFromMonsterLevel(monLv)));
   const factor = kind==='armor' ? 0.20 : 0.25;
   return cleanRoundCopper(base*factor);
 }
 function getMonsterSealUnitPrice(type, monLv){
-  const base=getEquipmentBasePrice('weapon', getCrystalEquipLv(monLv));
+  const base=getEquipmentBasePrice('weapon', crystalTierStartLevel(crystalTierFromMonsterLevel(monLv)));
   const factor = type==='monster_seal_armor' ? 1.8 : 2.0;
   return cleanRoundCopper(base*factor);
 }
 function getSealPlateUnitPrice(type, monLv){
-  const base=getEquipmentBasePrice('weapon', getCrystalEquipLv(monLv));
+  const base=getEquipmentBasePrice('weapon', crystalTierStartLevel(crystalTierFromMonsterLevel(monLv)));
   return cleanRoundCopper(base*0.15);
 }
 function rollUpgradeStoneDrops(tier, monLv, kills){
@@ -3740,27 +3732,18 @@ function upgradeSealDropSummary(result){
   return parts.join(' | ');
 }
 function emptyCrystalUpdatePrice(){
-  const lv=Math.max(1,Math.min(5,+document.getElementById('empty-crystal-lv')?.value||1));
-  const qty=Math.max(1,+document.getElementById('empty-crystal-qty')?.value||1);
-  const unit=emptyCrystalUnitPrice(lv);
-  const equipLv=emptyCrystalEquipLv(lv);
-  const el=document.getElementById('empty-crystal-price-show');
-  if(el) el.textContent=`ระดับ ${lv} / มอน Lv.${equipLv}–${equipLv+9}: ${invFormatCopper(unit)} ×${qty} = ${invFormatCopper(unit*qty)}`;
+  const tier=Math.max(3,+document.getElementById('empty-crystal-lv')?.value||3), qty=Math.max(1,+document.getElementById('empty-crystal-qty')?.value||1), unit=emptyCrystalUnitPrice(tier);
+  const el=document.getElementById('empty-crystal-price-show'); if(el) el.textContent=`T${tier} / ${crystalTierRangeText(tier)}: ${invFormatCopper(unit)} ×${qty} = ${invFormatCopper(unit*qty)}`;
 }
 function buyEmptyCrystal(){
-  const lv=Math.max(1,Math.min(5,+document.getElementById('empty-crystal-lv')?.value||1));
-  const qty=Math.max(1,+document.getElementById('empty-crystal-qty')?.value||1);
-  const unit=emptyCrystalUnitPrice(lv);
-  const cost=unit*qty;
+  const tier=Math.max(3,+document.getElementById('empty-crystal-lv')?.value||3), qty=Math.max(1,+document.getElementById('empty-crystal-qty')?.value||1), unit=emptyCrystalUnitPrice(tier), cost=unit*qty;
   if(cost>moneyCopper){ moneyLog(`✘ เงินไม่พอซื้อผลึกไร้มานา: ${invFormatCopper(cost)}`,'var(--red)'); return; }
-  moneyCopper-=cost;
-  updateMoneyDisplay();
-  invPush({name:`ผลึกไร้มานา ระดับ ${lv}`,type:'empty_crystal',rarity:'common',lv,qty,base:0});
+  moneyCopper-=cost; updateMoneyDisplay();
+  invPush({name:crystalDisplayName('ผลึกไร้มานา',tier,true),type:'empty_crystal',rarity:'common',lv:crystalTierStartLevel(tier),monsterLv:crystalTierStartLevel(tier),crystalTier:tier,qty,base:0});
   if(typeof emptyCrystalNormalizePity==='function') emptyCrystalNormalizePity();
-  moneyLog(`ซื้อผลึกไร้มานา ระดับ ${lv} ×${qty} = ${invFormatCopper(cost)}`,'var(--red)');
-  if(sessionState.active){ sessionState.consumableCost=(sessionState.consumableCost||0)+cost; sessionState.log.push(`BUY EMPTY CRYSTAL Lv.${lv} x${qty}: ${invFormatCopper(cost)}`); sessionRender(); }
-  emptyCrystalUpdatePrice();
-  if(typeof autoSave==='function') autoSave();
+  moneyLog(`ซื้อผลึกไร้มานา T${tier} ×${qty} = ${invFormatCopper(cost)}`,'var(--red)');
+  if(sessionState.active){ sessionState.consumableCost=(sessionState.consumableCost||0)+cost; sessionState.log.push(`BUY EMPTY CRYSTAL T${tier} x${qty}: ${invFormatCopper(cost)}`); sessionRender(); }
+  emptyCrystalUpdatePrice(); if(typeof autoSave==='function') autoSave();
 }
 
 let sessionState={active:false,startLv:0,startExpTotal:0,kills:0,exp:0,lootValue:0,repairCost:0,consumableCost:0,restMinutes:0,log:[]};
@@ -4225,36 +4208,82 @@ function rewardAddExp(applyWear=true){
   if(applyWear) rewardApplyWeaponWear(kills);
   return total;
 }
+const LEGACY_MATERIAL_TYPES = new Set(['monster_part','elite_monster_part','mat_g1','mat_g2','mat_g3','mat_g4','mat_g5','mat_g6','mat_g7','mat_g8','mat_g9']);
+function invNormalizeLoadedRow(source){
+  const r={...(source||{})};
+  r.name=String(r.name||'Item');
+  r.type=String(r.type||'custom');
+  r.rarity=String(r.rarity||'common');
+  r.lv=Math.max(0,Math.round(+r.lv||1));
+  r.qty=Math.max(0,Math.round(+r.qty||0));
+  r.base=Math.max(0,+r.base||0);
+  r.market=Math.max(0,r.market===undefined?100:(+r.market||0));
+  r.unitOverride=Math.max(0,+r.unitOverride||0);
+  r.note=String(r.note||'');
+  r.locked=!!r.locked;
+  const typeQuality=materialQualityFromType(r.type);
+  if(typeQuality){
+    r.quality=Math.max(1,Math.min(5,Math.round(+r.quality||typeQuality)));
+    r.type=materialTypeFromQuality(r.quality);
+    const sourceMonsterLv=normalizeMonsterLevel(r.monsterLv || r.lv);
+    const tierFromLevel=materialTierFromMonsterLevel(sourceMonsterLv);
+    const savedTier=Math.max(0,Math.round(+r.materialTier||0));
+    // Trust a saved tier only when it agrees with the stored source level. This repairs rows wrongly saved as T1.
+    r.materialTier=(savedTier>0 && savedTier===tierFromLevel) ? savedTier : tierFromLevel;
+    r.monsterLv=sourceMonsterLv;
+    r.lv=materialTierStartLevel(r.materialTier);
+    r.name=materialDropDisplayName(r.materialTier,r.quality);
+    r.rarity='common';
+    r.base=0;
+    r.legacy=false;
+  }else if(isTieredCrystalType(r.type)){
+    let savedTier=Math.max(0,Math.round(+r.crystalTier||0));
+    if(!savedTier && r.type==='empty_crystal' && r.lv>=1 && r.lv<=5) savedTier=3+((Math.round(r.lv)-1)*2); // migrate old ระดับ 1–5 to T3/T5/T7/T9/T11
+    const sourceMonsterLv=normalizeMonsterLevel(r.monsterLv || (savedTier?crystalTierStartLevel(savedTier):r.lv));
+    const tierFromLevel=crystalTierFromMonsterLevel(sourceMonsterLv);
+    r.crystalTier=savedTier>0?savedTier:tierFromLevel;
+    r.monsterLv=sourceMonsterLv;
+    r.lv=crystalTierStartLevel(r.crystalTier);
+    r.name=crystalDisplayName(crystalBaseName(r.type),r.crystalTier,true);
+    r.rarity='common'; r.base=0; r.legacy=false;
+    r.materialTier=0; r.quality=0;
+  }else{
+    r.materialTier=Math.max(0,Math.round(+r.materialTier||0));
+    r.quality=Math.max(0,Math.round(+r.quality||0));
+    r.crystalTier=Math.max(0,Math.round(+r.crystalTier||0));
+    r.legacy=!!r.legacy || LEGACY_MATERIAL_TYPES.has(r.type) || !!(INV_TYPE_BASE[r.type]&&INV_TYPE_BASE[r.type].legacy);
+  }
+  return r;
+}
 function invMergeKey(row){
-  const type = row?.type || 'custom';
-  const rarity = row?.rarity || 'common';
-  const lv = Math.round(+row?.lv || 1);
-  const base = Math.round(+row?.base || 0);
-  // Custom items can share type/base, so include name. System loot/crystals merge by type+rarity+level+base.
-  const namePart = type==='custom' ? String(row?.name||'Item').trim() : '';
+  const r=invNormalizeLoadedRow(row);
+  if(isMonsterPartQualityType(r.type)) return ['monster_part',r.materialTier,r.quality].join('|');
+  if(isTieredCrystalType(r.type)) return ['crystal',r.type,r.crystalTier].join('|');
+  const type = r.type || 'custom';
+  const rarity = r.rarity || 'common';
+  const lv = Math.round(+r.lv || 1);
+  const base = Math.round(+r.base || 0);
+  // Custom items can share type/base, so include name. Legacy/system items retain the old merge behavior.
+  const namePart = type==='custom' ? String(r.name||'Item').trim() : '';
   return [type, rarity, lv, base, namePart].join('|');
 }
-function invPush(row){
-  row = {
-    name: row?.name || 'Item',
-    type: row?.type || 'custom',
-    rarity: row?.rarity || 'common',
-    lv: Math.max(1, Math.round(+row?.lv || 1)),
-    qty: Math.max(0, Math.round(+row?.qty || 0)),
-    base: Math.max(0, +row?.base || 0),
-    market: Math.max(0, +row?.market || 100),
-    unitOverride: Math.max(0, +row?.unitOverride || 0)
-  };
+function invPush(source){
+  const row=invNormalizeLoadedRow(source);
   if(row.qty<=0) return 0;
   const addedValue = invUnitPrice(row) * row.qty;
   const key = invMergeKey(row);
   const existing = inventoryRows.find(r => invMergeKey(r) === key);
   if(existing){
+    const normalized=invNormalizeLoadedRow(existing);
+    Object.assign(existing,normalized);
     existing.qty = Math.max(0, Math.round(+existing.qty || 0)) + row.qty;
-    // Prefer the latest non-empty display name, useful for tier names like elite/champion.
     if(row.name) existing.name = row.name;
-    if(Math.round(+row.unitOverride||0)>0) existing.unitOverride = row.unitOverride;
-    if(row.market!==undefined) existing.market = row.market;
+    if(Math.round(+existing.unitOverride||0)<=0 && Math.round(+row.unitOverride||0)>0) existing.unitOverride = row.unitOverride;
+    if(existing.market===undefined || existing.market===null) existing.market = row.market===undefined ? 100 : row.market;
+    if(row.materialTier) existing.materialTier=row.materialTier;
+    if(row.crystalTier) existing.crystalTier=row.crystalTier;
+    if(row.quality) existing.quality=row.quality;
+    existing.legacy=!!row.legacy;
   }else{
     inventoryRows.push(row);
   }
@@ -4584,7 +4613,7 @@ function buildApplyInputs(inputs){
 }
 function buildState(){
   return {
-    version:'UW_CALC_BUILD_V1',
+    version:'UW_CALC_BUILD_V2_MATERIAL_QUALITY',
     savedAt:new Date().toISOString(),
     inputs:buildCollectInputs(),
     expState:JSON.parse(JSON.stringify(expState||{})),
@@ -4653,7 +4682,7 @@ function buildApplyState(state){
   if(state.expState){ expState=state.expState; }
   if(typeof state.moneyCopper==='number') moneyCopper=state.moneyCopper;
   updateMoneyDisplay();
-  inventoryRows=Array.isArray(state.inventoryRows)?state.inventoryRows:[];
+  inventoryRows=(Array.isArray(state.inventoryRows)?state.inventoryRows:[]).map(invNormalizeLoadedRow);
   crystalPityState=(state.crystalPityState && typeof state.crystalPityState==='object')?state.crystalPityState:{};
   consumables=Array.isArray(state.consumables)?state.consumables:[];
   if(state.sessionState) sessionState=state.sessionState;
@@ -4820,11 +4849,17 @@ function cloudInventoryToSheetRows(){
   return (inventoryRows||[]).map((r,idx)=>({
     id:cloudRowId(r,idx),
     name:r.name||'Item',
-    type:r.type||'monster_part',
+    type:r.type||'monster_part_q1',
     rarity:r.rarity||'common',
     lv:Number(r.lv||1),
+    monsterLv:Number(r.monsterLv||r.lv||1),
     qty:Number(r.qty||0),
     basePerLv:Number(r.base||0),
+    materialTier:Number(r.materialTier||0),
+    crystalTier:Number(r.crystalTier||0),
+    quality:Number(r.quality||0),
+    legacy:Boolean(r.legacy),
+    locked:Boolean(r.locked),
     marketPct:Number(r.market===undefined?100:r.market),
     unitFixed:Number(r.unitOverride||0),
     note:r.note||''
@@ -4832,21 +4867,27 @@ function cloudInventoryToSheetRows(){
 }
 function cloudSheetRowsToInventory(rows){
   return (Array.isArray(rows)?rows:[]).filter(r=>r && (r.name||r.id)).map((r,idx)=>{
-    const type=String(r.type||'monster_part');
-    const def=INV_TYPE_BASE[type]||INV_TYPE_BASE.monster_part;
+    const type=String(r.type||'monster_part_q1');
+    const def=INV_TYPE_BASE[type]||INV_TYPE_BASE.monster_part_q1;
     return {
       id:String(r.id||cloudRowId(r,idx)),
       name:String(r.name||def.label||'Item'),
       type,
       rarity:String(r.rarity||'common'),
       lv:Math.max(1,Number(r.lv||1)),
+      monsterLv:Math.max(1,Number(r.monsterLv||r.lv||1)),
       qty:Math.max(0,Number(r.qty||0)),
       base:Math.max(0,Number(r.basePerLv!==undefined?r.basePerLv:(r.base!==undefined?r.base:def.base))),
+      materialTier:Math.max(0,Number(r.materialTier||0)),
+      crystalTier:Math.max(0,Number(r.crystalTier||0)),
+      quality:Math.max(0,Number(r.quality||0)),
+      legacy:Boolean(r.legacy),
+      locked:Boolean(r.locked),
       market:Math.max(0,Number(r.marketPct!==undefined?r.marketPct:(r.market!==undefined?r.market:100))),
       unitOverride:Math.max(0,Number(r.unitFixed!==undefined?r.unitFixed:(r.unitOverride||0))),
       note:String(r.note||'')
     };
-  });
+  }).map(invNormalizeLoadedRow);
 }
 function cloudVal(id, fallback=''){
   const el=document.getElementById(id);
@@ -4943,22 +4984,12 @@ function cloudApplyConsumables(rows){
   }));
 }
 function cloudCollectEmptyCrystal(){
-  const rows=[];
-  for(let level=1;level<=5;level++){
-    const equipLv=emptyCrystalEquipLv(level);
-    rows.push({level,progress:Number(crystalPityState[`L${equipLv}`]||0),required:CRYSTAL_PITY_KILLS,stock:emptyCrystalCount(level)});
-  }
-  return rows;
+  const tiers=new Set([3,4,5,6,7,8,9,10,11,12]); inventoryRows.forEach(r=>{ if(r.type==='empty_crystal'&&r.crystalTier) tiers.add(Math.round(r.crystalTier)); }); Object.keys(crystalPityState||{}).forEach(k=>{ const m=k.match(/^T(\d+)$/); if(m) tiers.add(+m[1]); });
+  return [...tiers].sort((a,b)=>a-b).map(tier=>({tier,progress:Number(crystalPityState[`T${tier}`]||0),required:CRYSTAL_PITY_KILLS,stock:emptyCrystalCount(tier)}));
 }
 function cloudApplyEmptyCrystal(rows){
   if(!Array.isArray(rows)) return;
-  rows.forEach(r=>{
-    const level=Number(r.level||0);
-    if(level>=1 && level<=5){
-      const equipLv=emptyCrystalEquipLv(level);
-      crystalPityState[`L${equipLv}`]=Math.max(0,Math.round(Number(r.progress||0)));
-    }
-  });
+  rows.forEach(r=>{ let tier=Number(r.tier||0); if(!tier && r.level>=1 && r.level<=5) tier=3+((Number(r.level)-1)*2); if(tier>=3) crystalPityState[`T${tier}`]=Math.max(0,Math.round(Number(r.progress||0))); });
 }
 function cloudCollectSessionLog(){
   const ss=sessionState||{};
@@ -5243,7 +5274,7 @@ function safeBoot(){
     ['cloudLoadSettings',()=>cloudLoadSettings()],
     ['initQuickSteppers',()=>initQuickSteppers()],
     ['skillInit',()=>{ skillLibrary=skillDefaults().map(normalizeSkill); skillRender(); skillRefreshCombatSelect(); updateCombatPotionHeal(); }],
-    ['calcRender',()=>{ autoFillStats(); calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender(); equipmentRecalc('weapon'); equipmentRecalc('armor'); consRender(); fatigueRender(); expectedCalc(); updateFieldEncounterSummary(); monsterSealPresetRender(); monsterSealRender(); clearIMPips(15); }],
+    ['calcRender',()=>{ autoFillStats(); calcAll(); updateExpDisplay(); updateMoneyDisplay(); invRender(); equipmentRecalc('weapon'); equipmentRecalc('armor'); consRender(); fatigueRender(); expectedCalc(); updateFieldEncounterSummary(); updateRewardMaterialTierPreview(); invTypeChanged(); monsterSealPresetRender(); monsterSealRender(); clearIMPips(15); }],
     ['imPips',()=>document.querySelectorAll('#im-pips .im-pip').forEach(p=>p.classList.add('filled'))],
     ['autoLoad',()=>buildTryAutoLoad()],
     ['autoSave',()=>buildEnableAutoSave()],
