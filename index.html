@@ -3370,6 +3370,15 @@ const INV_RARITY = {
   unique: { label:'Unique', mult:20, color:'var(--gold)' },
   legendary: { label:'Legendary', mult:50, color:'var(--red)' },
 };
+function updateRewardMaterialTierPreview(){
+  const input=document.getElementById('reward-mlv');
+  const box=document.getElementById('reward-material-tier-preview');
+  if(!input || !box) return;
+  const lv=normalizeMonsterLevel(input.value);
+  const tier=materialTierFromMonsterLevel(lv);
+  box.textContent=`Material: Lv.${lv} → T${tier} (${materialTierRangeText(tier)})`;
+}
+
 function invTypeChanged(){
   const type=document.getElementById('inv-add-type').value;
   const name=document.getElementById('inv-add-name');
