@@ -239,7 +239,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
 <div class="wrap">
   <div class="header">
     <h1>⟨ UNRULING WORLD ⟩</h1>
-    <p>GM WEBAPP — Material Tier / Quality System</p>
+    <p>GM WEBAPP — Mana Flake Q1–Q9 / Crafting Economy</p>
     <div class="header-line"></div>
   </div>
 
@@ -544,7 +544,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               Weapon ATK = (Lv×1.2)+5 × rarity<br>
               Weapon price = 75 + (Lv²×20); repair base: Common×1, Uncommon×2, Rare×3, Epic×4, Unique×5, Legendary×8<br>
               Crystal price: เศษเสี้ยว = Weapon base×0.25, เข้มข้นต่ำ = เศษเสี้ยว×5, เข้มข้นกลาง = เศษเสี้ยว×25, เข้มข้นสูง = เศษเสี้ยว×100, เศษเสี้ยวแก่นมานา = เศษเสี้ยว×500<br>
-              ผลึกไร้มานา price = ผลึกเศษเสี้ยวมานา×20% = B×0.05 โดย B ใช้เลเวลต้นช่วงของระดับผลึก<br>
+              ผลึกไร้มานา price = ผลึกเศษเสี้ยวมานา×20% = B×0.01 โดย B ใช้เลเวลต้นช่วงของระดับผลึก<br>
               Mana Pressure: มอนสูงกว่า 1 Lv = ตีเบาลง 5%, DEF มอน +5%, durability lost +10%, EXP +10%
             </div>
           </div>
@@ -567,45 +567,76 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               คุณสมบัติ Seal ปรับเองได้ในหน้า MONSTER SEAL และถูก link เข้า Combat Sim โดยตรง
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
-              <b>ระบบ Material Drop — Material Tier / Quality</b><br>
-              มอนสเตอร์ 1 ตัวดรอป Monster Part พื้นฐาน 1 ชิ้นเสมอ แล้วสุ่ม Quality 1–5 เพียงครั้งเดียว<br>
-              Material Tier = floor(Monster Lv ÷ 5) + 1. มอนต่างเลเวลที่อยู่ Tier และ Quality เดียวกันจะรวมเป็นกองเดียวกันใน Inventory<br>
-              ชื่อไอเทมมาตรฐาน: <b>Monster Part T{Tier} Quality {1–5}</b>. Monster Rank ไม่ติดในชื่อ แต่ใช้กำหนดโอกาสสุ่ม Quality หลังบ้าน
+              <b>ระบบสะเก็ดมานา Q1–Q9 / เศรษฐกิจการล่า</b><br>
+              เมื่อมอนสเตอร์ตาย ร่างกายที่ถูกมานาหล่อเลี้ยงจะคงสภาพไม่ได้และสลายคืนสู่อากาศ เหลือเพียงสะเก็ดมานาตกค้าง<br>
+              <b>Q1 ดรอปแน่นอน 1 ชิ้นต่อการฆ่า</b> เป็นของขาย NPC/เชื้อหลอม จึงเป็นรายได้พื้นฐานของนักล่า ส่วน Q2–Q9 เป็น Bonus Drop แยกโรลอิสระ<br>
+              Material Tier = floor(Monster Lv ÷ 5) + 1. มอนต่างเลเวลใน Tier เดียวกันรวมกองได้<br>
+              Q2–Q3 เป็นมานาทั่วไป ใช้เสริมเหล็กหรือวัสดุฐาน ส่วน Q4 ขึ้นไปเก็บอัตลักษณ์ของสายพันธุ์และควรระบุชื่ออัตลักษณ์เมื่อใช้จริง
             </div>
             <table class="beh-table" style="margin-top:8px">
-              <thead><tr><th>ช่วงเลเวลมอนสเตอร์</th><th>Material Tier</th><th>ตัวอย่างชื่อไอเทม</th></tr></thead>
+              <thead><tr><th>ช่วงเลเวลมอนสเตอร์</th><th>Material Tier</th><th>ตัวอย่าง</th></tr></thead>
               <tbody>
-                <tr><td>Lv.20–24</td><td>T5</td><td>Monster Part T5 Quality 1–5</td></tr>
-                <tr><td>Lv.25–29</td><td>T6</td><td>Monster Part T6 Quality 1–5</td></tr>
-                <tr><td>Lv.30–34</td><td>T7</td><td>Monster Part T7 Quality 1–5</td></tr>
-                <tr><td>Lv.35–39</td><td>T8</td><td>Monster Part T8 Quality 1–5</td></tr>
-                <tr><td>Lv.40–44</td><td>T9</td><td>Monster Part T9 Quality 1–5</td></tr>
+                <tr><td>Lv.20–24</td><td>T5</td><td>สะเก็ดมานา T5 Q1–Q9</td></tr>
+                <tr><td>Lv.25–29</td><td>T6</td><td>สะเก็ดมานา T6 Q1–Q9</td></tr>
+                <tr><td>Lv.30–34</td><td>T7</td><td>สะเก็ดมานา T7 Q1–Q9</td></tr>
+                <tr><td>Lv.35–39</td><td>T8</td><td>สะเก็ดมานา T8 Q1–Q9</td></tr>
+                <tr><td>Lv.40–44</td><td>T9</td><td>สะเก็ดมานา T9 Q1–Q9</td></tr>
               </tbody>
             </table>
             <table class="beh-table" style="margin-top:8px">
-              <thead><tr><th>Quality</th><th>ความหมาย</th><th>ราคาจาก B</th></tr></thead>
+              <thead><tr><th>Quality</th><th>บทบาท</th><th>การใช้หลัก</th></tr></thead>
               <tbody>
-                <tr><td>Quality 1</td><td>คุณภาพพื้นฐาน พบได้บ่อยที่สุด</td><td>B ÷ 100</td></tr>
-                <tr><td>Quality 2</td><td>คุณภาพดี วัตถุดิบใช้งานทั่วไป</td><td>B ÷ 50</td></tr>
-                <tr><td>Quality 3</td><td>คุณภาพสูง เริ่มมีมูลค่าชัดเจน</td><td>B ÷ 8</td></tr>
-                <tr><td>Quality 4</td><td>คุณภาพหายาก มูลค่าสูง</td><td>B ÷ 2</td></tr>
-                <tr><td>Quality 5</td><td>คุณภาพยอดเยี่ยมระดับสูงสุด</td><td>B × 2</td></tr>
-              </tbody>
-            </table>
-            <table class="beh-table" style="margin-top:8px">
-              <thead><tr><th>Monster Rank</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th></tr></thead>
-              <tbody>
-                <tr><td class="t-n">Normal</td><td>75%</td><td>23%</td><td>2%</td><td>0%</td><td>0%</td></tr>
-                <tr><td class="t-e">Elite</td><td>60%</td><td>30%</td><td>9%</td><td>1%</td><td>0%</td></tr>
-                <tr><td class="t-c">Champion</td><td>45%</td><td>33%</td><td>16%</td><td>5.5%</td><td>0.5%</td></tr>
-                <tr><td class="t-m">Mini Boss</td><td>10%</td><td>35%</td><td>35%</td><td>17%</td><td>3%</td></tr>
-                <tr><td class="t-b">Boss</td><td>5%</td><td>25%</td><td>35%</td><td>25%</td><td>10%</td></tr>
+                <tr><td>Q1</td><td>สะเก็ดมานาเสื่อมสภาพ</td><td>ขาย NPC / เชื้อหลอม; ราคาฐาน ≈ เลเวลกลาง Tier × 5 C</td></tr>
+                <tr><td>Q2</td><td>สะเก็ดมานาธรรมดา</td><td>สร้าง Common; เสริมเหล็ก/ไม้/ผ้า</td></tr>
+                <tr><td>Q3</td><td>สะเก็ดมานาเสถียร</td><td>สร้างหรืออัป Uncommon และ Rare มาตรฐาน</td></tr>
+                <tr><td>Q4</td><td>อัตลักษณ์เบาบาง</td><td>Rare มีอัตลักษณ์; เช่น พยัคฆ์/หมี/อสรพิษ</td></tr>
+                <tr><td>Q5</td><td>อัตลักษณ์ชัดเจน</td><td>แกน Epic หรือใช้ลดจำนวน Q4 ในสูตร</td></tr>
+                <tr><td>Q6</td><td>อัตลักษณ์สมบูรณ์</td><td>Legendary; แหล่งหลัก Champion/Mini Boss/Boss</td></tr>
+                <tr><td>Q7</td><td>อัตลักษณ์วิวัฒน์</td><td>Mythic; บอสและเงื่อนไขเฉพาะ</td></tr>
+                <tr><td>Q8</td><td>อัตลักษณ์เอกเทศ</td><td>Mythic มีชื่อ / บอสมีชื่อ / เหตุการณ์โลก</td></tr>
+                <tr><td>Q9</td><td>อัตลักษณ์ต้นกำเนิด</td><td>ของระดับโลก ไม่อยู่ในตารางดรอปปกติ</td></tr>
               </tbody>
             </table>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
-              <b>สูตรราคา</b><br>
-              L = เลเวลต้นช่วงของ Tier | B = 75 + 20 × L² | ปัดเป็นหลัก 10 copper<br>
-              ตัวอย่าง T5: L = 20 → B = 8,075 C → Q1 80 C | Q2 160 C | Q3 1,010 C | Q4 4,040 C | Q5 16,150 C
+              <b>Bonus Drop Rate — โรลแต่ละ Quality แยกกัน</b><br>
+              Q1 การันตี ×1 ทุก kill. ตัวเลขด้านล่างเป็นโอกาสได้ Q2–Q7 เพิ่มเติม จึงมีโอกาสได้หลาย Quality จากมอนตัวเดียว โดย Q8–Q9 = 0% ในระบบปกติ
+            </div>
+            <table class="beh-table" style="margin-top:8px">
+              <thead><tr><th>Rank</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th><th>Q6</th><th>Q7</th></tr></thead>
+              <tbody>
+                <tr><td class="t-n">Normal</td><td>15%</td><td>2%</td><td>0.1%</td><td>0%</td><td>0%</td><td>0%</td></tr>
+                <tr><td class="t-e">Elite</td><td>45%</td><td>15%</td><td>2%</td><td>0.1%</td><td>0%</td><td>0%</td></tr>
+                <tr><td class="t-c">Champion</td><td>80%</td><td>45%</td><td>15%</td><td>2%</td><td>0.1%</td><td>0%</td></tr>
+                <tr><td class="t-m">Mini Boss</td><td>300%*</td><td>150%*</td><td>40%</td><td>10%</td><td>1%</td><td>0.1%</td></tr>
+                <tr><td class="t-b">Boss</td><td>1,000%*</td><td>400%*</td><td>100%</td><td>35%</td><td>5%</td><td>1%</td></tr>
+              </tbody>
+            </table>
+            <div class="small-note" style="line-height:1.7;margin-top:6px">
+              *Mini Boss/Boss ใช้จำนวนการันตีแทนเปอร์เซ็นต์: Mini Boss Q2 ×3, Q3 ×1 และมีโอกาสเพิ่มอีก 50%; Boss Q2 ×10, Q3 ×4. Q4+ โรลตามตาราง
+            </div>
+            <table class="beh-table" style="margin-top:8px">
+              <thead><tr><th>สูตรคราฟ</th><th>สะเก็ดที่ใช้</th><th>ผลึก/เงื่อนไข</th></tr></thead>
+              <tbody>
+                <tr><td>อาวุธ Common</td><td>Q2 ×30 + วัสดุฐาน</td><td>ค่าช่าง</td></tr>
+                <tr><td>เกราะชิ้นเล็ก Common</td><td>Q2 ×30 + วัสดุฐาน</td><td>ค่าช่าง</td></tr>
+                <tr><td>เกราะอก/โล่หนัก Common</td><td>Q2 ×45 + วัสดุฐาน</td><td>ค่าช่าง</td></tr>
+                <tr><td>Uncommon</td><td>อุปกรณ์ Common + Q3 ×20</td><td>ผลึกเศษเสี้ยวมานา ×3</td></tr>
+                <tr><td>Rare มาตรฐาน</td><td>อุปกรณ์ Uncommon + Q3 ×30</td><td>ผลึกมานาเข้มข้นต่ำ ×1</td></tr>
+                <tr><td>Rare มีอัตลักษณ์</td><td>Uncommon + Q3 ×15 + Q4 ชนิดเดียวกัน ×5</td><td>ผลึกมานาเข้มข้นต่ำ ×1</td></tr>
+                <tr><td>Epic</td><td>Rare อัตลักษณ์ + Q5 ชนิดเดียวกัน ×3</td><td>ผลึกมานาเข้มข้นกลาง + สูตร/ช่าง</td></tr>
+                <tr><td>Legendary</td><td>Epic + Q6 ชนิดเดียวกัน ×2</td><td>ผลึกมานาเข้มข้นสูง + เงื่อนไขวิวัฒน์</td></tr>
+                <tr><td>Mythic</td><td>Legendary + Q7 ×1</td><td>สูตรและเงื่อนไขเฉพาะ</td></tr>
+              </tbody>
+            </table>
+            <div class="small-note" style="line-height:1.7;margin-top:8px">
+              <b>เป้าสมดุลช่วง Lv.20–24 — ฆ่ารวมประมาณ 880 ตัว</b><br>
+              หากสัดส่วนการพบเป็น Normal 774 / Elite 88 / Champion 18 จะได้โดยเฉลี่ย Q1 ×880, Q2 ≈170, Q3 ≈37, Q4 ≈5, Q5 ≈0.45, Q6 ≈0.02.<br>
+              Q4 ขึ้นไปยังคละอัตลักษณ์ จึงไม่เท่ากับคราฟ Rare ได้ทันที. ผู้เล่นทั่วไปจบช่วงด้วย Common หลายชิ้นและเลือกอัป Uncommon ราว 1 ชิ้น; Rare ต้องเจาะฟาร์ม ซื้อขาย หรือรวมของชนิดเดียวกัน<br>
+              Q1 ที่ขาย NPC สร้างรายได้ขั้นต้นราว 96–97 Silver ก่อนหักดาบร้าน Lv.20, ซ่อม, ยา, อาหาร, แร่, ค่าช่าง และค่าตลาด จึงมีทั้ง Money Faucet และ Money Sink
+            </div>
+            <div class="small-note" style="line-height:1.7;margin-top:8px">
+              <b>กำแพงอุปกรณ์ทุก 10 เลเวล</b><br>
+              ใช้อาวุธช่วงก่อนหน้าตีมอนข้ามกำแพง: Damage −20% และ Durability Loss ×3. ผู้เล่นยังดิ้นล่าได้ แต่ดาบร้าน Lv.20 มีบทบาทเป็นอาวุธตั้งต้นสำหรับล่า Q2–Q4 แล้วค่อยคราฟของใหม่
             </div>
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>Tier</th><th>ศิลาอาวุธ</th><th>ศิลาเกราะ</th><th>ตรามอนสเตอร์</th></tr></thead>
@@ -636,7 +667,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <div class="field"><label>QTY</label><input type="number" id="empty-crystal-qty" value="1" min="1" oninput="emptyCrystalUpdatePrice()"></div>
             <div class="result-item" style="margin-top:6px;"><span class="r-label">UNIT / TOTAL</span><span class="r-val gold" id="empty-crystal-price-show">—</span></div>
             <button class="btn sm gold-btn" style="width:auto;padding:7px 12px;margin-top:8px;" onclick="buyEmptyCrystal()">BUY → INVENTORY</button>
-            <div class="small-note">ราคา = B ของระดับผลึก ×0.05. ต้องมีผลึกไร้มานาระดับตรงกันก่อนจึงนับ kill; ครบ 150 ตัว → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานาระดับเดียวกัน ×1</div>
+            <div class="small-note">ราคา = B ของระดับผลึก ×0.01. ต้องมีผลึกไร้มานาระดับตรงกันก่อนจึงนับ kill; ครบ 150 ตัว → ใช้ผลึกไร้มานา 1 ก้อน แล้วได้ผลึกเศษเสี้ยวมานาระดับเดียวกัน ×1</div>
             <div id="empty-crystal-trace" style="font-family:var(--mono);font-size:0.66rem;color:var(--text-dim);margin-top:8px;background:var(--panel);border:1px solid var(--border);padding:6px;line-height:1.6;">Empty Crystal Trace: —</div>
           </div>
 
@@ -678,6 +709,14 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               </select>
             </div>
             <div class="field"><label>ATK</label><input type="number" id="eq-weapon-atk" value="6" min="0" readonly></div>
+            <div class="field"><label>TRAIT</label>
+              <select id="eq-weapon-trait" onchange="equipmentRender();updateCombatEquipmentSummary()">
+                <option value="none">None</option>
+                <option value="power">Power — Damage +%</option>
+                <option value="pierce">Piercing — Ignore DEF %</option>
+              </select>
+            </div>
+            <div class="field"><label>TRAIT VALUE %</label><input type="number" id="eq-weapon-trait-value" value="0" min="0" step="1" oninput="equipmentRender();updateCombatEquipmentSummary()"></div>
             <div class="field"><label>PRICE</label><input type="number" id="eq-weapon-price" value="100" min="0"></div>
             <div class="field"><label>DUR %</label><input type="number" id="eq-weapon-dur" value="100" min="0" max="100" step="0.1" oninput="equipmentRender()"></div>
             <div class="small-note" id="eq-weapon-meta">Formula: price 100C / ATK 6 / DurPool 100</div>
@@ -702,6 +741,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
                 <option value="legendary">Legendary ×2</option>
               </select>
             </div>
+            <div class="field"><label>DEF</label><input type="number" id="eq-armor-def" value="4" min="0" readonly></div>
             <div class="field"><label>PRICE</label><input type="number" id="eq-armor-price" value="80" min="0"></div>
             <div class="field"><label>DUR %</label><input type="number" id="eq-armor-dur" value="100" min="0" max="100" step="0.1" oninput="equipmentRender()"></div>
             <div class="small-note" id="eq-armor-meta">Formula: price 80C / DurPool 100</div>
@@ -853,16 +893,20 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
           <div class="inv-add-grid">
             <div>
               <div class="section-label" style="margin-bottom:4px">ITEM NAME</div>
-              <input id="inv-add-name" value="Monster Part T1 Quality 1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--thai);font-size:0.82rem;outline:none;">
+              <input id="inv-add-name" value="สะเก็ดมานาเสื่อมสภาพ T1 Q1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--thai);font-size:0.82rem;outline:none;">
             </div>
             <div>
               <div class="section-label" style="margin-bottom:4px">TYPE</div>
               <select id="inv-add-type" onchange="invTypeChanged()" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
-                <option value="monster_part_q1">Monster Part Quality 1</option>
-                <option value="monster_part_q2">Monster Part Quality 2</option>
-                <option value="monster_part_q3">Monster Part Quality 3</option>
-                <option value="monster_part_q4">Monster Part Quality 4</option>
-                <option value="monster_part_q5">Monster Part Quality 5</option>
+                <option value="monster_part_q1">สะเก็ดมานา Q1</option>
+                <option value="monster_part_q2">สะเก็ดมานา Q2</option>
+                <option value="monster_part_q3">สะเก็ดมานา Q3</option>
+                <option value="monster_part_q4">สะเก็ดมานาอัตลักษณ์ Q4</option>
+                <option value="monster_part_q5">สะเก็ดมานาอัตลักษณ์ Q5</option>
+                <option value="monster_part_q6">สะเก็ดมานาอัตลักษณ์ Q6</option>
+                <option value="monster_part_q7">สะเก็ดมานาอัตลักษณ์ Q7</option>
+                <option value="monster_part_q8">สะเก็ดมานาอัตลักษณ์ Q8</option>
+                <option value="monster_part_q9">สะเก็ดมานาอัตลักษณ์ Q9</option>
                 <option value="monster_part">Legacy Monster Part</option>
                 <option value="elite_monster_part">Legacy Elite Part</option>
                 <option value="ore">Ore Lv×10</option>
@@ -1126,12 +1170,17 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
           <div class="stat-item"><label>DEX</label><input type="number" id="b-dex" value="15" min="1"></div>
           <div class="stat-item"><label>WIS</label><input type="number" id="b-wis" value="15" min="1"></div>
         </div>
-        <div class="field"><label>RARITY</label>
+        <div class="field"><label>RARITY (LEGACY FALLBACK)</label>
           <select id="b-rarity">
             <option value="1.0">Common</option><option value="1.15">Uncommon</option>
             <option value="1.3">Rare</option><option value="1.5">Epic</option>
             <option value="1.7">Unique</option><option value="2.0">Legendary</option>
           </select>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--border);padding:8px;margin-bottom:10px;">
+          <div class="section-label">LINKED EQUIPMENT</div>
+          <div id="combat-equipment-summary" class="small-note" style="line-height:1.7;white-space:pre-wrap;">กำลังอ่านค่าจาก Equipment…</div>
+          <button class="btn sm" style="width:auto;padding:7px 12px;margin-top:6px;" onclick="switchTab('tools')">EDIT EQUIPMENT</button>
         </div>
         <div style="background:var(--bg);border:1px solid var(--border);padding:8px;margin-bottom:10px;">
           <div class="section-label">LINKED MONSTER SEAL</div>
@@ -1388,6 +1437,31 @@ function getLvWeap(lv){ return lv<5?1:Math.floor(lv/5)*5; }
 function getBaseDMG(str){ return Math.pow(str,0.65)*2; }
 function getWeapDMG(lv,rar){ return ((getLvWeap(lv)*1.2)+5)*rar; }
 function getTotalDMG(str,lv,rar){ return getBaseDMG(str)+getWeapDMG(lv,rar); }
+function getEquipmentArmorDef(lv,rarityKey){
+  const r=(typeof EQ_RARITY!=='undefined' && EQ_RARITY[rarityKey])?EQ_RARITY[rarityKey]:{atk:1};
+  return Math.round((((+lv||1)*0.8)+3)*r.atk);
+}
+function getLinkedWeaponAtk(fallbackLv=1,fallbackRar=1){
+  const el=document.getElementById('eq-weapon-atk');
+  return el ? Math.max(0,+el.value||0) : getWeapDMG(fallbackLv,fallbackRar);
+}
+function getLinkedArmorDef(){ return Math.max(0,+document.getElementById('eq-armor-def')?.value||0); }
+function getLinkedWeaponTrait(){
+  return {key:document.getElementById('eq-weapon-trait')?.value||'none', value:Math.max(0,+document.getElementById('eq-weapon-trait-value')?.value||0)};
+}
+function linkedWeaponDamageMult(){ const t=getLinkedWeaponTrait(); return t.key==='power' ? 1+t.value/100 : 1; }
+function linkedWeaponIgnoreDef(){ const t=getLinkedWeaponTrait(); return t.key==='pierce' ? t.value : 0; }
+function linkedArmorReduction(){ const d=getLinkedArmorDef(); return Math.min(0.35, d/(d+200)); }
+function getCombatTotalDMG(str,lv,rar){ return (getBaseDMG(str)+getLinkedWeaponAtk(lv,rar))*linkedWeaponDamageMult(); }
+function updateCombatEquipmentSummary(){
+  const box=document.getElementById('combat-equipment-summary'); if(!box) return;
+  const wn=document.getElementById('eq-weapon-name')?.value||'Weapon';
+  const an=document.getElementById('eq-armor-name')?.value||'Armor';
+  const t=getLinkedWeaponTrait();
+  const trait=t.key==='power'?`Power: Damage +${t.value}%`:t.key==='pierce'?`Piercing: Ignore DEF ${t.value}%`:'ไม่มี Trait';
+  box.textContent=`${wn} | ATK ${getLinkedWeaponAtk()} | ${trait}
+${an} | DEF ${getLinkedArmorDef()} | ลดดาเมจเพิ่ม ${(linkedArmorReduction()*100).toFixed(1)}%`;
+}
 function getReduction(vit,lv){ return Math.min(0.80, vit/(vit+lv*2)); }
 function getHP(vit,lv){ return (vit*10)+(lv*20); }
 function getMP(int_,lv){ return (int_*5)+(lv*10); }
@@ -1600,7 +1674,7 @@ function calcAll(){
   const pint=+document.getElementById('c-int').value||1;
   const pwis=+document.getElementById('c-wis').value||1;
   const prar=+document.getElementById('c-rarity').value;
-  const pDMG=getTotalDMG(pstr,plv,prar);
+  const pDMG=getCombatTotalDMG(pstr,plv,prar);
   const pHP=getHP(pvit,plv);
   const pMP=getMP(pint,plv);
   const pRed=getReduction(pvit,plv);
@@ -2185,7 +2259,7 @@ function imSkillWeakBonus(){ return imSkillBonus('weak'); }
 function imSkillDodgeBonus(){ return imSkillBonus('dodge'); }
 function imSkillDefBonus(){ return imSkillBonus('def'); }
 function imSkillDmgMult(){ return 1 + imSkillBonus('dmg')/100; }
-function getFinalPlayerReduction(effVit, lv){ return adjustedReductionForMonsterAttack(clamp(getReduction(effVit,lv) + imSkillDefBonus()/100, 0, 0.90)); }
+function getFinalPlayerReduction(effVit, lv){ return adjustedReductionForMonsterAttack(clamp(getReduction(effVit,lv) + linkedArmorReduction() + imSkillDefBonus()/100, 0, 0.90)); }
 function getIMSkillConfig(){
   return {
     name:document.getElementById('im-skill-name')?.value||'Inner Mana Skill',
@@ -2340,6 +2414,8 @@ function initCombat(){
   const initFullDodge=clamp(initCombatDodge+15, 5, 90);
   addLog('system',`Dodge: Combat ${pct(initCombatDodge)} | Full ${pct(initFullDodge)} | Monster Control ×${initControl.toFixed(2)}`);
   addLog('system',`ไอเรน HP:${Math.round(prevVitals.hp)}/${Math.round(pHP)} MP:${Math.round(prevVitals.mp)}/${Math.round(pMaxMP)} DMG:${fmt(pDMG)} ขั้น:${coreStage} IM:${prevVitals.im}/${maxIM}`);
+  const linkedTrait=getLinkedWeaponTrait();
+  addLog('system',`Linked Equipment: Weapon ATK ${getLinkedWeaponAtk(plv,prar)}${linkedTrait.key==='power'?` | Damage +${linkedTrait.value}%`:linkedTrait.key==='pierce'?` | Ignore DEF ${linkedTrait.value}%`:''} | Armor DEF ${getLinkedArmorDef()} (Reduction +${(linkedArmorReduction()*100).toFixed(1)}%)`);
   if(seal.enabled) addLog('skill',`Monster Seal Active: ${monsterSealSummaryText(seal).replace(/\n/g,' | ')}`);
   addLog('system',`มอนสเตอร์ HP:${Math.round(mHP)} DMG:${fmt(mDMG)} AGI_eff:${fmt(mAgiEff)}`);
   addLog('system',`Weak Point Required: ${weakPointRequired(mtier)} clean hit(s) + HP <25% → [อ่อนแอ] | Repeat weak damage +0.1/hit cap ×2.0 | Aim weak: Dodge×1.75 (Stagger opening: ×1.0)`);
@@ -2414,7 +2490,7 @@ function calcPlayerDamage(p, effStr, effDex, mult=1, options={}){
     hb=Math.min(2.0, hb + weakBonus);
     hbLbl += ` | ซ้ำจุดอ่อน +${weakBonus.toFixed(1)} → ×${hb.toFixed(1)}`;
   }
-  let raw=(getTotalDMG(effStr,p.lv,p.rar)*d6p)*mult*manaPressureDmgMult(p.lv, combat.monster.lv)*sealDamageMult();
+  let raw=(getCombatTotalDMG(effStr,p.lv,p.rar)*d6p)*mult*manaPressureDmgMult(p.lv, combat.monster.lv)*sealDamageMult();
   const wasStaggered=!!(combat.monster && combat.monster.staggered);
   const isWeakAim = (options.forceHitbox==='weak' || selectedHitbox==='weak');
   const mdodge=monsterDodgeChance(options.attackerAgi||p.agi, effDex, combat.monster.agi, isWeakAim);
@@ -2424,7 +2500,7 @@ function calcPlayerDamage(p, effStr, effDex, mult=1, options={}){
   }
   if(wasStaggered) combat.monster.staggered=false;
   let pressuredRed=Math.min(0.95, combat.monster.red + manaPressureDefBonus(p.lv, combat.monster.lv));
-  const totalIgnoreDef=(+options.ignoreDefPct||0) + sealPiercePct();
+  const totalIgnoreDef=(+options.ignoreDefPct||0) + sealPiercePct() + linkedWeaponIgnoreDef();
   if(totalIgnoreDef) pressuredRed *= Math.max(0, 1 - totalIgnoreDef/100);
   if(isWeakPointResolved(resolved)) hb = Math.max(0.1, hb * sealWeakMult());
   let real=Math.max(1,raw*(1-(pressuredRed*redScale))*hb*monsterTakenDamageMult());
@@ -2512,16 +2588,22 @@ function handleMonsterFeint(strategy, p, m, effVit, lines, idx, total){
 }
 
 
-// ══ MONSTER MATERIAL DROP SYSTEM: 5-LEVEL TIER / SINGLE QUALITY ROLL ══
-// One kill always creates exactly one Monster Part. Monster Rank only changes the Quality roll.
-const MATERIAL_QUALITY_RATES = {
-  normal:   [75, 23, 2, 0, 0],
-  elite:    [60, 30, 9, 1, 0],
-  champion: [45, 33, 16, 5.5, 0.5],
-  miniboss: [10, 35, 35, 17, 3],
-  boss:     [5, 25, 35, 25, 10]
+// ══ MANA FLAKE DROP SYSTEM: Q1–Q9 / ECONOMY-AWARE ══
+// Q1 is guaranteed once per kill and serves as the stable NPC-sale income source.
+// Q2–Q9 are independent bonus rolls. A single monster may drop multiple qualities.
+const MATERIAL_BONUS_RATES = {
+  normal:   {2:15, 3:2, 4:0.1, 5:0,   6:0,   7:0,   8:0, 9:0},
+  elite:    {2:45, 3:15,4:2,   5:0.1, 6:0,   7:0,   8:0, 9:0},
+  champion: {2:80, 3:45,4:15,  5:2,   6:0.1, 7:0,   8:0, 9:0},
+  miniboss: {2:0,  3:50,4:40,  5:10,  6:1,   7:0.1, 8:0, 9:0},
+  boss:     {2:0,  3:0, 4:100, 5:35,  6:5,   7:1,   8:0, 9:0}
 };
-const MATERIAL_QUALITY_PRICE_FACTORS = {1:1/100, 2:1/50, 3:1/8, 4:1/2, 5:2};
+const MATERIAL_GUARANTEED_COUNTS = {
+  normal:{1:1}, elite:{1:1}, champion:{1:1},
+  miniboss:{1:1,2:3,3:1}, boss:{1:1,2:10,3:4}
+};
+// NPC salvage only. Market price is intentionally independent and player-driven.
+const MATERIAL_NPC_PRICE_MULTIPLIERS = {1:1,2:0.25,3:1,4:4,5:12,6:40,7:150,8:600,9:2500};
 
 function normalizeMonsterLevel(monsterLv){
   const numeric=Number(monsterLv);
@@ -2529,79 +2611,82 @@ function normalizeMonsterLevel(monsterLv){
 }
 function materialTierFromMonsterLevel(monsterLv){
   const lv=normalizeMonsterLevel(monsterLv);
-  // Canon bands: Lv.1–4=T1, Lv.5–9=T2, Lv.10–14=T3, Lv.15–19=T4, Lv.20–24=T5.
   return Math.floor(lv/5)+1;
 }
 function materialTierStartLevel(materialTier){
   const tier=Math.max(1,Math.floor(+materialTier||1));
-  return tier===1 ? 1 : (tier-1)*5;
+  return Math.max(1,(tier-1)*5);
 }
-function materialTierEndLevel(materialTier){
-  const tier=Math.max(1,Math.floor(+materialTier||1));
-  return tier*5-1;
+function materialTierMidLevel(materialTier){
+  return materialTierStartLevel(materialTier)+2;
 }
+function materialTierEndLevel(materialTier){ return materialTierStartLevel(materialTier)+4; }
 function materialTierRangeText(materialTier){
-  return `Lv.${materialTierStartLevel(materialTier)}–${materialTierEndLevel(materialTier)}`;
+  const start=materialTierStartLevel(materialTier);
+  return `Lv.${start}–${start+4}`;
 }
-function updateRewardMaterialTierPreview(){
-  const input=document.getElementById('reward-mlv');
-  const box=document.getElementById('reward-material-tier-preview');
-  if(!input || !box) return;
-  const lv=normalizeMonsterLevel(input.value);
+function materialTierRuleText(monsterLv){
+  const lv=normalizeMonsterLevel(monsterLv);
   const tier=materialTierFromMonsterLevel(lv);
-  box.textContent=`Material: Lv.${lv} → T${tier} (${materialTierRangeText(tier)})`;
+  return `Monster Lv.${lv} → T${tier} (${materialTierRangeText(tier)})`;
 }
 function materialBasePrice(materialTier){
-  const L=materialTierStartLevel(materialTier);
-  return 75 + (20*L*L);
+  // Stable hunting income: middle level of the 5-level band × 5 copper.
+  return materialTierMidLevel(materialTier)*5;
 }
 function materialQualityFromType(type){
-  const m=String(type||'').match(/^monster_part_q([1-5])$/);
+  const m=String(type||'').match(/^monster_part_q([1-9])$/);
   return m ? Number(m[1]) : 0;
 }
 function materialTypeFromQuality(quality){
-  const q=Math.max(1,Math.min(5,Math.round(+quality||1)));
+  const q=Math.max(1,Math.min(9,Math.round(+quality||1)));
   return `monster_part_q${q}`;
 }
 function isMonsterPartQualityType(type){ return materialQualityFromType(type)>0; }
 function materialDropDisplayName(materialTier, quality){
   const tier=Math.max(1,Math.floor(+materialTier||1));
-  const q=Math.max(1,Math.min(5,Math.round(+quality||1)));
-  return `Monster Part T${tier} Quality ${q}`;
+  const q=Math.max(1,Math.min(9,Math.round(+quality||1)));
+  if(q===1) return `สะเก็ดมานาเสื่อมสภาพ T${tier} Q1`;
+  if(q<=3) return `สะเก็ดมานา T${tier} Q${q}`;
+  return `สะเก็ดมานาอัตลักษณ์ T${tier} Q${q}`;
 }
 function getMonsterPartUnitPrice(materialTier, quality){
-  const q=Math.max(1,Math.min(5,Math.round(+quality||1)));
-  const raw=materialBasePrice(materialTier)*(MATERIAL_QUALITY_PRICE_FACTORS[q]||0);
+  const q=Math.max(1,Math.min(9,Math.round(+quality||1)));
+  const raw=materialBasePrice(materialTier)*(MATERIAL_NPC_PRICE_MULTIPLIERS[q]||0);
   return cleanRoundCopper(raw);
 }
-function materialRollQuality(monsterRank){
-  const rates=MATERIAL_QUALITY_RATES[monsterRank]||MATERIAL_QUALITY_RATES.normal;
-  const roll=Math.random()*100;
-  let cumulative=0;
-  for(let i=0;i<rates.length;i++){
-    cumulative += Number(rates[i]||0);
-    if(roll < cumulative) return i+1;
-  }
-  return 1;
-}
-function materialRollOneKill(monsterRank, monsterLv){
-  const normalizedMonsterLv=normalizeMonsterLevel(monsterLv);
-  const materialTier=materialTierFromMonsterLevel(normalizedMonsterLv);
-  const quality=materialRollQuality(monsterRank);
+function materialRollChance(rate){ return Math.random()*100 < Number(rate||0); }
+function materialDropRow(materialTier, quality, monsterLv, monsterRank, qty=1){
   return [{
-    key:`t${materialTier}q${quality}`,
     name:materialDropDisplayName(materialTier,quality),
     type:materialTypeFromQuality(quality),
     rarity:'common',
     lv:materialTierStartLevel(materialTier),
-    monsterLv:normalizedMonsterLv,
-    qty:1,
+    monsterLv,
+    qty,
     base:0,
     materialTier,
     quality,
     monsterRank:String(monsterRank||'normal'),
     legacy:false
   }];
+}
+function materialRollOneKill(monsterRank, monsterLv){
+  const rank=String(monsterRank||'normal').toLowerCase();
+  const normalizedMonsterLv=normalizeMonsterLevel(monsterLv);
+  const materialTier=materialTierFromMonsterLevel(normalizedMonsterLv);
+  const guaranteed=MATERIAL_GUARANTEED_COUNTS[rank]||MATERIAL_GUARANTEED_COUNTS.normal;
+  const rates=MATERIAL_BONUS_RATES[rank]||MATERIAL_BONUS_RATES.normal;
+  let drops=[];
+  for(const [qRaw,countRaw] of Object.entries(guaranteed)){
+    const q=Number(qRaw), count=Math.max(0,Math.floor(Number(countRaw)||0));
+    if(count>0) drops.push(...materialDropRow(materialTier,q,normalizedMonsterLv,rank,count));
+  }
+  for(let q=2;q<=9;q++){
+    const rate=Number(rates[q]||0);
+    if(rate>0 && materialRollChance(rate)) drops.push(...materialDropRow(materialTier,q,normalizedMonsterLv,rank,1));
+  }
+  return drops;
 }
 function aggregateMaterialDrops(drops){
   const map=new Map();
@@ -2610,7 +2695,7 @@ function aggregateMaterialDrops(drops){
     if(!map.has(key)) map.set(key,{...d});
     else map.get(key).qty += d.qty;
   }
-  return [...map.values()];
+  return [...map.values()].sort((a,b)=>(a.quality-b.quality));
 }
 function rollMaterialDrops(monsterRank, monsterLv, kills){
   let drops=[];
@@ -2626,17 +2711,19 @@ function addMaterialDropsToInventory(monsterRank, monsterLv, kills){
   return {drops,total};
 }
 function materialDropSummary(drops){
-  if(!drops || !drops.length) return 'Material: none';
-  return 'Material: ' + drops.map(d=>`${d.name} ×${d.qty}`).join(', ');
+  if(!drops || !drops.length) return 'Mana Flake: none';
+  return 'Mana Flake: ' + drops.map(d=>`${d.name} ×${d.qty}`).join(', ');
 }
 function getKillTrashReport(monsterRank, monsterLv){
+  const rank=String(monsterRank||'normal').toLowerCase();
   const materialTier=materialTierFromMonsterLevel(monsterLv);
-  const rates=MATERIAL_QUALITY_RATES[monsterRank]||MATERIAL_QUALITY_RATES.normal;
-  const rateText=rates.map((rate,i)=>`Q${i+1} ${rate}% (${getMonsterPartUnitPrice(materialTier,i+1)}C)`).join(' | ');
+  const rates=MATERIAL_BONUS_RATES[rank]||MATERIAL_BONUS_RATES.normal;
+  const rateText=[];
+  for(let q=2;q<=7;q++) if(Number(rates[q]||0)>0) rateText.push(`Q${q} ${rates[q]}%`);
   return {
     commonName:materialDropDisplayName(materialTier,1),
     commonValue:getMonsterPartUnitPrice(materialTier,1),
-    text:`Loot report: ${String(monsterRank||'normal')} | T${materialTier} ${materialTierRangeText(materialTier)} | 1 part/kill | ${rateText}`
+    text:`Loot report: ${rank} | T${materialTier} ${materialTierRangeText(materialTier)} | Q1 guaranteed ×1 (${getMonsterPartUnitPrice(materialTier,1)}C NPC) | Bonus ${rateText.join(' | ')||'none'}`
   };
 }
 
@@ -3237,11 +3324,15 @@ function moneySubSimple(){
 // ══ INVENTORY SYSTEM ══
 let inventoryRows = [];
 const INV_TYPE_BASE = {
-  monster_part_q1: { label:'Monster Part Quality 1', base:0 },
-  monster_part_q2: { label:'Monster Part Quality 2', base:0 },
-  monster_part_q3: { label:'Monster Part Quality 3', base:0 },
-  monster_part_q4: { label:'Monster Part Quality 4', base:0 },
-  monster_part_q5: { label:'Monster Part Quality 5', base:0 },
+  monster_part_q1: { label:'สะเก็ดมานา Q1', base:0 },
+  monster_part_q2: { label:'สะเก็ดมานา Q2', base:0 },
+  monster_part_q3: { label:'สะเก็ดมานา Q3', base:0 },
+  monster_part_q4: { label:'สะเก็ดมานาอัตลักษณ์ Q4', base:0 },
+  monster_part_q5: { label:'สะเก็ดมานาอัตลักษณ์ Q5', base:0 },
+  monster_part_q6: { label:'สะเก็ดมานาอัตลักษณ์ Q6', base:0 },
+  monster_part_q7: { label:'สะเก็ดมานาอัตลักษณ์ Q7', base:0 },
+  monster_part_q8: { label:'สะเก็ดมานาอัตลักษณ์ Q8', base:0 },
+  monster_part_q9: { label:'สะเก็ดมานาอัตลักษณ์ Q9', base:0 },
   monster_part: { label:'Legacy: Monster Part', base:5, legacy:true },
   elite_monster_part: { label:'Legacy: Elite Part', base:10, legacy:true },
   mat_g1: { label:'Legacy: Material Grade 1', base:3, legacy:true },
@@ -3337,12 +3428,12 @@ function crystalBaseName(type){
 }
 function isTieredCrystalType(type){ return ['crystal_shard','crystal_low','crystal_mid','crystal_high','crystal_core','empty_crystal'].includes(String(type||'')); }
 function crystalPriceFactor(type){
-  if(type==='crystal_shard') return 0.25;
-  if(type==='crystal_low') return 1.25;
-  if(type==='crystal_mid') return 6.25;
-  if(type==='crystal_high') return 25;
-  if(type==='crystal_core') return 125;
-  if(type==='empty_crystal') return 0.05;
+  if(type==='crystal_shard') return 0.05;
+  if(type==='crystal_low') return 0.25;
+  if(type==='crystal_mid') return 1.25;
+  if(type==='crystal_high') return 6.25;
+  if(type==='crystal_core') return 25;
+  if(type==='empty_crystal') return 0.01;
   return null;
 }
 function getCrystalUnitPrice(type, crystalLevel){
@@ -3358,12 +3449,12 @@ function crystalDisplayName(baseName, crystalLevel, levelIsDirect){
 }
 function invAutoUnitPrice(row){
   if(isMonsterPartQualityType(row.type)){
-    const q=Math.max(1,Math.min(5,Math.round(+row.quality||materialQualityFromType(row.type)||1)));
+    const q=Math.max(1,Math.min(9,Math.round(+row.quality||materialQualityFromType(row.type)||1)));
     const tier=Math.max(1,Math.round(+row.materialTier||materialTierFromMonsterLevel(row.lv)));
     return getMonsterPartUnitPrice(tier,q);
   }
   if(isTieredCrystalType(row.type)){
-    const tier=Math.max(3,Math.round(+row.crystalTier||crystalTierFromMonsterLevel(row.monsterLv||row.lv)));
+    const tier=Math.max(1,Math.round(+row.crystalTier||crystalTierFromMonsterLevel(row.monsterLv||row.lv)));
     return getCrystalUnitPrice(row.type,tier);
   }
   if(row.type==='stone_weapon') return getUpgradeStoneUnitPrice('weapon', row.lv);
@@ -3550,11 +3641,11 @@ function invRender(){
 // ══ REWARD / LOOT / REPAIR / SESSION SYSTEM ══
 const EXP_TIER_MULT = { normal:1, elite:3, champion:10, miniboss:20, boss:50 };
 const CRYSTAL_DROP = {
-  normal:   { shard:[0.01,1,1],  low:[0.002,1,1] },
-  elite:    { shard:[0.05,1,1],  low:[0.01,1,1],    mid:[0.001,1,1] },
-  champion: { shard:[1,1,1],     low:[0.10,1,1],   mid:[0.015,1,1], high:[0.001,1,1] },
-  miniboss: { shard:[1,2,4],     low:[0.50,1,1],   mid:[0.05,1,1],  high:[0.01,1,1] },
-  boss:     { shard:[1,6,10],    low:[1,2,4],      mid:[0.40,1,1],  high:[0.05,1,1] }
+  normal:   { shard:[0.01,1,1],  low:[0.0005,1,1] },
+  elite:    { shard:[0.04,1,1],  low:[0.005,1,1],  mid:[0.0003,1,1] },
+  champion: { shard:[0.35,1,1],  low:[0.05,1,1],   mid:[0.005,1,1], high:[0.0003,1,1] },
+  miniboss: { shard:[1,1,2],     low:[0.25,1,1],   mid:[0.03,1,1],  high:[0.003,1,1] },
+  boss:     { shard:[1,3,5],     low:[1,1,1],      mid:[0.20,1,1],  high:[0.02,1,1] }
 };
 const CRYSTAL_PITY_KILLS = 150;
 let crystalPityState = {};
@@ -4237,7 +4328,7 @@ function invNormalizeLoadedRow(source){
   r.locked=!!r.locked;
   const typeQuality=materialQualityFromType(r.type);
   if(typeQuality){
-    r.quality=Math.max(1,Math.min(5,Math.round(+r.quality||typeQuality)));
+    r.quality=Math.max(1,Math.min(9,Math.round(+r.quality||typeQuality)));
     r.type=materialTypeFromQuality(r.quality);
     const sourceMonsterLv=normalizeMonsterLevel(r.monsterLv || r.lv);
     const tierFromLevel=materialTierFromMonsterLevel(sourceMonsterLv);
@@ -4464,6 +4555,8 @@ function equipmentRecalc(kind){
   const priceEl=document.getElementById(`eq-${kind}-price`); if(priceEl) priceEl.value=price;
   if(kind==='weapon'){
     const atkEl=document.getElementById('eq-weapon-atk'); if(atkEl) atkEl.value=getEquipmentAtk(lv,rarityKey);
+  } else {
+    const defEl=document.getElementById('eq-armor-def'); if(defEl) defEl.value=getEquipmentArmorDef(lv,rarityKey);
   }
   const meta=document.getElementById(`eq-${kind}-meta`);
   if(meta){
@@ -4472,6 +4565,7 @@ function equipmentRecalc(kind){
     meta.textContent=`Base ${base}C × repair ${r.price}${atkTxt} / DurPool ${r.dur} (${r.label})`;
   }
   equipmentRender();
+  updateCombatEquipmentSummary();
 }
 function eqDur(kind){ return clampNumber(document.getElementById(`eq-${kind}-dur`)?.value ?? 100,0,100); }
 function eqSetDur(kind,val){ const el=document.getElementById(`eq-${kind}-dur`); if(el){ el.value=Math.round(clampNumber(val,0,100)*10)/10; equipmentRender(); } }
@@ -4483,6 +4577,7 @@ function equipmentRender(){
     if(txt) txt.textContent=`${Math.round(dur*10)/10}% (${effectivePool}/${r.dur})`;
     if(bar) bar.style.width=dur+'%';
   });
+  updateCombatEquipmentSummary();
 }
 function equipmentDamage(kind,loss){
   if(!document.getElementById(`eq-${kind}-dur`)) return;
@@ -4961,7 +5056,7 @@ function cloudApplyCharacter(ch){
 }
 function cloudCollectEquipment(){
   return [
-    {slot:'weapon',name:cloudVal('eq-weapon-name',''),lv:cloudNum('eq-weapon-lv',1),rarity:cloudVal('eq-weapon-rarity','common'),price:cloudNum('eq-weapon-price',0),dur:cloudNum('eq-weapon-dur',100),atk:cloudNum('eq-weapon-atk',0),note:''},
+    {slot:'weapon',name:cloudVal('eq-weapon-name',''),lv:cloudNum('eq-weapon-lv',1),rarity:cloudVal('eq-weapon-rarity','common'),price:cloudNum('eq-weapon-price',0),dur:cloudNum('eq-weapon-dur',100),atk:cloudNum('eq-weapon-atk',0),trait:cloudVal('eq-weapon-trait','none'),traitValue:cloudNum('eq-weapon-trait-value',0),note:''},
     {slot:'armor',name:cloudVal('eq-armor-name',''),lv:cloudNum('eq-armor-lv',1),rarity:cloudVal('eq-armor-rarity','common'),price:cloudNum('eq-armor-price',0),dur:cloudNum('eq-armor-dur',100),atk:0,note:''}
   ];
 }
@@ -4970,7 +5065,7 @@ function cloudApplyEquipment(rows){
   rows.forEach(r=>{
     const slot=String(r.slot||'').toLowerCase();
     if(slot==='weapon'){
-      [['eq-weapon-name',r.name],['eq-weapon-lv',r.lv],['eq-weapon-rarity',r.rarity],['eq-weapon-price',r.price],['eq-weapon-dur',r.dur],['eq-weapon-atk',r.atk]].forEach(([id,v])=>{ if(v!==undefined&&document.getElementById(id)) document.getElementById(id).value=v; });
+      [['eq-weapon-name',r.name],['eq-weapon-lv',r.lv],['eq-weapon-rarity',r.rarity],['eq-weapon-price',r.price],['eq-weapon-dur',r.dur],['eq-weapon-atk',r.atk],['eq-weapon-trait',r.trait],['eq-weapon-trait-value',r.traitValue]].forEach(([id,v])=>{ if(v!==undefined&&document.getElementById(id)) document.getElementById(id).value=v; });
     }else if(slot==='armor'){
       [['eq-armor-name',r.name],['eq-armor-lv',r.lv],['eq-armor-rarity',r.rarity],['eq-armor-price',r.price],['eq-armor-dur',r.dur]].forEach(([id,v])=>{ if(v!==undefined&&document.getElementById(id)) document.getElementById(id).value=v; });
     }
@@ -5317,6 +5412,7 @@ function safeBoot(){
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', safeBoot);
 else safeBoot();
+document.addEventListener('DOMContentLoaded',()=>{ equipmentRecalc('weapon'); equipmentRecalc('armor'); updateCombatEquipmentSummary(); });
 </script>
 </body>
 </html>
