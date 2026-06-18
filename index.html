@@ -239,7 +239,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
 <div class="wrap">
   <div class="header">
     <h1>⟨ UNRULING WORLD ⟩</h1>
-    <p>GM WEBAPP — Mana Flake Q1–Q9 / Crafting Economy</p>
+    <p>GM WEBAPP — Monster Meat Q1 / Mana Flake Q2–Q9 / Crafting Economy</p>
     <div class="header-line"></div>
   </div>
 
@@ -569,7 +569,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               <b>ระบบสะเก็ดมานา Q1–Q9 / เศรษฐกิจการล่า</b><br>
               เมื่อมอนสเตอร์ตาย ร่างกายที่ถูกมานาหล่อเลี้ยงจะคงสภาพไม่ได้และสลายคืนสู่อากาศ เหลือเพียงสะเก็ดมานาตกค้าง<br>
-              <b>Q1 ดรอปแน่นอน 1 ชิ้นต่อการฆ่า</b> เป็นของขาย NPC/เชื้อหลอม จึงเป็นรายได้พื้นฐานของนักล่า ส่วน Q2–Q9 เป็น Bonus Drop แยกโรลอิสระ<br>
+              <b>Q1 = เนื้อสัตว์อสูร ดรอปแน่นอน 1 ชิ้นต่อการฆ่า</b> เป็นของขาย NPC/วัตถุดิบอาหาร และมีราคาฐาน = เลเวลมอนสเตอร์ × 3.5 คอปเปอร์ ส่วน Q2–Q9 เป็น Bonus Drop แยกโรลอิสระ<br>
               Material Tier = floor(Monster Lv ÷ 5) + 1. มอนต่างเลเวลใน Tier เดียวกันรวมกองได้<br>
               อัตรา Bonus Drop เพิ่มขึ้นภายใน Tier ตามตำแหน่งเลเวล: ขั้นที่ 1–5 = ×1.00 / ×1.10 / ×1.20 / ×1.30 / ×1.40 แล้วรีเซ็ตเมื่อเข้าสู่ Tier ใหม่ เช่น Lv.20 = Lv.25, Lv.21 = Lv.26, ... ในด้านอัตราดรอป แต่สะเก็ดที่ได้เป็นคนละ Tier<br>
               Q2–Q3 เป็นมานาทั่วไป ใช้เสริมเหล็กหรือวัสดุฐาน ส่วน Q4 ขึ้นไปเก็บอัตลักษณ์ของสายพันธุ์และควรระบุชื่ออัตลักษณ์เมื่อใช้จริง
@@ -577,17 +577,17 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>ช่วงเลเวลมอนสเตอร์</th><th>Material Tier</th><th>ตัวอย่าง</th></tr></thead>
               <tbody>
-                <tr><td>Lv.20–24</td><td>T5</td><td>สะเก็ดมานา T5 Q1–Q9</td></tr>
-                <tr><td>Lv.25–29</td><td>T6</td><td>สะเก็ดมานา T6 Q1–Q9</td></tr>
-                <tr><td>Lv.30–34</td><td>T7</td><td>สะเก็ดมานา T7 Q1–Q9</td></tr>
-                <tr><td>Lv.35–39</td><td>T8</td><td>สะเก็ดมานา T8 Q1–Q9</td></tr>
-                <tr><td>Lv.40–44</td><td>T9</td><td>สะเก็ดมานา T9 Q1–Q9</td></tr>
+                <tr><td>Lv.20–24</td><td>T5</td><td>เนื้อสัตว์อสูร Q1 / สะเก็ดมานา T5 Q2–Q9</td></tr>
+                <tr><td>Lv.25–29</td><td>T6</td><td>เนื้อสัตว์อสูร Q1 / สะเก็ดมานา T6 Q2–Q9</td></tr>
+                <tr><td>Lv.30–34</td><td>T7</td><td>เนื้อสัตว์อสูร Q1 / สะเก็ดมานา T7 Q2–Q9</td></tr>
+                <tr><td>Lv.35–39</td><td>T8</td><td>เนื้อสัตว์อสูร Q1 / สะเก็ดมานา T8 Q2–Q9</td></tr>
+                <tr><td>Lv.40–44</td><td>T9</td><td>เนื้อสัตว์อสูร Q1 / สะเก็ดมานา T9 Q2–Q9</td></tr>
               </tbody>
             </table>
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>Quality</th><th>บทบาท</th><th>การใช้หลัก</th></tr></thead>
               <tbody>
-                <tr><td>Q1</td><td>สะเก็ดมานาเสื่อมสภาพ</td><td>ขาย NPC / เชื้อหลอม; ราคาฐาน ≈ เลเวลกลาง Tier × 5 C</td></tr>
+                <tr><td>Q1</td><td>เนื้อสัตว์อสูร</td><td>ขาย NPC / วัตถุดิบอาหาร; ราคาฐาน = Monster Lv × 3.5 C</td></tr>
                 <tr><td>Q2</td><td>สะเก็ดมานาธรรมดา</td><td>สร้าง Common; เสริมเหล็ก/ไม้/ผ้า</td></tr>
                 <tr><td>Q3</td><td>สะเก็ดมานาเสถียร</td><td>สร้างหรืออัป Uncommon และ Rare มาตรฐาน</td></tr>
                 <tr><td>Q4</td><td>อัตลักษณ์เบาบาง</td><td>Rare มีอัตลักษณ์; เช่น พยัคฆ์/หมี/อสรพิษ</td></tr>
@@ -600,7 +600,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             </table>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               <b>Bonus Drop Rate — โรลแต่ละ Quality แยกกัน</b><br>
-              Q1 การันตี ×1 ทุก kill. ตารางด้านล่างเป็น <b>เรทฐานของเลเวลแรกในแต่ละ Material Tier</b> แล้วคูณตามตำแหน่งเลเวลใน Tier: Lv.20/25/30... ×1.00, Lv.21/26/31... ×1.10, Lv.22/27/32... ×1.20, Lv.23/28/33... ×1.30, Lv.24/29/34... ×1.40. เมื่อขึ้น Tier ใหม่เรทจะรีเซ็ต แต่สะเก็ดเปลี่ยนเป็น Tier สูงกว่า<br>
+              Q1 เนื้อสัตว์อสูรการันตี ×1 ทุก kill. ตารางด้านล่างเป็น <b>เรทฐานของเลเวลแรกในแต่ละ Material Tier</b> แล้วคูณตามตำแหน่งเลเวลใน Tier: Lv.20/25/30... ×1.00, Lv.21/26/31... ×1.10, Lv.22/27/32... ×1.20, Lv.23/28/33... ×1.30, Lv.24/29/34... ×1.40. เมื่อขึ้น Tier ใหม่เรทจะรีเซ็ต แต่สะเก็ดเปลี่ยนเป็น Tier สูงกว่า<br>
               Q2–Q7 เป็น Bonus Drop จึงมีโอกาสได้หลาย Quality จากมอนตัวเดียว โดย Q8–Q9 = 0% ในระบบปกติ
             </div>
             <table class="beh-table" style="margin-top:8px">
@@ -644,7 +644,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               <b>เป้าสมดุลช่วง Lv.20–24 — ฆ่ารวมประมาณ 880 ตัว</b><br>
               หากกระจายการล่าใกล้เคียงกันตั้งแต่ Lv.20–24 และสัดส่วนการพบเป็น Normal 774 / Elite 88 / Champion 18 จะได้โดยเฉลี่ย Q1 ×880, Q2 ≈204, Q3 ≈44, Q4 ≈6.2, Q5 ≈0.54, Q6 ≈0.02 (ค่าเฉลี่ยตัวคูณทั้ง Tier ≈ ×1.20).<br>
               Q4 ขึ้นไปยังคละอัตลักษณ์ จึงไม่เท่ากับคราฟ Rare ได้ทันที. ผู้เล่นทั่วไปจบช่วงด้วย Common หลายชิ้นและเลือกอัป Uncommon ราว 1 ชิ้น; Rare ต้องเจาะฟาร์ม ซื้อขาย หรือรวมของชนิดเดียวกัน<br>
-              Q1 ที่ขาย NPC สร้างรายได้ขั้นต้นราว 96–97 Silver ก่อนหักดาบร้าน Lv.20, ซ่อม, ยา, อาหาร, แร่, ค่าช่าง และค่าตลาด จึงมีทั้ง Money Faucet และ Money Sink
+              Q1 ที่ขาย NPC สร้างรายได้ขั้นต้นราว 106–107 Silver ก่อนหักดาบร้าน Lv.20, ซ่อม, ยา, อาหาร, แร่, ค่าช่าง และค่าตลาด จึงมีทั้ง Money Faucet และ Money Sink
             </div>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               <b>กำแพงอุปกรณ์ทุก 10 เลเวล</b><br>
@@ -905,12 +905,12 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
           <div class="inv-add-grid">
             <div>
               <div class="section-label" style="margin-bottom:4px">ITEM NAME</div>
-              <input id="inv-add-name" value="สะเก็ดมานาเสื่อมสภาพ T1 Q1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--thai);font-size:0.82rem;outline:none;">
+              <input id="inv-add-name" value="เนื้อสัตว์อสูร Lv.1 Q1" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--thai);font-size:0.82rem;outline:none;">
             </div>
             <div>
               <div class="section-label" style="margin-bottom:4px">TYPE</div>
               <select id="inv-add-type" onchange="invTypeChanged()" style="width:100%;background:var(--bg);border:1px solid var(--border-bright);color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:0.82rem;outline:none;">
-                <option value="monster_part_q1">สะเก็ดมานา Q1</option>
+                <option value="monster_part_q1">เนื้อสัตว์อสูร Q1</option>
                 <option value="monster_part_q2">สะเก็ดมานา Q2</option>
                 <option value="monster_part_q3">สะเก็ดมานา Q3</option>
                 <option value="monster_part_q4">สะเก็ดมานาอัตลักษณ์ Q4</option>
@@ -2600,8 +2600,8 @@ function handleMonsterFeint(strategy, p, m, effVit, lines, idx, total){
 }
 
 
-// ══ MANA FLAKE DROP SYSTEM: Q1–Q9 / ECONOMY-AWARE ══
-// Q1 is guaranteed once per kill and serves as the stable NPC-sale income source.
+// ══ MONSTER MEAT Q1 + MANA FLAKE Q2–Q9 / ECONOMY-AWARE ══
+// Q1 is guaranteed monster meat once per kill and serves as the stable NPC-sale income source.
 // Q2–Q9 are independent bonus rolls. A single monster may drop multiple qualities.
 // Base rates below apply to the FIRST level of each 5-level Material Tier.
 // Drop chance rises by +10% multiplicatively for each later level in that Tier:
@@ -2646,8 +2646,12 @@ function materialTierRuleText(monsterLv){
   return `Monster Lv.${lv} → T${tier} (${materialTierRangeText(tier)})`;
 }
 function materialBasePrice(materialTier){
-  // Stable hunting income: middle level of the 5-level band × 5 copper.
+  // Base reference for Q2–Q9 NPC salvage prices.
   return materialTierMidLevel(materialTier)*5;
+}
+function monsterMeatUnitPrice(monsterLv){
+  // Q1 meat uses the exact monster level: Lv × 3.5 copper, rounded to the nearest copper.
+  return Math.max(1, Math.round(normalizeMonsterLevel(monsterLv)*3.5));
 }
 function materialQualityFromType(type){
   const m=String(type||'').match(/^monster_part_q([1-9])$/);
@@ -2658,15 +2662,16 @@ function materialTypeFromQuality(quality){
   return `monster_part_q${q}`;
 }
 function isMonsterPartQualityType(type){ return materialQualityFromType(type)>0; }
-function materialDropDisplayName(materialTier, quality){
+function materialDropDisplayName(materialTier, quality, monsterLv){
   const tier=Math.max(1,Math.floor(+materialTier||1));
   const q=Math.max(1,Math.min(9,Math.round(+quality||1)));
-  if(q===1) return `สะเก็ดมานาเสื่อมสภาพ T${tier} Q1`;
+  if(q===1) return `เนื้อสัตว์อสูร Lv.${normalizeMonsterLevel(monsterLv||materialTierMidLevel(tier))} Q1`;
   if(q<=3) return `สะเก็ดมานา T${tier} Q${q}`;
   return `สะเก็ดมานาอัตลักษณ์ T${tier} Q${q}`;
 }
-function getMonsterPartUnitPrice(materialTier, quality){
+function getMonsterPartUnitPrice(materialTier, quality, monsterLv){
   const q=Math.max(1,Math.min(9,Math.round(+quality||1)));
+  if(q===1) return monsterMeatUnitPrice(monsterLv||materialTierMidLevel(materialTier));
   const raw=materialBasePrice(materialTier)*(MATERIAL_NPC_PRICE_MULTIPLIERS[q]||0);
   return cleanRoundCopper(raw);
 }
@@ -2685,7 +2690,7 @@ function materialScaledBonusRate(baseRate, monsterLv){
 function materialRollChance(rate){ return Math.random()*100 < Number(rate||0); }
 function materialDropRow(materialTier, quality, monsterLv, monsterRank, qty=1){
   return [{
-    name:materialDropDisplayName(materialTier,quality),
+    name:materialDropDisplayName(materialTier,quality,monsterLv),
     type:materialTypeFromQuality(quality),
     rarity:'common',
     lv:materialTierStartLevel(materialTier),
@@ -2718,7 +2723,7 @@ function materialRollOneKill(monsterRank, monsterLv){
 function aggregateMaterialDrops(drops){
   const map=new Map();
   for(const d of drops){
-    const key=[d.materialTier,d.quality].join('|');
+    const key=(d.quality===1) ? [d.materialTier,d.quality,d.monsterLv].join('|') : [d.materialTier,d.quality].join('|');
     if(!map.has(key)) map.set(key,{...d});
     else map.get(key).qty += d.qty;
   }
@@ -2753,9 +2758,9 @@ function getKillTrashReport(monsterRank, monsterLv){
     if(base>0) rateText.push(`Q${q} ${materialScaledBonusRate(base,monsterLv).toFixed(base<1?2:1)}%`);
   }
   return {
-    commonName:materialDropDisplayName(materialTier,1),
-    commonValue:getMonsterPartUnitPrice(materialTier,1),
-    text:`Loot report: ${rank} | T${materialTier} ${materialTierRangeText(materialTier)} | Tier position ${pos}/5 ×${mult.toFixed(2)} | Q1 guaranteed ×1 (${getMonsterPartUnitPrice(materialTier,1)}C NPC) | Bonus ${rateText.join(' | ')||'none'}`
+    commonName:materialDropDisplayName(materialTier,1,monsterLv),
+    commonValue:getMonsterPartUnitPrice(materialTier,1,monsterLv),
+    text:`Loot report: ${rank} | T${materialTier} ${materialTierRangeText(materialTier)} | Tier position ${pos}/5 ×${mult.toFixed(2)} | Q1 meat guaranteed ×1 (${getMonsterPartUnitPrice(materialTier,1,monsterLv)}C NPC) | Bonus ${rateText.join(' | ')||'none'}`
   };
 }
 
@@ -3356,7 +3361,7 @@ function moneySubSimple(){
 // ══ INVENTORY SYSTEM ══
 let inventoryRows = [];
 const INV_TYPE_BASE = {
-  monster_part_q1: { label:'สะเก็ดมานา Q1', base:0 },
+  monster_part_q1: { label:'เนื้อสัตว์อสูร Q1', base:0 },
   monster_part_q2: { label:'สะเก็ดมานา Q2', base:0 },
   monster_part_q3: { label:'สะเก็ดมานา Q3', base:0 },
   monster_part_q4: { label:'สะเก็ดมานาอัตลักษณ์ Q4', base:0 },
@@ -3492,7 +3497,7 @@ function invAutoUnitPrice(row){
   if(isMonsterPartQualityType(row.type)){
     const q=Math.max(1,Math.min(9,Math.round(+row.quality||materialQualityFromType(row.type)||1)));
     const tier=Math.max(1,Math.round(+row.materialTier||materialTierFromMonsterLevel(row.lv)));
-    return getMonsterPartUnitPrice(tier,q);
+    return getMonsterPartUnitPrice(tier,q,row.monsterLv||row.lv);
   }
   if(isTieredCrystalType(row.type)){
     const tier=Math.max(1,Math.round(+row.crystalTier||crystalTierFromMonsterLevel(row.monsterLv||row.lv)));
