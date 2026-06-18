@@ -571,6 +571,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
               เมื่อมอนสเตอร์ตาย ร่างกายที่ถูกมานาหล่อเลี้ยงจะคงสภาพไม่ได้และสลายคืนสู่อากาศ เหลือเพียงสะเก็ดมานาตกค้าง<br>
               <b>Q1 ดรอปแน่นอน 1 ชิ้นต่อการฆ่า</b> เป็นของขาย NPC/เชื้อหลอม จึงเป็นรายได้พื้นฐานของนักล่า ส่วน Q2–Q9 เป็น Bonus Drop แยกโรลอิสระ<br>
               Material Tier = floor(Monster Lv ÷ 5) + 1. มอนต่างเลเวลใน Tier เดียวกันรวมกองได้<br>
+              อัตรา Bonus Drop เพิ่มขึ้นภายใน Tier ตามตำแหน่งเลเวล: ขั้นที่ 1–5 = ×1.00 / ×1.10 / ×1.20 / ×1.30 / ×1.40 แล้วรีเซ็ตเมื่อเข้าสู่ Tier ใหม่ เช่น Lv.20 = Lv.25, Lv.21 = Lv.26, ... ในด้านอัตราดรอป แต่สะเก็ดที่ได้เป็นคนละ Tier<br>
               Q2–Q3 เป็นมานาทั่วไป ใช้เสริมเหล็กหรือวัสดุฐาน ส่วน Q4 ขึ้นไปเก็บอัตลักษณ์ของสายพันธุ์และควรระบุชื่ออัตลักษณ์เมื่อใช้จริง
             </div>
             <table class="beh-table" style="margin-top:8px">
@@ -599,7 +600,8 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             </table>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               <b>Bonus Drop Rate — โรลแต่ละ Quality แยกกัน</b><br>
-              Q1 การันตี ×1 ทุก kill. ตัวเลขด้านล่างเป็นโอกาสได้ Q2–Q7 เพิ่มเติม จึงมีโอกาสได้หลาย Quality จากมอนตัวเดียว โดย Q8–Q9 = 0% ในระบบปกติ
+              Q1 การันตี ×1 ทุก kill. ตารางด้านล่างเป็น <b>เรทฐานของเลเวลแรกในแต่ละ Material Tier</b> แล้วคูณตามตำแหน่งเลเวลใน Tier: Lv.20/25/30... ×1.00, Lv.21/26/31... ×1.10, Lv.22/27/32... ×1.20, Lv.23/28/33... ×1.30, Lv.24/29/34... ×1.40. เมื่อขึ้น Tier ใหม่เรทจะรีเซ็ต แต่สะเก็ดเปลี่ยนเป็น Tier สูงกว่า<br>
+              Q2–Q7 เป็น Bonus Drop จึงมีโอกาสได้หลาย Quality จากมอนตัวเดียว โดย Q8–Q9 = 0% ในระบบปกติ
             </div>
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>Rank</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th><th>Q6</th><th>Q7</th></tr></thead>
@@ -614,6 +616,16 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <div class="small-note" style="line-height:1.7;margin-top:6px">
               *Mini Boss/Boss ใช้จำนวนการันตีแทนเปอร์เซ็นต์: Mini Boss Q2 ×3, Q3 ×1 และมีโอกาสเพิ่มอีก 50%; Boss Q2 ×10, Q3 ×4. Q4+ โรลตามตาราง
             </div>
+            <table class="beh-table" style="margin-top:8px">
+              <thead><tr><th>ตำแหน่งใน Material Tier</th><th>ตัวอย่างเลเวล</th><th>ตัวคูณ Bonus Drop</th></tr></thead>
+              <tbody>
+                <tr><td>1 / 5</td><td>20, 25, 30, 35...</td><td>×1.00</td></tr>
+                <tr><td>2 / 5</td><td>21, 26, 31, 36...</td><td>×1.10</td></tr>
+                <tr><td>3 / 5</td><td>22, 27, 32, 37...</td><td>×1.20</td></tr>
+                <tr><td>4 / 5</td><td>23, 28, 33, 38...</td><td>×1.30</td></tr>
+                <tr><td>5 / 5</td><td>24, 29, 34, 39...</td><td>×1.40</td></tr>
+              </tbody>
+            </table>
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>สูตรคราฟ</th><th>สะเก็ดที่ใช้</th><th>ผลึก/เงื่อนไข</th></tr></thead>
               <tbody>
@@ -630,7 +642,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             </table>
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               <b>เป้าสมดุลช่วง Lv.20–24 — ฆ่ารวมประมาณ 880 ตัว</b><br>
-              หากสัดส่วนการพบเป็น Normal 774 / Elite 88 / Champion 18 จะได้โดยเฉลี่ย Q1 ×880, Q2 ≈170, Q3 ≈37, Q4 ≈5, Q5 ≈0.45, Q6 ≈0.02.<br>
+              หากกระจายการล่าใกล้เคียงกันตั้งแต่ Lv.20–24 และสัดส่วนการพบเป็น Normal 774 / Elite 88 / Champion 18 จะได้โดยเฉลี่ย Q1 ×880, Q2 ≈204, Q3 ≈44, Q4 ≈6.2, Q5 ≈0.54, Q6 ≈0.02 (ค่าเฉลี่ยตัวคูณทั้ง Tier ≈ ×1.20).<br>
               Q4 ขึ้นไปยังคละอัตลักษณ์ จึงไม่เท่ากับคราฟ Rare ได้ทันที. ผู้เล่นทั่วไปจบช่วงด้วย Common หลายชิ้นและเลือกอัป Uncommon ราว 1 ชิ้น; Rare ต้องเจาะฟาร์ม ซื้อขาย หรือรวมของชนิดเดียวกัน<br>
               Q1 ที่ขาย NPC สร้างรายได้ขั้นต้นราว 96–97 Silver ก่อนหักดาบร้าน Lv.20, ซ่อม, ยา, อาหาร, แร่, ค่าช่าง และค่าตลาด จึงมีทั้ง Money Faucet และ Money Sink
             </div>
@@ -2591,6 +2603,9 @@ function handleMonsterFeint(strategy, p, m, effVit, lines, idx, total){
 // ══ MANA FLAKE DROP SYSTEM: Q1–Q9 / ECONOMY-AWARE ══
 // Q1 is guaranteed once per kill and serves as the stable NPC-sale income source.
 // Q2–Q9 are independent bonus rolls. A single monster may drop multiple qualities.
+// Base rates below apply to the FIRST level of each 5-level Material Tier.
+// Drop chance rises by +10% multiplicatively for each later level in that Tier:
+// position 1/2/3/4/5 = ×1.00/×1.10/×1.20/×1.30/×1.40, then resets at the next Tier.
 const MATERIAL_BONUS_RATES = {
   normal:   {2:15, 3:2, 4:0.1, 5:0,   6:0,   7:0,   8:0, 9:0},
   elite:    {2:45, 3:15,4:2,   5:0.1, 6:0,   7:0,   8:0, 9:0},
@@ -2655,6 +2670,18 @@ function getMonsterPartUnitPrice(materialTier, quality){
   const raw=materialBasePrice(materialTier)*(MATERIAL_NPC_PRICE_MULTIPLIERS[q]||0);
   return cleanRoundCopper(raw);
 }
+function materialTierPosition(monsterLv){
+  const lv=normalizeMonsterLevel(monsterLv);
+  const tier=materialTierFromMonsterLevel(lv);
+  const start=materialTierStartLevel(tier);
+  return Math.max(1,Math.min(5,(lv-start)+1));
+}
+function materialDropLevelMultiplier(monsterLv){
+  return 1 + (materialTierPosition(monsterLv)-1)*0.10;
+}
+function materialScaledBonusRate(baseRate, monsterLv){
+  return Math.min(100, Number(baseRate||0) * materialDropLevelMultiplier(monsterLv));
+}
 function materialRollChance(rate){ return Math.random()*100 < Number(rate||0); }
 function materialDropRow(materialTier, quality, monsterLv, monsterRank, qty=1){
   return [{
@@ -2683,7 +2710,7 @@ function materialRollOneKill(monsterRank, monsterLv){
     if(count>0) drops.push(...materialDropRow(materialTier,q,normalizedMonsterLv,rank,count));
   }
   for(let q=2;q<=9;q++){
-    const rate=Number(rates[q]||0);
+    const rate=materialScaledBonusRate(rates[q]||0, normalizedMonsterLv);
     if(rate>0 && materialRollChance(rate)) drops.push(...materialDropRow(materialTier,q,normalizedMonsterLv,rank,1));
   }
   return drops;
@@ -2719,11 +2746,16 @@ function getKillTrashReport(monsterRank, monsterLv){
   const materialTier=materialTierFromMonsterLevel(monsterLv);
   const rates=MATERIAL_BONUS_RATES[rank]||MATERIAL_BONUS_RATES.normal;
   const rateText=[];
-  for(let q=2;q<=7;q++) if(Number(rates[q]||0)>0) rateText.push(`Q${q} ${rates[q]}%`);
+  const pos=materialTierPosition(monsterLv);
+  const mult=materialDropLevelMultiplier(monsterLv);
+  for(let q=2;q<=7;q++){
+    const base=Number(rates[q]||0);
+    if(base>0) rateText.push(`Q${q} ${materialScaledBonusRate(base,monsterLv).toFixed(base<1?2:1)}%`);
+  }
   return {
     commonName:materialDropDisplayName(materialTier,1),
     commonValue:getMonsterPartUnitPrice(materialTier,1),
-    text:`Loot report: ${rank} | T${materialTier} ${materialTierRangeText(materialTier)} | Q1 guaranteed ×1 (${getMonsterPartUnitPrice(materialTier,1)}C NPC) | Bonus ${rateText.join(' | ')||'none'}`
+    text:`Loot report: ${rank} | T${materialTier} ${materialTierRangeText(materialTier)} | Tier position ${pos}/5 ×${mult.toFixed(2)} | Q1 guaranteed ×1 (${getMonsterPartUnitPrice(materialTier,1)}C NPC) | Bonus ${rateText.join(' | ')||'none'}`
   };
 }
 
