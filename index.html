@@ -569,7 +569,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <div class="small-note" style="line-height:1.7;margin-top:8px">
               <b>ระบบสะเก็ดมานา Q1–Q9 / เศรษฐกิจการล่า</b><br>
               เมื่อมอนสเตอร์ตาย ร่างกายที่ถูกมานาหล่อเลี้ยงจะคงสภาพไม่ได้และสลายคืนสู่อากาศ เหลือเพียงสะเก็ดมานาตกค้าง<br>
-              <b>Q1 = เนื้อสัตว์อสูร ดรอปแน่นอน 1 ชิ้นต่อการฆ่า</b> เป็นของขาย NPC/วัตถุดิบอาหาร และมีราคาฐาน = เลเวลมอนสเตอร์ × 3.5 คอปเปอร์ ส่วน Q2–Q9 เป็น Bonus Drop แยกโรลอิสระ<br>
+              <b>Q1 = เนื้อสัตว์อสูร ดรอปแน่นอน 1 ชิ้นต่อการฆ่า</b> เป็นของขาย NPC/วัตถุดิบอาหาร และมีราคาฐาน = เลเวลมอนสเตอร์ × 4.5 คอปเปอร์ ส่วน Q2–Q9 เป็น Bonus Drop แยกโรลอิสระ<br>
               Material Tier = floor(Monster Lv ÷ 5) + 1. มอนต่างเลเวลใน Tier เดียวกันรวมกองได้<br>
               อัตรา Bonus Drop เพิ่มขึ้นภายใน Tier ตามตำแหน่งเลเวล: ขั้นที่ 1–5 = ×1.00 / ×1.10 / ×1.20 / ×1.30 / ×1.40 แล้วรีเซ็ตเมื่อเข้าสู่ Tier ใหม่ เช่น Lv.20 = Lv.25, Lv.21 = Lv.26, ... ในด้านอัตราดรอป แต่สะเก็ดที่ได้เป็นคนละ Tier<br>
               Q2–Q3 เป็นมานาทั่วไป ใช้เสริมเหล็กหรือวัสดุฐาน ส่วน Q4 ขึ้นไปเก็บอัตลักษณ์ของสายพันธุ์และควรระบุชื่ออัตลักษณ์เมื่อใช้จริง<br>ราคาขาย NPC ของสะเก็ดใช้ราคาฐาน = เลเวลกลางของ Material Tier × 5 C แล้วคูณตามคุณภาพ: Q2 ×1, Q3 ×3, Q4 ×12, Q5 ×40, Q6 ×150, Q7 ×600, Q8 ×2,500, Q9 ×10,000. ราคาตลาดผู้เล่นแยกต่างหากและปรับได้ด้วย Market %.
@@ -587,7 +587,7 @@ body{background:radial-gradient(circle at top left,rgba(0,200,200,.08),transpare
             <table class="beh-table" style="margin-top:8px">
               <thead><tr><th>Quality</th><th>บทบาท</th><th>การใช้หลัก</th></tr></thead>
               <tbody>
-                <tr><td>Q1</td><td>เนื้อสัตว์อสูร</td><td>ขาย NPC / วัตถุดิบอาหาร; ราคาฐาน = Monster Lv × 3.5 C</td></tr>
+                <tr><td>Q1</td><td>เนื้อสัตว์อสูร</td><td>ขาย NPC / วัตถุดิบอาหาร; ราคาฐาน = Monster Lv × 4.5 C</td></tr>
                 <tr><td>Q2</td><td>สะเก็ดมานาธรรมดา</td><td>สร้าง Common; เสริมเหล็ก/ไม้/ผ้า</td></tr>
                 <tr><td>Q3</td><td>สะเก็ดมานาเสถียร</td><td>สร้างหรืออัป Uncommon และ Rare มาตรฐาน</td></tr>
                 <tr><td>Q4</td><td>อัตลักษณ์เบาบาง</td><td>Rare มีอัตลักษณ์; เช่น พยัคฆ์/หมี/อสรพิษ</td></tr>
@@ -2650,8 +2650,8 @@ function materialBasePrice(materialTier){
   return materialTierMidLevel(materialTier)*5;
 }
 function monsterMeatUnitPrice(monsterLv){
-  // Q1 meat uses the exact monster level: Lv × 3.5 copper, rounded to the nearest copper.
-  return Math.max(1, Math.round(normalizeMonsterLevel(monsterLv)*3.5));
+  // Q1 meat uses the exact monster level: Lv ×4.5 copper, rounded to the nearest copper.
+  return Math.max(1, Math.round(normalizeMonsterLevel(monsterLv)*4.5));
 }
 function materialQualityFromType(type){
   const m=String(type||'').match(/^monster_part_q([1-9])$/);
